@@ -1,3 +1,24 @@
+29 January 2026
+This week's plan:
+1- Finish outline
+2- Add meeting notes to GitHub repository
+
+Objectives for model coders:
+2- Create the main model for PeakFitness (generations required to reach a peak fitness value) to examine: sex_mito and asex_mito, and verify that it has these criteria-
+    i- two autosomes ("nuclear" chromosomes)
+    ii- one mitogenome
+    iii- mitogenome with both higher mutation rate (and eventually higher deleterious mutation accumulation, which is the case for the mito models in the del directory on the github repository)
+    iv- mitogenome is uniparentally inherited
+3- Modify that main model for PeakFitness so that there are two "sub"models:
+    i- Sex (autosomes recombine, only one of the autosomes gets passed on because the other is passed on by a mate)
+4- Create the main model for CompensatoryTest (fitness value after certain number of generations, when there has been a pre-loading of deleterious mutations). This should have the same general criteria as the main model for PeakFitness.
+3- Modify that main model for CompensatoryTest so that there are two "sub"models:
+    i- Sex (autosomes recombine, only one of the autosomes gets passed on because the other is passed on by a mate)
+
+Objectives for statisticians/figure makers:
+1- Look at output from SLiM and decide how they can be handled with a statistical language
+2- Examine how data can be depicted visually
+
 6 December 2024
   William presented a poster at the Utah Tech Biology poster session (I added this poster to the meetings folder in the KLab directory on onen drive). Ultimately for the project, I think the next step is figuring out if our Running3 simulations are truly set up where the mitochondrial mutations are deleterious. (RunningFiles and RunningFiles3, which are the "Neut" and "Del" simulations (respectively), are all under Documents/UtahTech/Research).
 
