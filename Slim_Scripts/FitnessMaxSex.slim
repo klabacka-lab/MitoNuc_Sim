@@ -1,0 +1,45 @@
+// set up a simple neutral simulation
+initialize() {
+	initializeSex();
+	
+
+	initializeMutationType("m1",0.5, "f", 0.0); //Nuclear
+	initializeMutationType("m2", 1.0, "f", 0.0); //Mitochondrial
+	
+	
+	initializeGenomicElementType("g1", m1, 1.0);
+	initializeGenomicElementType("g2", m2, 1.0);
+	
+	initializeChromosome(1, 1e5, symbol="N");
+	initializeGenomicElement(g1, 0, 99999);
+	initializeMutationRate(1e-7);
+	initializeRecombinationRate(1e-8);
+	
+	
+	
+	
+	initializeChromosome(2, 1e5, type="HF", symbol="M");
+	initializeRecombinationRate(0);
+	initializeGenomicElement(g2, 0, 99999);
+	initializeMutationRate(1e-6);}
+
+// create a population of 500 individuals
+1 early() {
+	sim.addSubpop("p1", 500);
+	
+}
+
+
+1: late() {
+	if (sim.cycle % 100 == 0){
+		inds = sim.subpopulations.individuals;
+ 		cat(sim.cycle+"\n");
+ 		cat("Mean fitness: " + mean(inds.fitnessScaling) + "\n");
+ 		cat("\n");
+ 	}
+}
+// output samples of 10 haplosomes periodically, all fixed mutations at end
+
+10000 late() { inds = sim.subpopulations.individuals;
+
+ cat("Final Fitness: " + mean(inds.fitnessScaling)); }
