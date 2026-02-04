@@ -1,41 +1,44 @@
 initialize() {
-	initializeMutationType("m1", 1.0, "f", 0.0);
+	//neutral mutation
+	initializeMutationType("neutral", 1.0, "f", 0.0);
 
 	//deleterious mutation
-	//probably create more
-	initializeMutationType("m2", 40000, "g", -0.09, 1.5);
+	//probably create more?
+	initializeMutationType("deleterious", 40000, "g", -0.09, 1.5);
 
-	initializeGenomicElementType("g1", m1, 1.0);
-	initializeGenomicElementType("g2", c(m1, m2), c(1,2));
-	initializeGenomicElementType("g3", m1, 1.0);
+	//genomic elements
+	initializeGenomicElementType("chrom1Element",neutral , 1.0);
+	initializeGenomicElementType("chrom2Element", c(neutral ,deleterious), c(1,2));
+	initializeGenomicElementType("chrom3Element",neutral , 1.0);
 
 
-	//mt chrosomomes
+	//chromosome 1: mitochondrial chromosome
 	initializeChromosome(1, type="H");
-	initializeGenomicElement(g3, 0, 1e4-1);
+	initializeGenomicElement(chrom3Element, 0, 1e4-1);
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
 
+	//chromosome 2: autosome
 	initializeChromosome(2, type="A");
-	initializeGenomicElement(g2, 0, 1e5-1);
+	initializeGenomicElement(chrom2Element, 0, 1e5-1);
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
 
+	//chromosome 3: autosome
 	initializeChromosome(3, type="A");
-	initializeGenomicElement(g1, 0, 1e5-1);
+	initializeGenomicElement(chrom1Element, 0, 1e5-1);
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
 }
 1 early() {
-	sim.addSubpop("p1", 500);
+	sim.addSubpop("subPop1", 500);
 }
 
 //burn-in for 5000 generations
-5000 early() { p1.setSubpopulationSize(1000);
-
+5000 early() { subPop1.setSubpopulationSize(1000);
 	mito_chroms = c();
 
-	for (some in p1.individuals.haplosomes){
+	for (some in subPop1.individuals.haplosomes){
 		if (some.chromosome.id == 1){
 			mito_chroms = c(mito_chroms, some);
 		}
@@ -43,9 +46,9 @@ initialize() {
 
 	print(mito_chroms);
 
-	sample(mito_chroms,400).addNewDrawnMutation(m1,rdunif(1,0,1e4-1));
+	sample(mito_chroms,400).addNewDrawnMutationneutral ,rdunif(1,0,1e4-1));
 
-	g2.setMutationFractions(m2, 0.000000000000001);
+	g2.setMutationFractionsdeleterious, 0.000000000000001);
 }
 
 10000 late() { sim.simulationFinished(); }
