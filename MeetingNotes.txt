@@ -3,6 +3,19 @@ This week's plan:
 1- Finish outline
 2- Add meeting notes to GitHub repository
 
+1/29/2026
+Github notes
+Asex - diploid but the nucleus reproduces asexually
+Auto - treat all as autosomes
+Mito - mitochondria has high mutation rate
+Mito-adj - same as mito but mitochondria without the highermutation rate  
+CompensatoryTest.slim - introduce lots of deleteriousn mutations and watch them compensate
+PeakFitness.slim - 
+We make a Sex_mito and Asex_mito - focus on increased deleterious mutations in mitochondria
+
+Plot scripts and statistical testing
+
+
 Objectives for model coders:
 2- Create the main model for PeakFitness (generations required to reach a peak fitness value) to examine: sex_mito and asex_mito, and verify that it has these criteria-
     i- two autosomes ("nuclear" chromosomes)
