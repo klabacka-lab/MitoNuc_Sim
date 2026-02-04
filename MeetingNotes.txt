@@ -16,6 +16,8 @@ We make a Sex_mito and Asex_mito - focus on increased deleterious mutations in m
 Plot scripts and statistical testing
 
 
+
+
 Objectives for model coders:
 2- Create the main model for PeakFitness (generations required to reach a peak fitness value) to examine: sex_mito and asex_mito, and verify that it has these criteria-
     i- two autosomes ("nuclear" chromosomes)
