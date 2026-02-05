@@ -3,11 +3,12 @@ initialize() {
 	defineConstant("asexual", F);
 
 	//neutral mutation
-	initializeMutationType("m1", 1.0, "f", 0.0);
+	initializeMutationType("m1", 1.0, "e", 0.0019);
+	//initializeMutationType("m3", 1.0, "e", 0.0);
 
 	//deleterious mutation
 	//probably create more?
-	initializeMutationType("m2", 40000, "g", -0.09, 1.5);
+	initializeMutationType("m2", 1.0, "g", -0.09, 1.5);
 
 	//genomic elements
 	initializeGenomicElementType("g1",m1 , 1.0);
