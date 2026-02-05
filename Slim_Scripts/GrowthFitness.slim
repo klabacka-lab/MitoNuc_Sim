@@ -54,17 +54,13 @@ initialize() {
 	g2.setMutationFractions(m2, 0.000000000000001);
 }
 
-
-
 1000 late() { 
 
-	//sim.simulationFinished(); 
-	//sim.outputFull();
+	sim.simulationFinished(); 
+	sim.outputFull();
 }
 
 1001 early() { 
-
-
 	print("Mean fitness at generation 1000:");
 	print(mean(p1.cachedFitness(NULL)));
 	print(sum(p1.cachedFitness(NULL)));
