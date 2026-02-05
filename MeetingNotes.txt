@@ -1,3 +1,21 @@
+February 5 2026
+Progress Report Meeting
+
+Some tweaks to outline sentance structure and vocabulary 
+- to be addressed when moving the introduction into a full draft
+
+Sim 1 is getting there. 
+Currently working to add epistasis, 
+so that mitochondrial and nuclear genes affect fitness through interaction
+Looking through William (team memebr of previous project iteration)'s coders
+
+Sim 2 coming along.
+Managed to seed poputlation with initial deleterious mutations.
+Focusing on tweaks to setup (chromosomes, genomic elements, mutation types)
+
+
+
+
 29 January 2026
 This week's plan:
 1- Finish outline
