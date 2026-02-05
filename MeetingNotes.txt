@@ -12,7 +12,12 @@ Looking through William (team memebr of previous project iteration)'s coders
 Sim 2 coming along.
 Managed to seed poputlation with initial deleterious mutations.
 Focusing on tweaks to setup (chromosomes, genomic elements, mutation types)
+Sposnor suggested icreased number seeded mutations 
+and commented on the apparent "fitness ceiling" of 1.0. Together we decided that this phenomenon
+would stiop if beneficial mutations were added.
 
+Figure ideas from sponsor - dual sex/asex boxplot, dual sex/asex fitness-time graph 
+for each of the two simulations 
 
 
 
