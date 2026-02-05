@@ -40,10 +40,7 @@ initialize() {
 	if (asexual == T){
 		p1.setCloningRate(1.0);
 	}
-}
 
-//burn-in for 5000 generations
-5000 early() { p1.setSubpopulationSize(1000);
 	//gather mitochondrial chromosomes
 	mito_chroms = c();
 	for (some in p1.individuals.haplosomes){
@@ -56,6 +53,7 @@ initialize() {
 
 	g2.setMutationFractions(m2, 0.000000000000001);
 }
+
 
 10000 early() { 
 	print(p1.cachedFitness(c(0:500)));
