@@ -63,6 +63,23 @@ initialize() {
 	print(mean(p1.cachedFitness(NULL)));
 }
 
+2:999 early() {
+	if (mean(p1.cachedFitness(NULL)) >= 1.0){
+		//Send a meessage when threshold is reached
+		print("Mean fitness at generation " + sim.cycle + " has reached 1.0");
+		print("Mean fitness at generation " + sim.cycle + ":");
+		print(mean(p1.cachedFitness(NULL)));
+
+		if (asexual == T){
+			writeFile(getwd() + "/asexual.txt", asString(sim.cycle), append=T);
+		} else {
+			writeFile(getwd() + "/sexual.txt", asString(sim.cycle), append=T);
+		}
+
+		//deregister this script block to stop this check print
+		community.deregisterScriptBlock(self);
+	}}
+
 1000 late() { 
 	//sim.simulationFinished(); 
 	//sim.outputFull();
