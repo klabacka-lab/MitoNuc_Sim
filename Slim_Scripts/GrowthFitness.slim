@@ -1,22 +1,21 @@
 initialize() {
 	//parameter to toggle asexual reproduction
 	defineConstant("asexual", F);
-	defineConstant("popSize", 10000);
+	defineConstant("popSize", 100);
+
+	//Mutations: expeiment with DFE (manual section 26.11)
 
 	//neutral mutation
-	initializeMutationType("m1", 1.0, "e", 0.0019);
-	//initializeMutationType("m3", 1.0, "e", 0.0);
-
-	
+	initializeMutationType("m1", 0.1, "f", 0.1);
 	//deleterious mutation
 	//probably create more?
 	//specifically for the preloading
-	initializeMutationType("m2", 1.0, "g", -0.09, 1.5);
+	initializeMutationType("m2", 1.0, "f", -0.5);
 
 	//genomic elements
 	initializeGenomicElementType("g1",m1 , 1.0);
 	//remove m2?
-	initializeGenomicElementType("g2", c(m1 ,m2), c(1,2));
+	initializeGenomicElementType("g2", m1, 1.0);
 	initializeGenomicElementType("g3",m1 , 1.0);
 
 
@@ -59,15 +58,17 @@ initialize() {
 	g2.setMutationFractions(m2, 0.000000000000001);
 }
 
-1000 late() { 
+2 early() {
+	print("Mean fitness at generation 1:");
+	print(mean(p1.cachedFitness(NULL)));
+}
 
-	sim.simulationFinished(); 
-	sim.outputFull();
+1000 late() { 
+	//sim.simulationFinished(); 
+	//sim.outputFull();
 }
 
 1001 early() { 
 	print("Mean fitness at generation 1000:");
 	print(mean(p1.cachedFitness(NULL)));
-	print(sum(p1.cachedFitness(NULL)));
-	print(length(p1.individuals));
 }
