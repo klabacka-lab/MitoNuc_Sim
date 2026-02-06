@@ -5,22 +5,24 @@ initialize() {
 	defineConstant("asexual", T);
 	
 	//create normal mutation distributions
+	//I just added the basic set that remains active the whole time
 	initializeMutationType("m2", 0.5, "f", 0.0); // synonymous
 	initializeMutationType("m3", 0.1, "g", -0.03, 0.2); // deleterious
-	initializeMutationType("m5", 0.7, "g", -0.19, 1.2);
-	initializeMutationType("m4", 0.1, "e", 0.001);
+	initializeMutationType("m5", 0.7, "g", -0.19, 1.2); // fun deleterious for preloading
+	initializeMutationType("m4", 0.1, "e", 0.001); //beneficial
 	
 	//genomic elements
+	//g1 to be used for autosomes
 	initializeGenomicElementType("g1",c(m2, m3, m4) , c(2,3,4));
-	//remove m2?
+	//g2 specifically for mutation dump
 	initializeGenomicElementType("g2", m3,3);
-	//initializeGenomicElementType("g3",m1 , 1.0);
 	
 	
 	//chromosome 1: mitochondrial chromosome
 	initializeChromosome(1, type="H");
-	initializeGenomicElement(g2, 0, 1e4-1);
-	initializeMutationRate(1e-7);
+	initializeGenomicElement(g1, 0, 1e4-1);
+	//increased mutation rate
+	initializeMutationRate(1e-6);
 	initializeRecombinationRate(1e-7);
 	
 	//chromosome 2: autosome
@@ -44,14 +46,15 @@ initialize() {
 	}
 
 }
+//remove me if you don't want to stop once we reached the OG fitness
 4999 early(){
-//cache fitness
+	//cache current fitness before preloading
 	defineConstant("fitness", mean(p1.cachedFitness(NULL)));
 	//print(fitness);
 }
 
+//burn-in period ends here
 5000 late() {
-	
 	//gather mitochondrial chromosomes
 	mito_chroms = c();
 	for (some in p1.individuals.haplosomes){
@@ -63,37 +66,28 @@ initialize() {
 	//seed deleterious mutations into 400 mitochondrial chromosomes
 	sample(mito_chroms,400).addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
 	
-	g2.setMutationFractions(m2, 0.000000000000001);
+	//g2.setMutationFractions(m2, 0.000000000000001);
 }
-5001:9000 early(){
-	//if current fitness == or > og fitness: end sim
+
+//colon means it runs this every tick.... I think
+5001: early(){
+	//if current fitness > og fitness: end sim
 	//cache fitness
-	//defineConstant("fitness2", mean(p1.cachedFitness(NULL)));
 	fitness2 =  mean(p1.cachedFitness(NULL));
 	//print(fitness2);
 	
+	//in this case, fitness can be changed to whatever we want it to be, doesn't have to be pre-drop fitness
+	//did > b/c it's safer than ==
 	if (fitness2 > fitness) {
-		community.deregisterScriptBlock(self);
-		print("made it");
+		print("Simulation ended");
 		sim.simulationFinished();
-		//sim.outputFull();
-		//print("Mean fitness at generation 10000:");
-		//print(mean(p1.cachedFitness(NULL)));
-		//print(sum(p1.cachedFitness(NULL)));
-		//print(length(p1.individuals));
-		//stop();
+		//print clicks it took to get here
+		//whatever else we need
 	}
 }
 
 10000 late() {
-	
+	//in case it never reached OG fitness
 	sim.simulationFinished();
 	//sim.outputFull();
 }
-
-//10001 early() {
-//print("Mean fitness at generation 1000:");
-//print(mean(p1.cachedFitness(NULL)));
-//print(sum(p1.cachedFitness(NULL)));
-//print(length(p1.individuals));
-//}
