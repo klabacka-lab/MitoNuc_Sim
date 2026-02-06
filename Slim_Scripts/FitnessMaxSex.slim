@@ -5,8 +5,8 @@ initialize() {
 	initializeSex();
 	
 
-	initializeMutationType("m1",0.5, "f", 0); //Nuclear
-	initializeMutationType("m2", 1.0, "n", -0.7, 0.15); //Mitochondrial
+	initializeMutationType("m1",0.5, "g", -0.02, 0.2); //Nuclear
+	initializeMutationType("m2", 1.0, "g", -0.02, 0.2); //Mitochondrial
 	m1.convertToSubstitution = F;
 	m2.convertToSubstitution = F;
 	
@@ -16,7 +16,7 @@ initialize() {
 	
 	initializeChromosome(1, 1e5, symbol="N");
 	initializeGenomicElement(g1, 0, 99999);
-	initializeMutationRate(1e-8);
+	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
 	
 	
@@ -25,12 +25,12 @@ initialize() {
 	initializeChromosome(2, 1e5, type="HF", symbol="M");
 	initializeRecombinationRate(0);
 	initializeGenomicElement(g2, 0, 99999);
-	initializeMutationRate(1e-6);}
+	initializeMutationRate(1e-7);}
 
 // create a population of 500 individuals
 1 early() {
 	sim.setValue("MaxFitness", 0.0);
-	sim.addSubpop("p1", 500);
+	sim.addSubpop("p1", 100);
 //	log = community.createLogFile("fitness_log.txt", logInterval=1);
 //   log.addCycle();
 //   log.addMeanFitness("p1");
@@ -54,8 +54,8 @@ mutationEffect(m2) {
 	pos = mut.position;
 	nuc_pos = individual.uniqueMutations[individual.uniqueMutations.mutationType == m1].position;
 	if (any(nuc_pos == pos)) {
-
-		return effect + 1.0;}
+	
+		return effect + 1;}
 	else {
 		return effect;
 }
