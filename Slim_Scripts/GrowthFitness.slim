@@ -1,6 +1,7 @@
 initialize() {
 	//parameter to toggle asexual reproduction
 	defineConstant("asexual", F);
+	defineConstant("popSize", 10000);
 
 	//neutral mutation
 	initializeMutationType("m1", 1.0, "e", 0.0019);
@@ -37,7 +38,7 @@ initialize() {
 1 early() {
 	
 	//initialize population
-	sim.addSubpop("p1", 100);
+	sim.addSubpop("p1", popSize);
 	if (asexual == T){
 		p1.setCloningRate(1.0);
 	}
@@ -50,7 +51,7 @@ initialize() {
 		}
 	}
 	//seed deleterious mutations into 400 mitochondrial chromosomes
-	sample(mito_chroms,90).addNewDrawnMutation(m2, rdunif(1,0,1e4-1));
+	sample(mito_chroms, asInteger(0.95 * popSize)).addNewDrawnMutation(m2, rdunif(1,0,1e4-1));
 
 	g2.setMutationFractions(m2, 0.000000000000001);
 }
