@@ -1,0 +1,99 @@
+//creating this bad boy so I don't totally break GrowthFitness
+
+initialize() {
+	//parameter to toggle asexual reproduction
+	defineConstant("asexual", T);
+	
+	//create normal mutation distributions
+	initializeMutationType("m2", 0.5, "f", 0.0); // synonymous
+	initializeMutationType("m3", 0.1, "g", -0.03, 0.2); // deleterious
+	initializeMutationType("m5", 0.7, "g", -0.19, 1.2);
+	initializeMutationType("m4", 0.1, "e", 0.001);
+	
+	//genomic elements
+	initializeGenomicElementType("g1",c(m2, m3, m4) , c(2,3,4));
+	//remove m2?
+	initializeGenomicElementType("g2", m3,3);
+	//initializeGenomicElementType("g3",m1 , 1.0);
+	
+	
+	//chromosome 1: mitochondrial chromosome
+	initializeChromosome(1, type="H");
+	initializeGenomicElement(g2, 0, 1e4-1);
+	initializeMutationRate(1e-7);
+	initializeRecombinationRate(1e-7);
+	
+	//chromosome 2: autosome
+	initializeChromosome(2, type="A");
+	initializeGenomicElement(g1, 0, 1e5-1);
+	initializeMutationRate(1e-7);
+	initializeRecombinationRate(1e-7);
+	
+	//chromosome 3: autosome
+	initializeChromosome(3, type="A");
+	initializeGenomicElement(g1, 0, 1e5-1);
+	initializeMutationRate(1e-7);
+	initializeRecombinationRate(1e-7);
+}
+1 early() {
+	
+	//initialize population
+	sim.addSubpop("p1", 500);
+	if (asexual == T){
+		p1.setCloningRate(1.0);
+	}
+
+}
+4999 early(){
+//cache fitness
+	defineConstant("fitness", mean(p1.cachedFitness(NULL)));
+	//print(fitness);
+}
+
+5000 late() {
+	
+	//gather mitochondrial chromosomes
+	mito_chroms = c();
+	for (some in p1.individuals.haplosomes){
+		if (some.chromosome.id == 1){
+			mito_chroms = c(mito_chroms, some);
+		}
+	}
+	
+	//seed deleterious mutations into 400 mitochondrial chromosomes
+	sample(mito_chroms,400).addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
+	
+	g2.setMutationFractions(m2, 0.000000000000001);
+}
+5001:9000 early(){
+	//if current fitness == or > og fitness: end sim
+	//cache fitness
+	//defineConstant("fitness2", mean(p1.cachedFitness(NULL)));
+	fitness2 =  mean(p1.cachedFitness(NULL));
+	//print(fitness2);
+	
+	if (fitness2 > fitness) {
+		community.deregisterScriptBlock(self);
+		print("made it");
+		sim.simulationFinished();
+		//sim.outputFull();
+		//print("Mean fitness at generation 10000:");
+		//print(mean(p1.cachedFitness(NULL)));
+		//print(sum(p1.cachedFitness(NULL)));
+		//print(length(p1.individuals));
+		//stop();
+	}
+}
+
+10000 late() {
+	
+	sim.simulationFinished();
+	//sim.outputFull();
+}
+
+//10001 early() {
+//print("Mean fitness at generation 1000:");
+//print(mean(p1.cachedFitness(NULL)));
+//print(sum(p1.cachedFitness(NULL)));
+//print(length(p1.individuals));
+//}
