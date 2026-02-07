@@ -2,7 +2,7 @@
 
 initialize() {
 	//parameter to toggle asexual reproduction
-	defineConstant("asexual", T);
+	defineConstant("asexual", F);
 	
 	//create normal mutation distributions
 	//I just added the basic set that remains active the whole time
@@ -80,14 +80,17 @@ initialize() {
 	//did > b/c it's safer than ==
 	if (fitness2 > fitness) {
 		print("Simulation ended");
+		print(community.tick);
 		sim.simulationFinished();
 		//print clicks it took to get here
+		//print(community.estimatedLastTick());
 		//whatever else we need
 	}
 }
 
 10000 late() {
 	//in case it never reached OG fitness
+	print("Unable to reach required fitness");
 	sim.simulationFinished();
 	//sim.outputFull();
 }
