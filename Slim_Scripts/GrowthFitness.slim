@@ -1,12 +1,12 @@
 initialize() {
 	//parameter to toggle asexual reproduction
 	defineConstant("asexual", F);
-	defineConstant("popSize", 100);
+	defineConstant("popSize", 1000);
 
 	//Mutations: expeiment with DFE (manual section 26.11)
 
-	//neutral mutation
-	initializeMutationType("m1", 0.1, "f", 0.1);
+	//beneficial mutation
+	initializeMutationType("m1", 0.5, "f", 0.01);
 	//deleterious mutation
 	//probably create more?
 	//specifically for the preloading
@@ -71,9 +71,9 @@ initialize() {
 		print(mean(p1.cachedFitness(NULL)));
 
 		if (asexual == T){
-			writeFile(getwd() + "/asexual.txt", asString(sim.cycle), append=T);
+			writeFile(getwd() + "/asexual_cycles_to_escape.txt", asString(sim.cycle), append=T);
 		} else {
-			writeFile(getwd() + "/sexual.txt", asString(sim.cycle), append=T);
+			writeFile(getwd() + "/sexual_cycles_to_escape.txt", asString(sim.cycle), append=T);
 		}
 
 		//deregister this script block to stop this check print
@@ -88,4 +88,9 @@ initialize() {
 1001 early() { 
 	print("Mean fitness at generation 1000:");
 	print(mean(p1.cachedFitness(NULL)));
+	if (asexual == T){
+		writeFile(getwd() + "/asexual_final_fitness.txt", asString(mean(p1.cachedFitness(NULL))), append=T);
+	} else {
+		writeFile(getwd() + "/sexual_final_fitness.txt", asString(mean(p1.cachedFitness(NULL))), append=T);
+	}
 }

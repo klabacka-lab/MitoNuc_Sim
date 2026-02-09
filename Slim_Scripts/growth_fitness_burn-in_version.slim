@@ -8,8 +8,8 @@ initialize() {
 	//I just added the basic set that remains active the whole time
 	initializeMutationType("m2", 0.5, "f", 0.0); // synonymous
 	initializeMutationType("m3", 0.1, "g", -0.03, 0.2); // deleterious
-	initializeMutationType("m5", 0.7, "g", -0.19, 1.2); // fun deleterious for preloading
 	initializeMutationType("m4", 0.1, "e", 0.001); //beneficial
+	initializeMutationType("m5", 0.7, "g", -0.19, 1.2); // fun deleterious for preloading
 	
 	//genomic elements
 	//g1 to be used for autosomes
@@ -46,6 +46,7 @@ initialize() {
 	}
 
 }
+
 //remove me if you don't want to stop once we reached the OG fitness
 4999 early(){
 	//cache current fitness before preloading
