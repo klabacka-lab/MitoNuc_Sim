@@ -77,9 +77,14 @@ initialize() {
 	fitness2 =  mean(p1.cachedFitness(NULL));
 	//print(fitness2);
 	
-	//in this case, fitness can be changed to whatever we want it to be, doesn't have to be pre-drop fitness
-	//did > b/c it's safer than ==
-	if (fitness2 > fitness) {
+	//if (fitness2 >= fitness) {
+	
+	//when the threshold is the OG fitness, everybody usually hits it pretty quickly
+	//with 1.0 as the threshold, asexual is really having a tough time hitting it, while sexual isn't
+	//granted, this is with negative mutations included with neutral and beneficial. But those are consistent between the two and more real world than having only neutral mutations.
+	
+	
+	if (fitness2 >= 1.0) {
 		print("Simulation ended");
 		print(community.tick);
 		sim.simulationFinished();
