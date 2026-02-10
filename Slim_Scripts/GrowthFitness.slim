@@ -3,7 +3,7 @@ initialize() {
 	defineConstant("asexual", F);
 	defineConstant("popSize", 1000);
 
-	//Mutations: expeiment with DFE (manual section 26.11)
+	//Mutations: experiment with DFE (manual section 26.11)
 
 	//beneficial mutation
 	initializeMutationType("m1", 0.5, "f", 0.01);
@@ -65,7 +65,7 @@ initialize() {
 
 2:999 early() {
 	if (mean(p1.cachedFitness(NULL)) >= 1.0){
-		//Send a meessage when threshold is reached
+		//Send a message when threshold is reached
 		print("Mean fitness at generation " + sim.cycle + " has reached 1.0");
 		print("Mean fitness at generation " + sim.cycle + ":");
 		print(mean(p1.cachedFitness(NULL)));
