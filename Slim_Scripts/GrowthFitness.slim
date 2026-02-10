@@ -23,6 +23,7 @@ initialize() {
 	initializeChromosome(1, type="H");
 	initializeGenomicElement(g1, 0, 1e4-1);
 	initializeMutationRate(1e-5);
+	//SHould mitochindria recombine?
 	initializeRecombinationRate(1e-7);
 
 	//chromosome 2: autosome
@@ -37,6 +38,8 @@ initialize() {
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
 }
+
+
 1 early() {
 	
 	//initialize population
@@ -52,10 +55,12 @@ initialize() {
 			mito_chroms = c(mito_chroms, some);
 		}
 	}
-	//seed deleterious mutations into 400 mitochondrial chromosomes
-	sample(mito_chroms, asInteger(0.95 * popSize)).addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
+	//For loop to introdye liek 7 mutarion?
 
+	//seed deleterious mutations into 400 mitochondrial chromosomes
+	sample(mito_chroms, asInteger(popSize)).addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
 }
+
 
 2 early() {
 	print("Mean fitness at generation 1:");
