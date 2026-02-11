@@ -1,6 +1,9 @@
 initialize() {
-	//parameter to toggle asexual reproduction
-	defineConstant("asexual", F);
+
+	if (!exists("asexual")){
+    	//parameter to toggle asexual reproduction
+		defineConstant("asexual", F);
+	}
 	defineConstant("popSize", 1000);
 
 	//Mutations: experiment with DFE (manual section 26.11)

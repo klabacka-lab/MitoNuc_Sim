@@ -1,4 +1,25 @@
 #!/bin/bash
-for i in {1..100}; do
-    slim GrowthFitness.slim
+
+rm -f sexual_cycles_to_escape.txt
+rm -f asexual_cycles_to_escape.txt
+rm -f sexual_final_fitness.txt
+rm -f asexual_final_fitness.txt
+
+for val in T F; do
+    for i in {1..100}; do
+        slim -d asexual="\"$val\"" GrowthFitness.slim
+    done
 done
+
+source venv/bin/activate
+echo ""
+echo ""
+echo "Cycles to escape deleterious mutation: an analysis"
+echo ""
+python3 stat_analysis.py asexual_cycles_to_escape.txt sexual_cycles_to_escape.txt escape_cycles_distribution.png
+echo ""
+echo ""
+echo "Final fitness: an analysis"
+echo ""
+python3 stat_analysis.py asexual_final_fitness.txt sexual_final_fitness.txt fitness_distribution.png
+
