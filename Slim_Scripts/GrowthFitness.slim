@@ -2,9 +2,13 @@ initialize() {
 	
 	if (!exists("asexual")){
 		//parameter to toggle asexual reproduction
-		defineConstant("asexual", F);
+		defineConstant("asexual", T);
 	}
-	defineConstant("popSize", 1000);
+	defineConstant("popSize", 100);
+
+	//Enable pedigree tracking
+	initializeSLiMOptions(keepPedigrees=T);
+	
 	
 	//Mutations: experiment with DFE (manual section 26.11)
 	
@@ -40,6 +44,47 @@ initialize() {
 	initializeGenomicElement(g2, 0, 1e5-1);
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
+
+}
+
+modifyChild() {
+	print("A procreation event occurred.");
+	childIDs = child.haplosomes.mutations.id;
+
+	p1IDs = parent1.haplosomes.mutations.id;
+	p2IDs = (isNULL(parent2) ? integer(0) else parent2.haplosomes.mutations.id);
+	inheritedPool = unique(c(p1IDs, p2IDs));
+
+
+	print("");
+	print("Parent 1 mutations: " + asString(p1IDs));
+	print("");
+	print("Parent 2 mutations: " + asString(p2IDs));
+	print("");
+	print("Child mutations: " + asString(childIDs));
+	print("");
+
+	gained = childIDs[match(childIDs, inheritedPool) == -1];
+
+	cat("cycle " + asString(sim.cycle) +
+		" child=" + asString(child.pedigreeID) +
+		" gainedNew=" + asString(size(gained)) +
+		"\n");
+
+
+	for (mid in gained) {
+		m = sim.mutations[sim.mutations.id == mid][0];
+
+		cat("  new mut id=" + asString(m.id) +
+			" chr=" + asString(m.chromosome.id) +
+			" pos=" + asString(m.position) +
+			" type=" + asString(m.mutationType.id) +
+			" s=" + asString(m.selectionCoeff) +
+			" origin=" + asString(m.originTick) +
+			"\n");
+	}
+
+    return T;
 }
 
 
@@ -60,10 +105,8 @@ initialize() {
 			mito_chroms = c(mito_chroms, some);
 		}
 	}
-	//For loop to introdye liek 7 mutarion?
-	for (index in 1:20)
-		//seed deleterious mutations into mitochondrial chromosomes
-		mito_chroms.addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
+	//seed deleterious mutations into mitochondrial chromosomes
+	mito_chroms.addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
 }
 
 
@@ -73,6 +116,8 @@ initialize() {
 }
 
 2: early() {
+
+
 	if (mean(p1.cachedFitness(NULL)) >= 1.0){
 		//Send a message when threshold is reached
 		print("Mean fitness at generation " + sim.cycle + " has reached 1.0");

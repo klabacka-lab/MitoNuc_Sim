@@ -1,3 +1,28 @@
+12 February 2026
+
+Group meeting
+
+Sim 1
+Epistasis methods
+epistaic interaction of 5 nuclear loci with 1 mitochondrial loci: should it be symmetic
+make decsion on genome sizes?
+
+Slim 2
+
+
+10 February 2026
+
+Sim 2 ingredient list
+4 mutation types from SLiM manual recipe 
+2 genomic elements - g1 is mitochondrial DNA and experiences the mutation profile thereof, g2 for autosomes
+3 chromosomes- 1 mitochondrial, 2 autosomes. Mutation rate defined differently for each
+Single sub pop
+Asexual trigger for cloning rate
+Initial mutation dump with loop
+file writing for escape-cycles and final fitness
+
+Todo list 
+
 February 5 2026
 Progress Report Meeting
 
