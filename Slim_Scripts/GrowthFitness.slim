@@ -4,7 +4,7 @@ initialize() {
 		//parameter to toggle asexual reproduction
 		defineConstant("asexual", T);
 	}
-	defineConstant("popSize", 100);
+	defineConstant("popSize", 1000);
 
 	//Enable pedigree tracking
 	initializeSLiMOptions(keepPedigrees=T);
@@ -47,47 +47,6 @@ initialize() {
 
 }
 
-modifyChild() {
-	print("A procreation event occurred.");
-	childIDs = child.haplosomes.mutations.id;
-
-	p1IDs = parent1.haplosomes.mutations.id;
-	p2IDs = (isNULL(parent2) ? integer(0) else parent2.haplosomes.mutations.id);
-	inheritedPool = unique(c(p1IDs, p2IDs));
-
-
-	print("");
-	print("Parent 1 mutations: " + asString(p1IDs));
-	print("");
-	print("Parent 2 mutations: " + asString(p2IDs));
-	print("");
-	print("Child mutations: " + asString(childIDs));
-	print("");
-
-	gained = childIDs[match(childIDs, inheritedPool) == -1];
-
-	cat("cycle " + asString(sim.cycle) +
-		" child=" + asString(child.pedigreeID) +
-		" gainedNew=" + asString(size(gained)) +
-		"\n");
-
-
-	for (mid in gained) {
-		m = sim.mutations[sim.mutations.id == mid][0];
-
-		cat("  new mut id=" + asString(m.id) +
-			" chr=" + asString(m.chromosome.id) +
-			" pos=" + asString(m.position) +
-			" type=" + asString(m.mutationType.id) +
-			" s=" + asString(m.selectionCoeff) +
-			" origin=" + asString(m.originTick) +
-			"\n");
-	}
-
-    return T;
-}
-
-
 1 early() {
 	
 	//initialize population
@@ -107,6 +66,8 @@ modifyChild() {
 	}
 	//seed deleterious mutations into mitochondrial chromosomes
 	mito_chroms.addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
+
+	return T;
 }
 
 
