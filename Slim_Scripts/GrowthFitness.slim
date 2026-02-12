@@ -1,40 +1,40 @@
 initialize() {
-
+	
 	if (!exists("asexual")){
-    	//parameter to toggle asexual reproduction
+		//parameter to toggle asexual reproduction
 		defineConstant("asexual", F);
 	}
 	defineConstant("popSize", 1000);
-
+	
 	//Mutations: experiment with DFE (manual section 26.11)
-
+	
 	//create normal mutation distributions
 	//I just added the basic set that remains active the whole time
 	initializeMutationType("m2", 0.5, "f", 0.0); // synonymous
 	initializeMutationType("m3", 0.1, "g", -0.03, 0.2); // deleterious
 	initializeMutationType("m5", 0.7, "g", -0.19, 1.2); // fun deleterious for preloading
 	initializeMutationType("m4", 0.1, "e", 0.001); //beneficial
-
+	
 	//genomic elements
 	//mito
 	initializeGenomicElementType("g1",c(m2, m3, m4) , c(1,1,1));
 	//autosomal
 	initializeGenomicElementType("g2",c(m2, m3, m4) , c(1,1,1));
-
-
+	
+	
 	//chromosome 1: mitochondrial chromosome
 	initializeChromosome(1, type="H");
 	initializeGenomicElement(g1, 0, 1e4-1);
 	initializeMutationRate(1e-5);
 	//SHould mitochindria recombine?
 	initializeRecombinationRate(1e-7);
-
+	
 	//chromosome 2: autosome
 	initializeChromosome(2, type="A");
 	initializeGenomicElement(g2, 0, 1e5-1);
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
-
+	
 	//chromosome 3: autosome
 	initializeChromosome(3, type="A");
 	initializeGenomicElement(g2, 0, 1e5-1);
@@ -50,7 +50,9 @@ initialize() {
 	if (asexual == T){
 		p1.setCloningRate(1.0);
 	}
+}
 
+1 late() {
 	//gather mitochondrial chromosomes
 	mito_chroms = c();
 	for (some in p1.individuals.haplosomes){
@@ -59,9 +61,9 @@ initialize() {
 		}
 	}
 	//For loop to introdye liek 7 mutarion?
-
-	//seed deleterious mutations into 400 mitochondrial chromosomes
-	sample(mito_chroms, asInteger(popSize)).addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
+	for (index in 1:20)
+		//seed deleterious mutations into mitochondrial chromosomes
+		mito_chroms.addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
 }
 
 
@@ -76,23 +78,23 @@ initialize() {
 		print("Mean fitness at generation " + sim.cycle + " has reached 1.0");
 		print("Mean fitness at generation " + sim.cycle + ":");
 		print(mean(p1.cachedFitness(NULL)));
-
+		
 		if (asexual == T){
 			writeFile(getwd() + "/asexual_cycles_to_escape.txt", asString(sim.cycle), append=T);
 		} else {
 			writeFile(getwd() + "/sexual_cycles_to_escape.txt", asString(sim.cycle), append=T);
 		}
-
+		
 		//deregister this script block to stop this check print
 		community.deregisterScriptBlock(self);
 	}}
 
-1000 late() { 
+1000 late() {
 	//sim.simulationFinished(); 
 	//sim.outputFull();
 }
 
-1001 early() { 
+1001 early() {
 	//print(community.tick);
 	print("Mean fitness at generation 1000:");
 	print(mean(p1.cachedFitness(NULL)));
