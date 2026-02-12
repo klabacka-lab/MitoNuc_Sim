@@ -2,7 +2,7 @@ initialize() {
 	
 	if (!exists("asexual")){
 		//parameter to toggle asexual reproduction
-		defineConstant("asexual", F);
+		defineConstant("asexual", T);
 	}
 	defineConstant("popSize", 1000);
 	
@@ -13,7 +13,7 @@ initialize() {
 	initializeMutationType("m2", 0.5, "f", 0.0); // synonymous
 	initializeMutationType("m3", 0.1, "g", -0.03, 0.2); // deleterious
 	initializeMutationType("m5", 0.7, "g", -0.19, 1.2); // fun deleterious for preloading
-	initializeMutationType("m4", 0.1, "e", 0.001); //beneficial
+	initializeMutationType("m4", 0.1, "e", 0.01); //beneficial
 	
 	//genomic elements
 	//mito
@@ -52,18 +52,25 @@ initialize() {
 	}
 }
 
-1 late() {
+1 modifyChild() {
 	//gather mitochondrial chromosomes
 	mito_chroms = c();
-	for (some in p1.individuals.haplosomes){
-		if (some.chromosome.id == 1){
-			mito_chroms = c(mito_chroms, some);
+	for (mito in child.haplosomes){
+		if (mito.chromosome.id == 1){
+			mito_chroms = c(mito_chroms, mito);
 		}
 	}
 	//For loop to introdye liek 7 mutarion?
-	for (index in 1:20)
-		//seed deleterious mutations into mitochondrial chromosomes
-		mito_chroms.addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
+	//for (index in 1:20)
+	//seed deleterious mutations into mitochondrial chromosomes
+	mito_chroms.addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
+	
+	if(sim.cycle < 3){
+		return T;
+	}
+	
+	return F;
+
 }
 
 
