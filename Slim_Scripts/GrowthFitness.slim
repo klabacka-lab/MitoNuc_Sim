@@ -45,6 +45,9 @@ initialize() {
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
 
+	//Vector to store fitness over time
+	fitness_over_time = c();
+
 }
 
 1 early() {
@@ -77,8 +80,6 @@ initialize() {
 }
 
 2: early() {
-
-
 	if (mean(p1.cachedFitness(NULL)) >= 1.0){
 		//Send a message when threshold is reached
 		print("Mean fitness at generation " + sim.cycle + " has reached 1.0");
@@ -93,7 +94,10 @@ initialize() {
 		
 		//deregister this script block to stop this check print
 		community.deregisterScriptBlock(self);
-	}}
+	}
+	
+
+}
 
 1000 late() {
 	//sim.simulationFinished(); 
@@ -109,4 +113,21 @@ initialize() {
 	} else {
 		writeFile(getwd() + "/sexual_final_fitness.txt", asString(mean(p1.cachedFitness(NULL))), append=T);
 	}
+}
+
+1:1001 late() {
+	//track fitness over time
+	fitness_over_time = c(fitness_over_time, mean(p1.cachedFitness(NULL)));
+}
+
+1001 late() {
+	//output fitness over time
+	if (asexual == T){
+		writeFile(getwd() + "/asexual_fitness_over_time.txt", asString(fitness_over_time), append=T);
+	} else {
+		writeFile(getwd() + "/sexual_fitness_over_time.txt", asString(fitness_over_time), append=T);
+	}
+
+	//print size of exported vector
+	print(length(fitness_over_time) + "entries exported");
 }
