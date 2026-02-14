@@ -56,7 +56,7 @@ def generate_summary(mean1, mean2, std1, std2, shapiro1, shapiro2, ttest, ks):
 
 
 if len(sys.argv) != 4:
-    print("Usage: python analyze_distributions.py file1.txt file2.txt output.png")
+    print("Usage: python stat_analysis.py file1.txt file2.txt output.png")
     sys.exit(1)
 
 file1, file2, output_png = sys.argv[1], sys.argv[2], sys.argv[3]
