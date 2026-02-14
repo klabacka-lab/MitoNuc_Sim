@@ -133,9 +133,9 @@ initialize() {
     v = p1.getValue("fitness_over_time");
 	s = paste(v, sep=" ");
     if (asexual == T)
-        writeFile(getwd() + "/asexual_fitness_over_time.txt", s, append=F);
+        writeFile(getwd() + "/asexual_fitness_over_time.txt", s, append=T);
     else
-        writeFile(getwd() + "/sexual_fitness_over_time.txt", s, append=F);
+        writeFile(getwd() + "/sexual_fitness_over_time.txt", s, append=T);
 
     print(length(v) + " entries exported");
 }
