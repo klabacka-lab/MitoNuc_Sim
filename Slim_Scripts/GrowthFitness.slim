@@ -82,7 +82,9 @@ initialize() {
 }
 
 2: early() {
-	if (mean(p1.cachedFitness(NULL)) >= 1.0){
+	//TEMPORARILY SET AT 0.8 TO TEST
+	//PLEASE CHANGE BACK TO 1.0 FOR FINAL RUNS
+	if (mean(p1.cachedFitness(NULL)) >= 0.8){
 		//Send a message when threshold is reached
 		print("Mean fitness at generation " + sim.cycle + " has reached 1.0");
 		print("Mean fitness at generation " + sim.cycle + ":");
