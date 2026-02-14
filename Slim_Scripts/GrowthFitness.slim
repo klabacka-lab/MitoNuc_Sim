@@ -127,17 +127,15 @@ initialize() {
     v = p1.getValue("fitness_over_time");
     v = c(v, f);
     p1.setValue("fitness_over_time", v);
-
-    print("Tracking: " + sim.cycle);
-    print("Length of fitness vector: " + length(v));
 }
 
 1001 late() {
     v = p1.getValue("fitness_over_time");
+	s = paste(v, sep=" ");
     if (asexual == T)
-        writeFile(getwd() + "/asexual_fitness_over_time.txt", asString(v), append=F);
+        writeFile(getwd() + "/asexual_fitness_over_time.txt", s, append=F);
     else
-        writeFile(getwd() + "/sexual_fitness_over_time.txt", asString(v), append=F);
+        writeFile(getwd() + "/sexual_fitness_over_time.txt", s, append=F);
 
     print(length(v) + " entries exported");
 }
