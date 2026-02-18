@@ -2,7 +2,7 @@ initialize() {
 	
 	if (!exists("asexual")){
 		//parameter to toggle asexual reproduction
-		defineConstant("asexual", F);
+		defineConstant("asexual", T);
 	}
 	defineConstant("popSize", 1000);
 
@@ -15,17 +15,18 @@ initialize() {
 	//Mutations: experiment with DFE (manual section 26.11)
 	
 	//create normal mutation distributions
-	//I just added the basic set that remains active the whole time
-	initializeMutationType("m2", 0.5, "f", 0.0); // synonymous
-	initializeMutationType("m3", 0.1, "f", -0.1); // deleterious
+	//Stole Jac and Jason's mutations, but increased the positive mutations slightly
+	initializeMutationType("m2", 0.5, "g", 0.0, 1); // synonymous
+	initializeMutationType("m3", 0.1, "g", -0.05, 0.2); // deleterious
+	//making m5 fixed resolves the problem of the graph shooting up too quickly
 	initializeMutationType("m5", 0.7, "f", -0.19); // fun deleterious for preloading
-	initializeMutationType("m4", 0.1, "f", 0.007); //beneficial
+	initializeMutationType("m4", 0.1, "g", 0.005, 1); //beneficial
 	
 	//genomic elements
 	//mito
-	initializeGenomicElementType("g1",c(m2, m3, m4) , c(1,1,1));
+	initializeGenomicElementType("g1",c(m2, m3, m4) , c(1,0.98,0.15));
 	//autosomal
-	initializeGenomicElementType("g2",c(m2, m3, m4) , c(1,1,1));
+	initializeGenomicElementType("g2",c(m2, m3, m4) , c(1,0.98,0.15));
 	
 	
 	//chromosome 1: mitochondrial chromosome
