@@ -25,3 +25,7 @@ echo "-----Final fitness: an analysis-----"
 echo ""
 python3 stat_analysis.py asexual_final_fitness.txt sexual_final_fitness.txt fitness_distribution.png
 
+python3 figure_maker.py
+
+echo "Final figure saved to fitness_over_time.png"
+
