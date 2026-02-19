@@ -20,8 +20,6 @@ asexual_arr = load_2d_array("asexual_fitness_over_time.txt")
 sexual_arr = sexual_arr.mean(axis=0)
 asexual_arr = asexual_arr.mean(axis=0)
 
-print(sexual_arr.shape)
-print(asexual_arr.shape)
 cycles = np.array(range(1, sexual_arr.shape[0] + 1))
 
 
@@ -42,15 +40,33 @@ axes[0].legend()
 axes[0].grid(True)
 
 # ----- Right: Final fitness distribution (boxplots)
-axes[1].hist(asexual_final_fitness, bins=15, alpha=0.6, label="Asexual", color="blue")
-axes[1].hist(sexual_final_fitness, bins=15, alpha=0.6, label="Sexual", color="orange")
+BOXPLOT = True
+if BOXPLOT:
+    bp = axes[1].boxplot(
+        [asexual_final_fitness, sexual_final_fitness],
+        tick_labels=["Asexual", "Sexual"],
+        patch_artist=True  # <-- allows filling colors
+    )
+
+    colors = ["blue", "orange"]
+
+    for patch, color in zip(bp["boxes"], colors):
+        patch.set_facecolor(color)
+        patch.set_alpha(0.6)
+
+    for median in bp["medians"]:
+        median.set_color("black")
+        median.set_linewidth(2)
+
+else:
+    axes[1].hist(asexual_final_fitness, bins=15, alpha=0.6, label="Asexual", color="blue")
+    axes[1].hist(sexual_final_fitness, bins=15, alpha=0.6, label="Sexual", color="orange")
 
 axes[1].set_xlabel("Final Fitness")
 axes[1].set_ylabel("Frequency")
 axes[1].set_title("Final Fitness Distribution")
-axes[1].legend()
+#axes[1].legend()
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.savefig("fitness_over_time.png", dpi=300)
-plt.show()

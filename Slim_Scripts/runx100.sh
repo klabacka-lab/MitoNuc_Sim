@@ -1,5 +1,7 @@
 #!/bin/bash
 
+start=$(date +%s)
+
 rm -f sexual_cycles_to_escape.txt
 rm -f asexual_cycles_to_escape.txt
 rm -f sexual_final_fitness.txt
@@ -28,4 +30,7 @@ python3 stat_analysis.py asexual_final_fitness.txt sexual_final_fitness.txt fitn
 python3 figure_maker.py
 
 echo "Final figure saved to fitness_over_time.png"
+
+end=$(date +%s)
+echo "Elapsed time of simulation: $((end - start)) seconds"
 
