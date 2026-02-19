@@ -5,7 +5,7 @@ initialize() {
 	initializeSex();
 	
 	
-	initializeMutationType("m1",0.5, "g", -0.01, 0.2); //Nuclear Neg
+	initializeMutationType("m1", 0.5, "g", -0.01, 0.2); //Nuclear Neg
 	initializeMutationType("m2", 1.0, "g", -0.05, 0.2); //Mitochondrial Neg
 	initializeMutationType("m3", 1.0, "g", 0.001, 1); //Mitochondrial Pos
 	initializeMutationType("m4", 0.5, "g", 0.001, 1); //Nuc Positive
@@ -110,3 +110,4 @@ mutationEffect(m1) {
 sim.outputFull();
  cat(sim.getValue("MaxFitness") + "\n");
 sim.simulationFinished(); }
+
