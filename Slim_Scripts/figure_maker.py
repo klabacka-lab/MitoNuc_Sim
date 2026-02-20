@@ -21,6 +21,9 @@ def load_2d_array(path: str) -> np.ndarray:
 sexual_arr = load_2d_array("sexual_fitness_over_time.txt")
 asexual_arr = load_2d_array("asexual_fitness_over_time.txt")
 
+sexual_std_dev = sexual_arr.std(axis=0)
+asexual_arr = asexual_arr.std(axis=0)
+
 sexual_arr = sexual_arr.mean(axis=0)
 asexual_arr = asexual_arr.mean(axis=0)
 
