@@ -44,17 +44,15 @@ def model_function(x, a, b, c):
 
 # Fit curve
 popt, pcov = curve_fit(model_function, cycles, sexual_arr, p0 = [1.0, 0.1, 0.001])
-print("Fitted parameters:", popt)
 #print the lie of best fit as string 
-print(f"Line of best fit: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
+print(f"Line of best fit for sexual: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
 
-# Plot
-plt.scatter(cycles, sexual_arr, label="Data")
-plt.plot(cycles, model_function(cycles, *popt), color='red', label="Fit")
-plt.xlabel("x")
-plt.ylabel("y")
-plt.legend()
-plt.savefig("regression_test.png", dpi=300)
+# Fit curve
+popt, pcov = curve_fit(model_function, cycles, asexual_arr, p0 = [1.0, 0.1, 0.001])
+#print the lie of best fit as string 
+print(f"Line of best fit for asexual: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
+
+
 
 #Load final fitness data
 sexual_final_fitness = np.loadtxt("sexual_final_fitness.txt")
