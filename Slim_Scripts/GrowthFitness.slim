@@ -17,7 +17,7 @@ initialize() {
 	
 	//create normal mutation distributions
 	if (use_alts == F){
-		//I just added the basic set that remains active the whole time
+		//Negligible mutations
 		initializeMutationType("m2", 0.5, "f", 0.0); // synonymous
 		initializeMutationType("m3", 0.1, "g", -0.0, 0.1); // deleterious
 		initializeMutationType("m5", 0.7, "g", -0.19, 1.2); // fun deleterious for preloading
@@ -29,11 +29,10 @@ initialize() {
 		//autosomal
 		initializeGenomicElementType("g2",c(m2, m3, m4) , c(1,1,1));
 	} else {
-		//Alt mutation numbers with minimum(ish) effect. Both consistently hit 1.0 but the overall shape remains the same... just wobbly
-		//Stole Jac and Jason's mutations, but increased the positive mutations slightly
+		//alt mutations
 		initializeMutationType("m2", 0.5, "g", 0.0, 1); // synonymous
 		initializeMutationType("m3", 0.1, "g", -0.05, 0.2); // deleterious
-		//making m5 fixed resolves the problem of the graph shooting up too quickly
+		//fixed m5
 		initializeMutationType("m5", 0.7, "f", -0.19); // fun deleterious for preloading
 		initializeMutationType("m4", 0.1, "g", 0.005, 1); //beneficial
 
@@ -46,17 +45,20 @@ initialize() {
 
 
 	
-	
+	//depending on how realistic we want to be, we may want to increase chromosome length
 	
 	//chromosome 1: mitochondrial chromosome
 	initializeChromosome(1, type="HF");
+	//mt chromosome is typically 16.5k base pairs
+	//ours is currently about 10k
 	initializeGenomicElement(g1, 0, 1e4-1);
 	initializeMutationRate(1e-5);
-	//SHould mitochindria recombine?
 	//initializeRecombinationRate(1e-7);
 	
 	//chromosome 2: autosome
 	initializeChromosome(2, type="A");
+	//nuclear genome is 3.1 billion base pairs
+	//ours is like 100k
 	initializeGenomicElement(g2, 0, 1e5-1);
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
@@ -75,6 +77,7 @@ initialize() {
 	p1.setValue("fitness_over_time", c());
 }
 
+//seeds deleterious mutations
 1 modifyChild() {
 	//gather mitochondrial chromosomes
 	mito_chroms = c();
