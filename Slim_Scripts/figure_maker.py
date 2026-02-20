@@ -39,7 +39,7 @@ axes[0].plot(cycles, sexual_arr, label="Sexual", color="orange")
 axes[0].set_xlabel("Cycle")
 axes[0].set_ylabel("Mean Fitness")
 if LOG_SCALE:
-    axes[0].yscale('log')      # Logarithmic y-axis
+    axes[0].set_yscale('log')      # Logarithmic y-axis
 axes[0].set_title("Mean Fitness Over Time")
 axes[0].legend()
 axes[0].grid(True)
