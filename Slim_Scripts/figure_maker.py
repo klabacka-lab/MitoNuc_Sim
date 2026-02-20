@@ -39,8 +39,8 @@ cycles = np.array(range(1, sexual_arr.shape[0] + 1))
 from scipy.optimize import curve_fit
 
 # Define asymptotic function
-def asymptotic(x, a, b):
-    return 1 - a * np.exp(-b * x)
+def asymptotic(x, k, c):
+    return 1 - k / (x + c)
 
 # Fit curve
 popt, pcov = curve_fit(asymptotic, cycles, sexual_arr)
