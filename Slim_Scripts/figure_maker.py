@@ -28,12 +28,31 @@ asexual_std_dev = asexual_arr.std(axis=0)
 sexual_arr = sexual_arr.mean(axis=0)
 asexual_arr = asexual_arr.mean(axis=0)
 
+
+
 if MEASURE_FITNESS_GAP:
     sexual_arr = 1- sexual_arr
     asexual_arr = 1- asexual_arr
 
 cycles = np.array(range(1, sexual_arr.shape[0] + 1))
 
+from scipy.optimize import curve_fit
+
+# Define asymptotic function
+def asymptotic(x, a, b):
+    return 1 - a * np.exp(-b * x)
+
+# Fit curve
+popt, pcov = curve_fit(asymptotic, cycles, sexual_arr)
+print("Fitted parameters:", popt)
+
+# Plot
+plt.scatter(cycles, sexual_arr, label="Data")
+plt.plot(cycles, asymptotic(cycles, *popt), color='red', label="Fit")
+plt.xlabel("x")
+plt.ylabel("y")
+plt.legend()
+plt.savefig("regression_test.png", dpi=300)
 
 #Load final fitness data
 sexual_final_fitness = np.loadtxt("sexual_final_fitness.txt")
