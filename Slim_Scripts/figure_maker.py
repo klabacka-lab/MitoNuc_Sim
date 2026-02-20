@@ -7,6 +7,7 @@ from pathlib import Path
 BOXPLOT = True
 LOG_SCALE = False
 MEASURE_FITNESS_GAP = False
+SCATER = True
 
 def load_2d_array(path: str) -> np.ndarray:
     rows = []
@@ -41,8 +42,12 @@ asexual_final_fitness = np.loadtxt("asexual_final_fitness.txt")
 fig, axes = plt.subplots(1, 2, figsize=(12,5))
 
 # ----- Left: Mean fitness over time
-axes[0].scatter(cycles, asexual_arr, label="Asexual", color="blue")
-axes[0].scatter(cycles, sexual_arr, label="Sexual", color="orange")
+if SCATTER:
+    axes[0].scatter(cycles, asexual_arr, label="Asexual", color="blue", s = 5)
+    axes[0].scatter(cycles, sexual_arr, label="Sexual", color="orange", s = 5)
+else:
+    axes[0].plot(cycles, asexual_arr, label="Asexual", color="blue")
+    axes[0].plot(cycles, sexual_arr, label="Sexual", color="orange")
 
 axes[0].set_xlabel("Cycle")
 axes[0].set_ylabel("Mean Fitness")
