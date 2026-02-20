@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 BOXPLOT = True
-LOG_SCALE = False
+LOG_SCALE = True
+MEASURE_FITNESS_GAP = True
 
 def load_2d_array(path: str) -> np.ndarray:
     rows = []
@@ -23,8 +24,9 @@ asexual_arr = load_2d_array("asexual_fitness_over_time.txt")
 sexual_arr = sexual_arr.mean(axis=0)
 asexual_arr = asexual_arr.mean(axis=0)
 
-sexual_arr = 1- sexual_arr
-asexual_arr = 1- asexual_arr
+if MEASURE_FITNESS_GAP:
+    sexual_arr = 1- sexual_arr
+    asexual_arr = 1- asexual_arr
 
 cycles = np.array(range(1, sexual_arr.shape[0] + 1))
 
