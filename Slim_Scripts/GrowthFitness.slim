@@ -1,5 +1,5 @@
 initialize() {
-	
+	print("Initializing simulation...");
 	if (!exists("asexual")){
 		//parameter to toggle asexual reproduction
 		defineConstant("asexual", T);
@@ -148,4 +148,5 @@ initialize() {
         writeFile(getwd() + "/sexual_fitness_over_time.txt", s, append=T);
 
     print(length(v) + " entries exported");
+	print("Simulation complete")
 }
