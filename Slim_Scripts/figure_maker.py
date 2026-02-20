@@ -4,6 +4,9 @@ import sys
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+BOXPLOT = True
+LOG_SCALE = True
+
 def load_2d_array(path: str) -> np.ndarray:
     rows = []
     with open(path, "r") as f:
@@ -35,12 +38,13 @@ axes[0].plot(cycles, sexual_arr, label="Sexual", color="orange")
 
 axes[0].set_xlabel("Cycle")
 axes[0].set_ylabel("Mean Fitness")
+if LOG_SCALE:
+    axes[0].yscale('log')      # Logarithmic y-axis
 axes[0].set_title("Mean Fitness Over Time")
 axes[0].legend()
 axes[0].grid(True)
 
 # ----- Right: Final fitness distribution (boxplots)
-BOXPLOT = True
 if BOXPLOT:
     bp = axes[1].boxplot(
         [asexual_final_fitness, sexual_final_fitness],

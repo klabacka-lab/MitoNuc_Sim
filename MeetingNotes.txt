@@ -1,9 +1,15 @@
 19 February 2026
 
 Sim 1
-
 1. Figure out fitness funtion 0-d istribution type - meaning of value 50. Epistasis
 2. mutational fitness value. sum nuckear fitnesses and mutlply by mitochondrial - normalize to normal distribution to make comparable
+
+Figure notes;
+log scale?
+box plot or error bars
+connect relation - dashed line
+run for longer
+
 
 
 
