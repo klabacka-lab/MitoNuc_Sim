@@ -30,10 +30,12 @@ initialize() {
 		initializeGenomicElementType("g2",c(m2, m3, m4) , c(1,1,1));
 	} else {
 		//Alt mutation numbers with minimum(ish) effect. Both consistently hit 1.0 but the overall shape remains the same... just wobbly
-		initializeMutationType("m2", 0.5, "f", 0.0); // synonymous
-		initializeMutationType("m3", 0.1, "g", -0.1, 0.1); // deleterious
-		initializeMutationType("m5", 0.7, "g", -0.19, 1.2); // fun deleterious for preloading
-		initializeMutationType("m4", 0.1, "g", 0.001, 1); //beneficial
+		//Stole Jac and Jason's mutations, but increased the positive mutations slightly
+		initializeMutationType("m2", 0.5, "g", 0.0, 1); // synonymous
+		initializeMutationType("m3", 0.1, "g", -0.05, 0.2); // deleterious
+		//making m5 fixed resolves the problem of the graph shooting up too quickly
+		initializeMutationType("m5", 0.7, "f", -0.19); // fun deleterious for preloading
+		initializeMutationType("m4", 0.1, "g", 0.005, 1); //beneficial
 
 
 		//mito
