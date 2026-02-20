@@ -39,16 +39,18 @@ cycles = np.array(range(1, sexual_arr.shape[0] + 1))
 from scipy.optimize import curve_fit
 
 # Define asymptotic function
-def asymptotic(x, k, c):
-    return 1 - k / (x + c)
+def model_function(x, a, b, c):
+    return a - b * np.exp(-c * x)
 
 # Fit curve
-popt, pcov = curve_fit(asymptotic, cycles, sexual_arr)
+popt, pcov = curve_fit(model_function, cycles, sexual_arr, p0 = [1.0, 0.1, 0.001])
 print("Fitted parameters:", popt)
+#print the lie of best fit as string 
+print(f"Line of best fit: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
 
 # Plot
 plt.scatter(cycles, sexual_arr, label="Data")
-plt.plot(cycles, asymptotic(cycles, *popt), color='red', label="Fit")
+plt.plot(cycles, model_function(cycles, *popt), color='red', label="Fit")
 plt.xlabel("x")
 plt.ylabel("y")
 plt.legend()
