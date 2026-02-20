@@ -16,7 +16,7 @@ initialize() {
 	defineConstant("use_alts", T);
 	
 	//create normal mutation distributions
-	if (use_alts == T){
+	if (use_alts == F){
 		//I just added the basic set that remains active the whole time
 		initializeMutationType("m2", 0.5, "f", 0.0); // synonymous
 		initializeMutationType("m3", 0.1, "g", -0.0, 0.1); // deleterious
