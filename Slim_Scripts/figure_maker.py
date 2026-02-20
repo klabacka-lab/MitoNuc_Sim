@@ -7,7 +7,7 @@ from pathlib import Path
 BOXPLOT = True
 LOG_SCALE = False
 MEASURE_FITNESS_GAP = False
-SCATTER = True
+SCATTER = False
 
 def load_2d_array(path: str) -> np.ndarray:
     rows = []
