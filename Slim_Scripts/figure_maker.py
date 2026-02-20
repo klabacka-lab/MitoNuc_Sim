@@ -43,8 +43,8 @@ fig, axes = plt.subplots(1, 2, figsize=(12,5))
 
 # ----- Left: Mean fitness over time
 if SCATTER:
-    axes[0].scatter(cycles, asexual_arr, label="Asexual", color="blue", s = 5)
-    axes[0].scatter(cycles, sexual_arr, label="Sexual", color="orange", s = 5)
+    axes[0].scatter(cycles, asexual_arr, label="Asexual", color="blue", s = 1)
+    axes[0].scatter(cycles, sexual_arr, label="Sexual", color="orange", s = 1)
 else:
     axes[0].plot(cycles, asexual_arr, label="Asexual", color="blue")
     axes[0].plot(cycles, sexual_arr, label="Sexual", color="orange")
