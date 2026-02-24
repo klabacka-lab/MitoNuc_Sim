@@ -120,12 +120,12 @@ initialize() {
 
 }
 
-10000 late() {
+1000 late() {
 	//sim.simulationFinished(); 
 	//sim.outputFull();
 }
 
-10001 early() {
+1001 early() {
 	//print(community.tick);
 	print("Mean fitness at generation 1000:");
 	print(mean(p1.cachedFitness(NULL)));
@@ -136,7 +136,7 @@ initialize() {
 	}
 }
 
-2:10001 early() {
+2:1001 early() {
     f = mean(p1.cachedFitness(NULL));
 
     v = p1.getValue("fitness_over_time");
@@ -144,7 +144,7 @@ initialize() {
     p1.setValue("fitness_over_time", v);
 }
 
-10001 late() {
+1001 late() {
     v = p1.getValue("fitness_over_time");
 	s = paste(v, sep=" ");
     if (asexual == T)
