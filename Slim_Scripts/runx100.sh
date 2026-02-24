@@ -16,7 +16,6 @@ for val in T F; do
     done
 done
 
-
 source venv/bin/activate
 echo ""
 echo ""
