@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 BOXPLOT = True
-LOG_SCALE = True
-MEASURE_FITNESS_GAP = True
+LOG_SCALE = False
+MEASURE_FITNESS_GAP = False
 SCATTER = False
 FIT_LINE = False
 
