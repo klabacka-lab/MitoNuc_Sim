@@ -5,17 +5,25 @@ initialize() {
 //	initializeSex();
 	
 	
+	initializeMutationType("m1",0.5, "g", -0.01, 0.2); //Nuclear Neg A
+	initializeMutationType("m2",0.5, "g", -0.01, 0.2); //Nuclear Neg B
+	initializeMutationType("m3", 0.5, "g", 0.001, 1); //Nuc Positive A
+	initializeMutationType("m4", 0.5, "g", 0.001, 1); //Nuc Positive B
+	
+	
+	
+	initializeMutationType("m5", 1.0, "g", -0.05, 0.2); //Mitochondrial Neg A
+	initializeMutationType("m6", 1.0, "g", -0.05, 0.2); //Mitochondrial Neg B
+	initializeMutationType("m7", 1.0, "g", 0.001, 1); //Mitochondrial Pos   A
+	initializeMutationType("m8", 1.0, "g", 0.001, 1); //Mitochondrial Pos   B
+
+
+//
 //	initializeMutationType("m1",0.5, "g", -0.01, 0.2); //Nuclear Neg
-//	initializeMutationType("m2", 1.0, "g", -0.05, 0.2); //Mitochondrial Neg
-//	initializeMutationType("m3", 1.0, "g", 0.001, 1); //Mitochondrial Pos
-//	initializeMutationType("m4", 0.5, "g", 0.001, 1); //Nuc Positive
-//	initializeMutationType("m5", 0.0, "f", 0); //Nuc Positive
-
-	initializeMutationType("m1",0.5, "g", -0.01, 0.2); //Nuclear Neg
-	initializeMutationType("m2",0.5, "g", -0.01, 0.2); //Nuclear Neg
-
-	initializeMutationType("m3", 1.0, "g", -0.05, 0.2); //Mitochondrial Neg
-	initializeMutationType("m4", 1.0, "g", -0.05, 0.2); //Mitochondrial Neg
+//	initializeMutationType("m2",0.5, "g", -0.01, 0.2); //Nuclear Neg
+//
+//	initializeMutationType("m3", 1.0, "g", -0.05, 0.2); //Mitochondrial Neg
+//	initializeMutationType("m4", 1.0, "g", -0.05, 0.2); //Mitochondrial Neg
 
 
 
@@ -33,17 +41,21 @@ initialize() {
 	m2.convertToSubstitution = F;
 	m3.convertToSubstitution = F;
 	m4.convertToSubstitution = F;
+	m5.convertToSubstitution = F;
+	m6.convertToSubstitution = F;
+	m7.convertToSubstitution = F;
+	m8.convertToSubstitution = F;
 	
 
 
-	initializeGenomicElementType("g1", c(m1,m2), c(0.5,0.5));
-	initializeGenomicElementType("g2", c(m3,m4), c(0.5,0.5));
+	initializeGenomicElementType("g1", c(m1,m2,m3,m4), c(0.49,0.49, 0.01, 0.01));
+	initializeGenomicElementType("g2", c(m5,m6,m7,m8), c(0.49,0.49, 0.01, 0.01));
 	
 
 	
 	initializeChromosome(1, 1e5, symbol="N");
 	initializeGenomicElement(g1, 0, 99999);
-	initializeMutationRate(5e-7);
+	initializeMutationRate(1e-8);
 //	initializeRecombinationRate(1e-8);
 	initializeRecombinationRate(0);
 	
@@ -53,12 +65,12 @@ initialize() {
 	initializeChromosome(2, 1e5, type="HF", symbol="M");
 	initializeRecombinationRate(0);
 	initializeGenomicElement(g2, 0, 99999);
-	initializeMutationRate(1e-6);}
+	initializeMutationRate(1e-7);}
 
 
 1 early() {
 
-	sim.addSubpop("p1", 100);
+	sim.addSubpop("p1", 250);
 	
 	log = community.createLogFile("Capstone Project/R/sim_log_ASex.csv", logInterval=25);
 	log.addCycle();
@@ -66,7 +78,8 @@ initialize() {
 	p1.setCloningRate(1.0);
 
 }
-1: early() {if (sim.cycle%100 == 0) {cat(sim.cycle + "\n");}} 
+1: early() {if (sim.cycle%100 == 0) {cat(sim.cycle + "\n");
+}} 
 
 
 
@@ -77,19 +90,20 @@ initialize() {
 	for (ind in inds) {
 		globalFitness = 0;
 		unique = ind.uniqueMutations;
-		uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2];
-		uniqueMito = unique[unique.mutationType == m3 | unique.mutationType == m4];
+		uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m3 | unique.mutationType == m4];
+		uniqueMito = unique[unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7 | unique.mutationType == m8];
 		for (m in uniqueMito) 
 		{total = 0;
-			for (n in uniqueNuc[uniqueNuc.position % 250 == m.position % 250]) {
-				if (n.mutationType == m1) {total = total + abs(n.selectionCoeff);}
+		epistatic = uniqueNuc[uniqueNuc.position % 125 == m.position % 125];
+			for (n in epistatic) {
+				if (n.mutationType == m1 | n.mutationType == m3) {total = total + abs(n.selectionCoeff);}
 				else {total = total - abs(n.selectionCoeff);}
 			}
 				
 				
-			
-				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
-			if (m.mutationType == m4) 
+			if (length(epistatic) == 0) {
+				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));}
+			if (m.mutationType == m6 | m.mutationType == m8) 
 				{globalFitness = globalFitness - (total * abs(m.selectionCoeff));}
 			else 
 				{globalFitness = globalFitness + (total * abs(m.selectionCoeff));}
@@ -97,15 +111,19 @@ initialize() {
 		
 		for (mut in uniqueNuc) 
 		{globalFitness = globalFitness + (abs(mut.selectionCoeff) * mut.selectionCoeff);}
-		
-		Fitness = 2*dnorm(30 - asFloat(globalFitness), 0.0, 25.0)/dnorm(0.0,0.0,25.0);
+		if (sim.cycle % 500 ==0) {cat(globalFitness + "\n");}
+		Fitness = max(0.0, 1.0 + globalFitness * 3);
+//		2*dnorm(30 - asFloat(globalFitness), 0.0, 25.0)/dnorm(0.0,0.0,25.0);
 		popFitt = c(popFitt, Fitness);
 	}
 		
 		
 		inds.fitnessScaling = popFitt;
-	
 	}
+	
+	
+	
+	
 
 
 mutationEffect(m2) {
@@ -118,6 +136,18 @@ mutationEffect(m3) {
 return 1.0;}
 
 mutationEffect(m4) {
+return 1.0;}
+
+mutationEffect(m5) {
+return 1.0;}
+
+mutationEffect(m6) {
+return 1.0;}
+
+mutationEffect(m7) {
+return 1.0;}
+
+mutationEffect(m8) {
 return 1.0;}
 
 //mutationEffect(m2) {
@@ -138,6 +168,6 @@ return 1.0;}
 
 // output samples of 10 haplosomes periodically, all fixed mutations at end
 
-2500 late() {
+10000 late() {
 //sim.outputFull();
 sim.simulationFinished(); }
