@@ -67,7 +67,10 @@ if SCATTER:
     axes[0].scatter(cycles, sexual_arr, label="Sexual", color="orange", s = 1)
 else:
     axes[0].plot(cycles, asexual_arr, label="Asexual", color="blue")
+    axes[0].fill_between(cycles, asexual_arr - asexual_std_dev, asexual_arr + asexual_std_dev, alpha=0.3, color="blue")
     axes[0].plot(cycles, sexual_arr, label="Sexual", color="orange")
+    axes[0].fill_between(cycles, sexual_arr - sexual_std_dev, sexual_arr + sexual_std_dev, alpha=0.3, color="orange")
+
 
 axes[0].set_xlabel("Cycle")
 axes[0].set_ylabel("Mean Fitness")
