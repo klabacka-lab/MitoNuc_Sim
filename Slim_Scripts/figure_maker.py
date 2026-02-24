@@ -8,6 +8,7 @@ BOXPLOT = True
 LOG_SCALE = False
 MEASURE_FITNESS_GAP = False
 SCATTER = False
+FIT_LINE = False
 
 def load_2d_array(path: str) -> np.ndarray:
     rows = []
@@ -36,22 +37,22 @@ if MEASURE_FITNESS_GAP:
 
 cycles = np.array(range(1, sexual_arr.shape[0] + 1))
 
-from scipy.optimize import curve_fit
+if FIT_LINE:
+    from scipy.optimize import curve_fit
 
-# Define asymptotic function
-def model_function(x, a, b, c):
-    return a - b * np.exp(-c * x)
+    # Define asymptotic function
+    def model_function(x, a, b, c):
+        return a - b * np.exp(-c * x)
 
-# Fit curve
-popt, pcov = curve_fit(model_function, cycles, sexual_arr, p0 = [1.0, 0.1, 0.001])
-#print the lie of best fit as string 
-print(f"Line of best fit for sexual: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
+    # Fit curve
+    popt, pcov = curve_fit(model_function, cycles, sexual_arr, p0 = [1.0, 0.1, 0.001])
+    #print the lie of best fit as string 
+    print(f"Line of best fit for sexual: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
 
-# Fit curve
-popt, pcov = curve_fit(model_function, cycles, asexual_arr, p0 = [1.0, 0.1, 0.001])
-#print the lie of best fit as string 
-print(f"Line of best fit for asexual: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
-
+    # Fit curve
+    popt, pcov = curve_fit(model_function, cycles, asexual_arr, p0 = [1.0, 0.1, 0.001])
+    #print the lie of best fit as string 
+    print(f"Line of best fit for asexual: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
 
 
 #Load final fitness data
