@@ -13,14 +13,14 @@ initialize() {
 	
 	
 	//Mutations: experiment with DFE (manual section 26.11)
-	defineConstant("use_alts", F);
+	defineConstant("use_alts", T);
 	
 	//create normal mutation distributions
 	if (use_alts == F){
 		//Negligible mutations
 		initializeMutationType("m2", 0.5, "f", 0.0); // synonymous
 		initializeMutationType("m3", 0.1, "g", -0.0, 0.1); // deleterious
-		initializeMutationType("m5", 0.7, "f", -0.01); // fun deleterious for preloading
+		initializeMutationType("m5", 0.7, "g", -0.19, 1.2); // fun deleterious for preloading
 		initializeMutationType("m4", 0.1, "e", 0.0); //beneficial
 
 		//genomic elements
@@ -34,7 +34,7 @@ initialize() {
 		initializeMutationType("m3", 0.1, "g", -0.05, 0.2); // deleterious
 		//fixed m5
 		initializeMutationType("m5", 0.7, "f", -0.19); // fun deleterious for preloading
-		initializeMutationType("m4", 0.1, "g", 0.005, 1); //beneficial
+		initializeMutationType("m4", 0.1, "g", 0.001, 1); //beneficial
 
 
 		//mito
