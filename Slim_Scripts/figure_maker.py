@@ -78,7 +78,7 @@ axes[0].set_xlabel("Cycle")
 axes[0].set_ylabel("Mean Fitness")
 if LOG_SCALE:
     axes[0].set_yscale('log')      # Logarithmic y-axis
-axes[0].set_title("Mean Fitness Over Time")
+axes[0].set_title("Mean Fitness Over Time (100 Simulations)")
 axes[0].legend()
 axes[0].grid(True)
 
@@ -99,6 +99,8 @@ if BOXPLOT:
     for median in bp["medians"]:
         median.set_color("black")
         median.set_linewidth(2)
+
+    axes[1].set_xlabel("Simulation Type")
 
 else:
     axes[1].hist(asexual_final_fitness, bins=15, alpha=0.6, label="Asexual", color="blue")
