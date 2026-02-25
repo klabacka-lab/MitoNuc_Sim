@@ -39,7 +39,6 @@ initialize() {
 		
 		initializeMutationType("m4", 0.1, "g", 0.001, 1); //beneficial
 
-
 		//mito
 		initializeGenomicElementType("g1",c(m2, m3, m4) , c(1,0.98,0.15));
 		//autosomal
@@ -54,7 +53,7 @@ initialize() {
 	initializeChromosome(1, type="HF");
 	//mt chromosome is typically 16.5k base pairs
 	//ours is currently about 10k
-	initializeGenomicElement(g1, 0, 1e4-1);
+	initializeGenomicElement(g1, 0, 16500-1);
 	initializeMutationRate(1e-5);
 	//initializeRecombinationRate(1e-7);
 	
@@ -62,7 +61,7 @@ initialize() {
 	initializeChromosome(2, type="A");
 	//nuclear genome is 3.1 billion base pairs
 	//ours is like 100k
-	initializeGenomicElement(g2, 0, 1e5-1);
+	initializeGenomicElement(g2, 0, 3100000000-1);
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
 
