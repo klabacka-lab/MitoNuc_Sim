@@ -1,9 +1,19 @@
 initialize() {
 
-//	initializeSex();
+
+
+
+
+
+
+if (sex) {
+	initializeSex();
+}
 	
 	// Initialize mutations types, genomic element types, and chromosomes
 
+
+if (ben) {
 	// Nuclear mutations
 	initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
 	initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
@@ -15,6 +25,19 @@ initialize() {
 	initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
 	initializeMutationType("m7", 1.0, "g", 0.001, 1); // Mitochondrial positive A
 	initializeMutationType("m8", 1.0, "g", 0.001, 1); // Mitochondrial positive B
+}
+else {
+	initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
+	initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
+	initializeMutationType("m3", 0.5, "g", -0.01, 0.2); // Nuclear negative A
+	initializeMutationType("m4", 0.5, "g", -0.01, 0.2); // Nuclear negative B
+	
+	// Mitochondrial mutations
+	initializeMutationType("m5", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
+	initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
+	initializeMutationType("m7", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
+	initializeMutationType("m8", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
+}
 
 	// Set convertToSubstitution to F for all mutation types - allows epistasis
 	m1.convertToSubstitution = F;
@@ -27,16 +50,21 @@ initialize() {
 	m8.convertToSubstitution = F;
 	
 	// Genomic element types
-	initializeGenomicElementType("g1", c(m1,m2,m3,m4), c(0.49,0.49, 0.01, 0.01)); // Nuclear genome
-	initializeGenomicElementType("g2", c(m5,m6,m7,m8), c(0.49,0.49, 0.01, 0.01)); // Mitochondrial genome
+	initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
+	initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
 	
 	// Chromosomes
 	// Nuclear chromosome
 	initializeChromosome(1, 1e5, type="A", symbol="N"); // autosomal
 	initializeGenomicElement(g1, 0, 99999);
 	initializeMutationRate(1e-7);
-//	initializeRecombinationRate(1e-8); // recombination rate of 1e-8 per base pair per generation for sexual reproduction
+	
+	if (sex) {
+	initializeRecombinationRate(1e-8); // recombination rate of 1e-8 per base pair per generation for sexual reproduction
+}
+	else {
 	initializeRecombinationRate(0);
+}
 	
 	// Mitochondrial chromosome
 	initializeChromosome(2, 1e5, type="HF", symbol="M"); // haploid female inheritance
@@ -50,12 +78,36 @@ initialize() {
 1 early() {
 
 	sim.addSubpop("p1", 250); // population of 250 individuals
+	path = "Capstone Project/R/sim_log_";
 	
-	log = community.createLogFile("Capstone Project/R/sim_log_Sex.csv", logInterval=25); // log every 25 generations
+	if (sex) {
+		S = "sex_";
+	} else {
+		S = "asex_";
+	}
+	
+	if (ben) {
+		B = "ben_";
+	} else {
+		B = "noben_";
+	}
+	
+	if (epi) {
+		Ep = "epi_";
+	} else {
+		Ep = "noepi_";
+	}
+	
+	
+	
+	
+	finalPath = path + S + B + Ep + fileNum + ".csv";
+	log = community.createLogFile(finalPath, logInterval=25); // log every 25 generations
 	log.addCycle();
 	log.addCustomColumn("Fitness", "mean(p1.cachedFitness(NULL));"); 
+	if (!sex) {
 	p1.setCloningRate(1.0); // cloning rate of 1.0 for asexual reproduction
-
+}
 }
 
 1: early() {
@@ -72,21 +124,31 @@ initialize() {
 	inds = sim.subpopulations.individuals;
 	popFitt = c();
 
+	// loop through each individual in the population to calculate fitness
 	for (ind in inds) {
 		globalFitness = 0;
-		unique = ind.uniqueMutations;
-		uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m3 | unique.mutationType == m4];
-		uniqueMito = unique[unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7 | unique.mutationType == m8];
+		unique = ind.uniqueMutations; // get the unique mutations for the individual
+		uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m3 | unique.mutationType == m4]; // subset to get only nuclear mutations
+		uniqueMito = unique[unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7 | unique.mutationType == m8]; // subset to get only mitochondrial mutations
 
+		// loop through each mitochondrial mutation to calculate the epistatic interactions with nuclear mutations
 		for (m in uniqueMito) {
+			if (!epi) {
+				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
+			} else {
 			total = 0;
-			epistatic = uniqueNuc[uniqueNuc.position % 125 == m.position % 125];
+			epistatic = uniqueNuc[uniqueNuc.position % 125 == m.position % 125]; // get the nuclear mutations that are epistatic with the mitochondrial mutation (i.e., those that occur at the same position modulo 125)
 
+			// loop through the epistatic nuclear mutations to calculate the total effect on fitness
 			for (n in epistatic) {
-				if (n.mutationType == m1 | n.mutationType == m3) {total = total + abs(n.selectionCoeff);}
+				if (n.mutationType == m1 | n.mutationType == m3) {
+					total = total + abs(n.selectionCoeff);
+				}
 				else {total = total - abs(n.selectionCoeff);}
 			}
-				
+			
+			// If there are no epistatic interactions, add the effect of the mitochondrial mutation to fitness
+
 //			globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 
 			if (length(epistatic) == 0) {
@@ -101,42 +163,55 @@ initialize() {
 				{globalFitness = globalFitness + (total * abs(m.selectionCoeff));
 			}
 		}
-		
+		}
+		// loop through the nuclear mutations to add their effects on fitness (after accounting for epistasis with mitochondrial mutations)
 		for (mut in uniqueNuc) {
 			globalFitness = globalFitness + (abs(mut.selectionCoeff) * mut.selectionCoeff);
 		}
 
-		Fitness = max(0.0, 1.0 + globalFitness * 3.0);
+		// calculate the final fitness for the individual, ensuring it is not negative
+		Fitness = max(0.0, 1.0 + globalFitness * 3.0); // scale fitness to ensure it is positive and has a reasonable range
 		popFitt = c(popFitt, Fitness);
 	}
 
 	inds.fitnessScaling = popFitt;
 }
 
-mutationEffect(m2) {
-return 1.0;}
+// Deactivate SLiM's default mutation effect function and use a custom one that allows for epistasis
 
 mutationEffect(m1) {
-return 1.0;}
+	return 1.0;
+}
+
+mutationEffect(m2) {
+	return 1.0;
+}
 
 mutationEffect(m3) {
-return 1.0;}
+	return 1.0;
+}
 
 mutationEffect(m4) {
-return 1.0;}
+	return 1.0;
+}
 
 mutationEffect(m5) {
-return 1.0;}
+	return 1.0;
+}
 
 mutationEffect(m6) {
-return 1.0;}
+	return 1.0;
+}
 
 mutationEffect(m7) {
-return 1.0;}
+	return 1.0;
+}
 
 mutationEffect(m8) {
-return 1.0;}
+	return 1.0;
+}
 
+// End the simulation after 4000 generations
 4000 late() {
 	sim.simulationFinished();
 }
