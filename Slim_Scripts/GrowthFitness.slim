@@ -83,22 +83,21 @@ initialize() {
 
 //seeds deleterious mutations
 1 modifyChild() {
-	
-
-	//create normal mutation distributions
-	if (preload_location == "mito"){
-		defineConstant("chrom_num", 1);
-	} else {
-		defineConstant("chrom_num", 2);
-	}
-
-
 	//gather mitochondrial chromosomes
 	mito_chroms = c();
 	for (mito in child.haplosomes){
-		if (mito.chromosome.id == chrom_num){
-			mito_chroms = c(mito_chroms, mito);
+		if (preload_location == "mito" ){
+			if (mito.chromosome.id == 1){
+				mito_chroms = c(mito_chroms, mito);
+			}
+		} else {
+			if (mito.chromosome.id == 2){
+				mito_chroms = c(mito_chroms, mito);
+			}
+			
 		}
+
+		
 	}
 	//seed deleterious mutations into mitochondrial chromosomes
 	mito_chroms.addNewDrawnMutation(m1, rdunif(1,0,1e4-1));
