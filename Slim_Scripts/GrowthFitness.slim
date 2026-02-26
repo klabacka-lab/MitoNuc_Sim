@@ -19,9 +19,9 @@ initialize() {
 	if (use_alts == T){
 		//Negligible mutations
 		initializeMutationType("m2", 0.5, "f", 0.0); // synonymous
-		initializeMutationType("m3", 0.1, "g", -0.0, 0.1); // deleterious
+		initializeMutationType("m3", 0.5, "f", 0.0); // deleterious
 		initializeMutationType("m5", 0.7, "f", -0.19, 1.2); // fun deleterious for preloading
-		initializeMutationType("m4", 0.1, "e", 0.0); //beneficial
+		initializeMutationType("m4", 0.5, "f", 0.0); //beneficial
 
 		//testing out convertToSubstitution. SLiM Manual 26.11.1 & 24.3
 		//m5.convertToSubstitution = F;
