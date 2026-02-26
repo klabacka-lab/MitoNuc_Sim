@@ -2,16 +2,21 @@ initialize() {
 
 //	initializeSex();
 	
-	initializeMutationType("m1", 0.5, "g", -0.01, 0.2); //Nuclear Neg A
-	initializeMutationType("m2", 0.5, "g", -0.01, 0.2); //Nuclear Neg B
-	initializeMutationType("m3", 0.5, "g", 0.001, 1); //Nuc Positive A
-	initializeMutationType("m4", 0.5, "g", 0.001, 1); //Nuc Positive B
-	
-	initializeMutationType("m5", 1.0, "g", -0.05, 0.2); //Mitochondrial Neg A
-	initializeMutationType("m6", 1.0, "g", -0.05, 0.2); //Mitochondrial Neg B
-	initializeMutationType("m7", 1.0, "g", 0.001, 1); //Mitochondrial Pos   A
-	initializeMutationType("m8", 1.0, "g", 0.001, 1); //Mitochondrial Pos   B
+	// Initialize mutations types, genomic element types, and chromosomes
 
+	// Nuclear mutations
+	initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
+	initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
+	initializeMutationType("m3", 0.5, "g", 0.001, 1); // Nuclear positive A
+	initializeMutationType("m4", 0.5, "g", 0.001, 1); // Nuclear positive B
+	
+	// Mitochondrial mutations
+	initializeMutationType("m5", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
+	initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
+	initializeMutationType("m7", 1.0, "g", 0.001, 1); // Mitochondrial positive A
+	initializeMutationType("m8", 1.0, "g", 0.001, 1); // Mitochondrial positive B
+
+	// Set convertToSubstitution to F for all mutation types - allows epistasis
 	m1.convertToSubstitution = F;
 	m2.convertToSubstitution = F;
 	m3.convertToSubstitution = F;
@@ -21,38 +26,46 @@ initialize() {
 	m7.convertToSubstitution = F;
 	m8.convertToSubstitution = F;
 	
-	initializeGenomicElementType("g1", c(m1,m2,m3,m4), c(0.49,0.49, 0.01, 0.01));
-	initializeGenomicElementType("g2", c(m5,m6,m7,m8), c(0.49,0.49, 0.01, 0.01));
+	// Genomic element types
+	initializeGenomicElementType("g1", c(m1,m2,m3,m4), c(0.49,0.49, 0.01, 0.01)); // Nuclear genome
+	initializeGenomicElementType("g2", c(m5,m6,m7,m8), c(0.49,0.49, 0.01, 0.01)); // Mitochondrial genome
 	
-	initializeChromosome(1, 1e5, type="A", symbol="N");
+	// Chromosomes
+	// Nuclear chromosome
+	initializeChromosome(1, 1e5, type="A", symbol="N"); // autosomal
 	initializeGenomicElement(g1, 0, 99999);
 	initializeMutationRate(1e-7);
-//	initializeRecombinationRate(1e-8);
+//	initializeRecombinationRate(1e-8); // recombination rate of 1e-8 per base pair per generation for sexual reproduction
 	initializeRecombinationRate(0);
 	
-	initializeChromosome(2, 1e5, type="HF", symbol="M");
+	// Mitochondrial chromosome
+	initializeChromosome(2, 1e5, type="HF", symbol="M"); // haploid female inheritance
 	initializeRecombinationRate(0);
 	initializeGenomicElement(g2, 0, 99999);
 	initializeMutationRate(1e-6);
 }
 
+// Set up the population and logging
+
 1 early() {
 
-	sim.addSubpop("p1", 250);
+	sim.addSubpop("p1", 250); // population of 250 individuals
 	
-	log = community.createLogFile("Capstone Project/R/sim_log_Sex.csv", logInterval=25);
+	log = community.createLogFile("Capstone Project/R/sim_log_Sex.csv", logInterval=25); // log every 25 generations
 	log.addCycle();
 	log.addCustomColumn("Fitness", "mean(p1.cachedFitness(NULL));"); 
-	p1.setCloningRate(1.0);
+	p1.setCloningRate(1.0); // cloning rate of 1.0 for asexual reproduction
 
 }
 
 1: early() {
 	
 	if (sim.cycle % 100 == 0) {
-		cat(sim.cycle + "\n");
+		cat(sim.cycle + "\n"); // print the current generation every 100 generations
 	}
 } 
+
+// Calculate fitness based on the effects of nuclear and mitochondrial mutations, including epistatic interactions
 
 1: late() {
 
@@ -127,4 +140,3 @@ return 1.0;}
 4000 late() {
 	sim.simulationFinished();
 }
-
