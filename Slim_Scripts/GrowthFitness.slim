@@ -4,7 +4,7 @@ initialize() {
 		//parameter to toggle asexual reproduction
 		defineConstant("asexual", T);
 	}
-	defineConstant("popSize", 250);
+	defineConstant("popSize", 5);
 
 	//1-6
 	defineConstant("preload_location", "mito");	
@@ -87,20 +87,18 @@ initialize() {
 //seeds deleterious mutations
 1 modifyChild() {
 	//gather mitochondrial chromosomes
-	mito_chroms = c();
+	mut_chroms = c();
+	print(child.haplosomes);
 	for (mito in child.haplosomes){
 		if (preload_location == "mito" ){
 			if (mito.chromosome.id == 1){
-				mito_chroms = c(mito_chroms, mito);
+				mut_chroms = c(mito_chroms, mito);
 			}
 		} else {
 			if (mito.chromosome.id == 2){
-				mito_chroms = c(mito_chroms, mito);
+				mut_chroms = c(mito_chroms, mito);
 			}
-			
 		}
-
-		
 	}
 	//seed deleterious mutations into mitochondrial chromosomes
 	mito_chroms.addNewDrawnMutation(m1, rdunif(1,0,1e4-1));
@@ -132,8 +130,6 @@ initialize() {
 		//deregister this script block to stop this check print
 		community.deregisterScriptBlock(self);
 	}
-	
-
 }
 
 1000 late() {
