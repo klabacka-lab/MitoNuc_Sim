@@ -88,22 +88,21 @@ initialize() {
 1 modifyChild() {
 	//gather mitochondrial chromosomes
 	mut_chroms = c();
-	print(child.haplosomes);
-	for (mito in child.haplosomes){
+	for (hap in child.haplosomes){
 		if (preload_location == "mito" ){
-			if (mito.chromosome.id == 1){
-				mut_chroms = c(mito_chroms, mito);
+			if (hap.chromosome.id == 1){
+				mut_chroms = c(mut_chroms, hap);
 			}
 		} else {
-			if (mito.chromosome.id == 2){
-				mut_chroms = c(mito_chroms, mito);
+			if (hap.chromosome.id == 2){
+				mut_chroms = c(mut_chroms, hap);
 			}
 		}
 	}
 	//seed deleterious mutations into mitochondrial chromosomes
-	mito_chroms.addNewDrawnMutation(m1, rdunif(1,0,1e4-1));
-	mito_chroms.addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
-	mito_chroms.addNewDrawnMutation(m6, rdunif(1,0,1e4-1));
+	mut_chroms.addNewDrawnMutation(m1, rdunif(1,0,1e4-1));
+	mut_chroms.addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
+	mut_chroms.addNewDrawnMutation(m6, rdunif(1,0,1e4-1));
 
 	return T;
 }
