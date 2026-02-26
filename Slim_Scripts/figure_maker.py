@@ -74,7 +74,7 @@ else:
     axes[0].fill_between(cycles, sexual_mean - sexual_std_dev, sexual_mean + sexual_std_dev, alpha=0.3, color="orange", label="Sexual ±1 SD")
 
 
-axes[0].set_xlabel("Cycle")
+axes[0].set_xlabel("Generation")
 axes[0].set_ylabel("Mean Fitness")
 if LOG_SCALE:
     axes[0].set_yscale('log')      # Logarithmic y-axis
@@ -106,7 +106,7 @@ else:
     axes[1].hist(asexual_final_fitness, bins=15, alpha=0.6, label="Asexual", color="blue")
     axes[1].hist(sexual_final_fitness, bins=15, alpha=0.6, label="Sexual", color="orange")
 
-axes[1].set_title("Final Fitness Distribution")
+axes[1].set_title("Fitness Distribution (After 1000 Generations)")
 #axes[1].legend()
 axes[1].grid(True, alpha=0.3)
 
