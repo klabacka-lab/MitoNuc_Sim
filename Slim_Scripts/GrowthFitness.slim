@@ -1,14 +1,15 @@
 initialize() {
 	print("Initializing simulation...");
 	if (!exists("asexual")){
-		//parameter to toggle asexual reproduction
-		defineConstant("asexual", T);
+		parameter to toggle asexual reproduction
+		defineConstant("asexual", F);
 	}
-	defineConstant("popSize", 5);
+	defineConstant("popSize", 1000);
 
 	//1-6
 	defineConstant("preload_location", "mito");	
 	defineConstant("mut_profile", 3);
+	
 	if (preload_location == "mito"){
 		defineConstant("chrom_length",1e4-1);
 	}
@@ -31,16 +32,16 @@ initialize() {
 
 	initializeMutationType("m2", 0.1, "g", -0.001, 1); // deleterious
 	initializeMutationType("m3", 0.1, "g", 0.001, 1); //beneficial
-	initializeMutationType("m4", 0.5, "f", 0.0); //synonymous
+	initializeMutationType("m4", 0.01, "f", 0.0); //synonymous
 	
 
 	//create normal mutation distributions
 	if (mut_profile == 1){
 		//Both del and ben muts
 		//mito
-		initializeGenomicElementType("g1",c(m2, m3, m4) , c(1,1,1));
+		initializeGenomicElementType("g1",c(m2, m3, m4) , c(1, 1, 0.1));
 		//autosomal
-		initializeGenomicElementType("g2",c(m2, m3, m4) , c(1,1,1));
+		initializeGenomicElementType("g2",c(m2, m3, m4) , c(1, 1, 0.1));
 	} else if (mut_profile == 2){ 
 		//mito
 		initializeGenomicElementType("g1",c(m2, m4) , c(1, 1));
@@ -48,9 +49,9 @@ initialize() {
 		initializeGenomicElementType("g2",c(m2, m4) , c(1, 1));
 	} else if (mut_profile == 3){
 		//mito
-		initializeGenomicElementType("g1", c(m4), c(0.1));
+		initializeGenomicElementType("g1", c(m4), c(0.01));
 		//autosomal
-		initializeGenomicElementType("g2", c(m4), c(0.1));
+		initializeGenomicElementType("g2", c(m4), c(0.01));
 	} 
 
 	
@@ -60,16 +61,16 @@ initialize() {
 	
 	//chromosome 1: mitochondrial chromosome
 	//adding in chromosome length
-	initializeChromosome(1,16500, type="HF");
+	initializeChromosome(1,1e4, type="HF");
 	//mt chromosome is typically 16.5k base pairs
 	//ours is currently about 10k
 	initializeGenomicElement(g1, 0, 1e4-1);
-	initializeMutationRate(1e-5);
+	initializeMutationRate(1e-6);
 	//initializeRecombinationRate(1e-7);
 	
 	//chromosome 2: autosome
 	//adding chromosome length
-	initializeChromosome(2,3100000000,type="A");
+	initializeChromosome(2,1e6,type="A");
 	//nuclear genome is 3.1 billion base pairs
 	//ours is like 100k
 	initializeGenomicElement(g2, 0, 1e6-1);
