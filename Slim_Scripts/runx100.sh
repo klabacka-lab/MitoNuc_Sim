@@ -10,7 +10,7 @@ rm -f sexual_fitness_over_time.txt
 rm -f asexual_fitness_over_time.txt
 
 for val in T F; do
-    for i in {1..1}; do
+    for i in {1..100}; do
         echo "Running simulation $i..."
         slim -d asexual="\"$val\"" GrowthFitness.slim
     done
