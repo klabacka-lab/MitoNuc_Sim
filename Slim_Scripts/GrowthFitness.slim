@@ -9,6 +9,12 @@ initialize() {
 	//1-6
 	defineConstant("preload_location", "mito");	
 	defineConstant("mut_profile", 3);
+	if (preload_location == "mito"){
+		defineConstant("chrom_length",1e4-1);
+	}
+	else {
+		defineConstant("chrom_length",1e6-1);
+	}
 
 	//Enable pedigree tracking
 	initializeSLiMOptions(keepPedigrees=T);
@@ -100,9 +106,9 @@ initialize() {
 		}
 	}
 	//seed deleterious mutations into mitochondrial chromosomes
-	mut_chroms.addNewDrawnMutation(m1, rdunif(1,0,1e4-1));
-	mut_chroms.addNewDrawnMutation(m5, rdunif(1,0,1e4-1));
-	mut_chroms.addNewDrawnMutation(m6, rdunif(1,0,1e4-1));
+	mut_chroms.addNewDrawnMutation(m1, rdunif(1,0,chrom_length));
+	mut_chroms.addNewDrawnMutation(m5, rdunif(1,0,chrom_length));
+	mut_chroms.addNewDrawnMutation(m6, rdunif(1,0,chrom_length));
 
 	return T;
 }
