@@ -2,7 +2,7 @@
 initialize() {
 
 	
-	initializeSex();
+//	initializeSex();
 	
 	
 	initializeMutationType("m1",0.5, "g", -0.01, 0.2); //Nuclear Neg A
@@ -53,11 +53,11 @@ initialize() {
 	
 
 	
-	initializeChromosome(1, 1e5, symbol="N");
+	initializeChromosome(1, 1e5, type="A", symbol="N");
 	initializeGenomicElement(g1, 0, 99999);
 	initializeMutationRate(1e-7);
-	initializeRecombinationRate(1e-8);
-//	initializeRecombinationRate(0);
+//	initializeRecombinationRate(1e-8);
+	initializeRecombinationRate(0);
 	
 	
 	
@@ -75,7 +75,7 @@ initialize() {
 	log = community.createLogFile("Capstone Project/R/sim_log_Sex.csv", logInterval=25);
 	log.addCycle();
 	log.addCustomColumn("Fitness", "mean(p1.cachedFitness(NULL));"); 
-//	p1.setCloningRate(1.0);
+	p1.setCloningRate(1.0);
 
 }
 1: early() {if (sim.cycle%100 == 0) {cat(sim.cycle + "\n");
@@ -100,9 +100,9 @@ initialize() {
 				else {total = total - abs(n.selectionCoeff);}
 			}
 				
-				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
-//			if (length(epistatic) == 0) {
-//				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));}
+//				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
+			if (length(epistatic) == 0) {
+				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));}
 			if (m.mutationType == m6 | m.mutationType == m8) 
 				{globalFitness = globalFitness - (total * abs(m.selectionCoeff));}
 			else 
