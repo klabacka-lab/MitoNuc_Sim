@@ -6,6 +6,10 @@ initialize() {
 	}
 	defineConstant("popSize", 1000);
 
+	//1-6
+	defineConstant("preload_location", "mito");	
+	defineConstant("mut_profile", 1);
+
 	//Enable pedigree tracking
 	initializeSLiMOptions(keepPedigrees=T);
 	
@@ -20,8 +24,6 @@ initialize() {
 	initializeMutationType("m3", 0.1, "g", 0.001, 1); //beneficial
 	initializeMutationType("m4", 0.5, "f", 0.0); //synonymous
 	
-	//Mutations: experiment with DFE (manual section 26.11)
-	defineConstant("mut_profile", 1);
 
 	//create normal mutation distributions
 	if (mut_profile == 1){
@@ -81,8 +83,7 @@ initialize() {
 
 //seeds deleterious mutations
 1 modifyChild() {
-	//Mutations: experiment with DFE (manual section 26.11)
-	defineConstant("preload_location", "mito");
+	
 
 	//create normal mutation distributions
 	if (preload_location == "mito"){
