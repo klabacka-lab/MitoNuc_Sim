@@ -6,9 +6,10 @@ initialize() {
 	}
 	defineConstant("popSize", 1000);
 
-	//1-6
-	defineConstant("preload_location", "mito");	
-	defineConstant("mut_profile", 3);
+	//Where to preload the mutations - mitochondria or the nuclear genome
+	defineConstant("preload_location", "nucl");	
+	//WHich mutational profile to use 1: del and ben, 2: only del, 3: no mutations with fitness effects
+	defineConstant("mut_profile", 1);
 	
 	if (preload_location == "mito"){
 		defineConstant("chrom_length",1e4-1);
@@ -21,10 +22,8 @@ initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 	
 	initializeSex();
-
 	
-	
-	//Preloaded mutations
+	//Preloaded mutations types for seeding initial population.
 	initializeMutationType("m1", 0.7, "f", -0.19); // preload
 	initializeMutationType("m5", 0.5, "f", -0.09); // preload
 	initializeMutationType("m6", 0.3, "f", -0.05); // preload
@@ -33,7 +32,7 @@ initialize() {
 	m5.convertToSubstitution = F;
 	m6.convertToSubstitution = F;
 
-
+	//Basic in-process mutation types
 	initializeMutationType("m2", 0.1, "g", -0.001, 1); // deleterious
 	initializeMutationType("m3", 0.1, "g", 0.001, 1); //beneficial
 	initializeMutationType("m4", 1, "f", 0.0); //synonymous
@@ -51,11 +50,13 @@ initialize() {
 		//autosomal
 		initializeGenomicElementType("g2",c(m2, m3, m4) , c(1, 1, 1));
 	} else if (mut_profile == 2){ 
+		//only del muts
 		//mito
 		initializeGenomicElementType("g1",c(m2, m4) , c(1, 1));
 		//autosomal
 		initializeGenomicElementType("g2",c(m2, m4) , c(1, 1));
 	} else if (mut_profile == 3){
+		//no muts (techincially synonymous muts with no fitness effect)
 		//mito
 		initializeGenomicElementType("g1", c(m4), c(1));
 		//autosomal
@@ -91,8 +92,11 @@ initialize() {
 	
 	//initialize population
 	sim.addSubpop("p1", popSize);
+	//Asexual populations reproducte by cloning 100% of the time
 	if (asexual == T){
 		p1.setCloningRate(1.0);
+	} else {
+		p1.setCloningRate(0.0);
 	}
 
 	//Vector to store fitness over time
@@ -125,6 +129,7 @@ initialize() {
 
 
 2 early() {
+	//Mutational metdown fitness
 	print("Mean fitness at generation 1:");
 	print(mean(p1.cachedFitness(NULL)));
 }
@@ -153,7 +158,7 @@ initialize() {
 }
 
 1001 early() {
-	//print(community.tick);
+	//Final fitness - output
 	print("Mean fitness at generation 1000:");
 	print(mean(p1.cachedFitness(NULL)));
 	if (asexual == T){
@@ -164,6 +169,7 @@ initialize() {
 }
 
 2:1001 early() {
+	//update stored data about fitness over time for this simulation
     f = mean(p1.cachedFitness(NULL));
 
     v = p1.getValue("fitness_over_time");
@@ -172,6 +178,7 @@ initialize() {
 }
 
 1001 late() {
+	//Export fitness over time data for this simulation
     v = p1.getValue("fitness_over_time");
 	s = paste(v, sep=" ");
     if (asexual == T)
