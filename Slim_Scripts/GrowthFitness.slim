@@ -28,20 +28,24 @@ initialize() {
 	initializeMutationType("m1", 0.7, "f", -0.19); // preload
 	initializeMutationType("m5", 0.5, "f", -0.09); // preload
 	initializeMutationType("m6", 0.3, "f", -0.05); // preload
+	
+	m1.convertToSubstitution = F;
+	m5.convertToSubstitution = F;
+	m6.convertToSubstitution = F;
 
 
 	initializeMutationType("m2", 0.1, "g", -0.001, 1); // deleterious
 	initializeMutationType("m3", 0.1, "g", 0.001, 1); //beneficial
-	initializeMutationType("m4", 0.01, "f", 0.0); //synonymous
+	initializeMutationType("m4", 1, "f", 0.0); //synonymous
 	
 
 	//create normal mutation distributions
 	if (mut_profile == 1){
 		//Both del and ben muts
 		//mito
-		initializeGenomicElementType("g1",c(m2, m3, m4) , c(1, 1, 0.1));
+		initializeGenomicElementType("g1",c(m2, m3, m4) , c(1, 1, 1));
 		//autosomal
-		initializeGenomicElementType("g2",c(m2, m3, m4) , c(1, 1, 0.1));
+		initializeGenomicElementType("g2",c(m2, m3, m4) , c(1, 1, 1));
 	} else if (mut_profile == 2){ 
 		//mito
 		initializeGenomicElementType("g1",c(m2, m4) , c(1, 1));
@@ -49,9 +53,9 @@ initialize() {
 		initializeGenomicElementType("g2",c(m2, m4) , c(1, 1));
 	} else if (mut_profile == 3){
 		//mito
-		initializeGenomicElementType("g1", c(m4), c(0.01));
+		initializeGenomicElementType("g1", c(m4), c(1));
 		//autosomal
-		initializeGenomicElementType("g2", c(m4), c(0.01));
+		initializeGenomicElementType("g2", c(m4), c(1));
 	} 
 
 	
@@ -94,6 +98,7 @@ initialize() {
 //seeds deleterious mutations
 1 modifyChild() {
 	//gather mitochondrial chromosomes
+	
 	mut_chroms = c();
 	for (hap in child.haplosomes){
 		if (preload_location == "mito" ){
