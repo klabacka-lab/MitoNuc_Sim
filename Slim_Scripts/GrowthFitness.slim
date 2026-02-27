@@ -38,6 +38,10 @@ initialize() {
 	initializeMutationType("m3", 0.1, "g", 0.001, 1); //beneficial
 	initializeMutationType("m4", 1, "f", 0.0); //synonymous
 	
+	//will make sim really slow if uncommented
+	//m2.convertToSubstitution = F;
+	//m3.convertToSubstitution = F;
+	//m4.convertToSubstitution = F;
 
 	//create normal mutation distributions
 	if (mut_profile == 1){
