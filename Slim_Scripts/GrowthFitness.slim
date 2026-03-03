@@ -152,11 +152,16 @@ initialize() {
 			}
 		}
 	}
-	//seed deleterious mutations into mitochondrial chromosomes
-	mut_chroms.addNewDrawnMutation(m1, rdunif(1,0,chrom_length));
-	mut_chroms.addNewDrawnMutation(m5, rdunif(1,0,chrom_length));
-	mut_chroms.addNewDrawnMutation(m6, rdunif(1,0,chrom_length));
 
+	if (preload_location == "mito"){
+		//seed deleterious mutations into mitochondrial chromosomes
+		mut_chroms.addNewDrawnMutation(m5, rdunif(1,0,chrom_length));
+		mut_chroms.addNewDrawnMutation(m6, rdunif(1,0,chrom_length));
+	} else {
+		//seed deleterious mutations into nuclear chromosomes
+		mut_chroms.addNewDrawnMutation(m1, rdunif(1,0,chrom_length));
+		mut_chroms.addNewDrawnMutation(m2, rdunif(1,0,chrom_length));
+	}
 	return T;
 }
 
