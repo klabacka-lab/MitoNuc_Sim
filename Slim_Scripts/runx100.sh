@@ -5,7 +5,7 @@ start=$(date +%s)
 source venv/bin/activate
 
 for val in T F; do
-    if val == F; then
+    if [ "$val" = "F" ]; then
         echo "Running sexual simulations..."
         rm -f sexual_cycles_to_escape.txt
         rm -f sexual_final_fitness.txt
