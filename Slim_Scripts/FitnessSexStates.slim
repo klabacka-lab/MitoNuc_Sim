@@ -183,9 +183,9 @@ mutationEffect(m8) {
 2:4001 early() {
 	fitness = mean(p1.cachedFitness(NULL));
 
-	values = pl.getValue("fitness_over_time");
+	values = sim.getValue("fitness_over_time");
 	values = c(values, fitness);
-	pl.setValue("fitness_over_time", values);
+	sim.setValue("fitness_over_time", values);
 }
 
 // End the simulation after 4000 generations
@@ -210,7 +210,7 @@ mutationEffect(m8) {
 	
 	finalPath = getwd() + S + B + Ep + ".csv";
 
-	values = pl.getValue("fitness_over_time");
+	values = sim.getValue("fitness_over_time");
 	line = paste(values, sep=",");
 	writeFile(finalPath, line, append=T);
 
