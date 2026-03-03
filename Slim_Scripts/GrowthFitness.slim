@@ -48,7 +48,7 @@ initialize() {
 		//initializeGenomicElementType("g1",c(m2, m3, m4) , c(1, 1, 1));
 		//autosomal
 		//initializeGenomicElementType("g2",c(m2, m3, m4) , c(1, 1, 1));
-
+		
 		// Nuclear mutations
 		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
 		initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
@@ -60,13 +60,16 @@ initialize() {
 		initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
 		initializeMutationType("m7", 1.0, "g", 0.001, 1); // Mitochondrial positive A
 		initializeMutationType("m8", 1.0, "g", 0.001, 1); // Mitochondrial positive B
-	} else if (mut_profile == 2){ 
+		
+		initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
+		initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
+	} else if (mut_profile == 2){
 		//only del muts
 		//mito
 		//initializeGenomicElementType("g1",c(m2, m4) , c(1, 1));
 		//autosomal
 		//initializeGenomicElementType("g2",c(m2, m4) , c(1, 1));
-
+		
 		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
 		initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
 		initializeMutationType("m3", 0.5, "g", -0.01, 0.2); // Nuclear negative A
@@ -77,17 +80,27 @@ initialize() {
 		initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
 		initializeMutationType("m7", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
 		initializeMutationType("m8", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
+		
+		initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
+		initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
 	} else if (mut_profile == 3){
 		//no muts (techincially synonymous muts with no fitness effect)
 		//mito
+		initializeMutationType("m1", 0.5, "g", 0.0, 0.2); // Nuclear negative A
+		initializeMutationType("m2", 0.5, "g", 0.0, 0.2); // Nuclear negative B
+		initializeMutationType("m3", 0.5, "g", 0.0, 0.2); // Nuclear negative A
+		initializeMutationType("m4", 0.5, "g", 0.0, 0.2); // Nuclear negative B
+		
+		// Mitochondrial mutations
+		initializeMutationType("m5", 1.0, "g", 0.0, 0.2); // Mitochondrial negative A
+		initializeMutationType("m6", 1.0, "g", 0.0, 0.2); // Mitochondrial negative B
+		initializeMutationType("m7", 1.0, "g", 0.0, 0.2); // Mitochondrial negative A
+		initializeMutationType("m8", 1.0, "g", 0.0, 0.2); // Mitochondrial negative B
 		initializeGenomicElementType("g1", c(m9), c(1));
 		//autosomal
 		initializeGenomicElementType("g2", c(m9), c(1));
-	} 
-
-	initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
-	initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
-
+	}
+	
 	m1.convertToSubstitution = F;
 	m2.convertToSubstitution = F;
 	m3.convertToSubstitution = F;
