@@ -2,6 +2,8 @@
 
 start=$(date +%s)
 
+source venv/bin/activate
+
 for val in T F; do
     if val == F; then
         echo "Running sexual simulations..."
@@ -21,7 +23,7 @@ for val in T F; do
     done
 done
 
-source venv/bin/activate
+
 echo ""
 echo ""
 echo "-----Cycles to escape deleterious mutation: an analysis-----"
