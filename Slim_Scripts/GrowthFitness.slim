@@ -1,3 +1,5 @@
+//added mutation effect == 1 for m9 and m10
+
 initialize() {
 	print("Initializing simulation...");
 	if (!exists("asexual")){
@@ -6,11 +8,11 @@ initialize() {
 	}
 	defineConstant("popSize", 250);
 	defineConstant("epi", T); // whether to include epistasis between mito and nuc muts
-
+	
 	//Where to preload the mutations - mitochondria or the nuclear genome
-	defineConstant("preload_location", "nucl");	
+	defineConstant("preload_location", "mito");
 	//WHich mutational profile to use 1: del and ben, 2: only del, 3: no mutations with fitness effects
-	defineConstant("mut_profile", 1);
+	defineConstant("mut_profile", 3);
 	
 	if (preload_location == "mito"){
 		defineConstant("chrom_length",1e4-1);
@@ -18,7 +20,7 @@ initialize() {
 	else {
 		defineConstant("chrom_length",1e6-1);
 	}
-
+	
 	//Enable pedigree tracking
 	initializeSLiMOptions(keepPedigrees=T);
 	
@@ -26,28 +28,23 @@ initialize() {
 	initializeSex();
 	
 	//Preloaded mutations types for seeding initial population.
-	//initializeMutationType("m1", 0.7, "f", -0.19); // preload
-	//initializeMutationType("m5", 0.5, "f", -0.09); // preload
+	//Nuclear
+	initializeMutationType("m10", 0.7, "f", -0.09); // preload
+	
+	//Mito
+	initializeMutationType("m11", 0.7, "f", -0.09); // preload
 	//initializeMutationType("m6", 0.3, "f", -0.05); // preload
 	
-
+	
 	//Basic in-process mutation types
 	//initializeMutationType("m2", 0.1, "g", -0.001, 1); // deleterious
 	//initializeMutationType("m3", 0.1, "g", 0.001, 1); //beneficial
 	initializeMutationType("m9", 1, "f", 0.0); //synonymous
 	
-	//will make sim really slow if uncommented
-	//m2.convertToSubstitution = F;
-	//m3.convertToSubstitution = F;
-	//m4.convertToSubstitution = F;
-
+	
 	//create normal mutation distributions
 	if (mut_profile == 1){
 		//Both del and ben muts
-		//mito
-		//initializeGenomicElementType("g1",c(m2, m3, m4) , c(1, 1, 1));
-		//autosomal
-		//initializeGenomicElementType("g2",c(m2, m3, m4) , c(1, 1, 1));
 		
 		// Nuclear mutations
 		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
@@ -65,10 +62,6 @@ initialize() {
 		initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
 	} else if (mut_profile == 2){
 		//only del muts
-		//mito
-		//initializeGenomicElementType("g1",c(m2, m4) , c(1, 1));
-		//autosomal
-		//initializeGenomicElementType("g2",c(m2, m4) , c(1, 1));
 		
 		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
 		initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
@@ -85,7 +78,7 @@ initialize() {
 		initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
 	} else if (mut_profile == 3){
 		//no muts (techincially synonymous muts with no fitness effect)
-		//mito
+		//Nuclear
 		initializeMutationType("m1", 0.5, "g", 0.0, 0.2); // Nuclear negative A
 		initializeMutationType("m2", 0.5, "g", 0.0, 0.2); // Nuclear negative B
 		initializeMutationType("m3", 0.5, "g", 0.0, 0.2); // Nuclear negative A
@@ -101,6 +94,7 @@ initialize() {
 		initializeGenomicElementType("g2", c(m9), c(1));
 	}
 	
+	
 	m1.convertToSubstitution = F;
 	m2.convertToSubstitution = F;
 	m3.convertToSubstitution = F;
@@ -110,14 +104,12 @@ initialize() {
 	m7.convertToSubstitution = F;
 	m8.convertToSubstitution = F;
 	m9.convertToSubstitution = F;
-
-	//depending on how realistic we want to be, we may want to increase chromosome length
+	m10.convertToSubstitution = F;
+	m11.convertToSubstitution = F;
 	
 	//chromosome 1: mitochondrial chromosome
 	//adding in chromosome length
 	initializeChromosome(1,1e4, type="HF");
-	//mt chromosome is typically 16.5k base pairs
-	//ours is currently about 10k
 	initializeGenomicElement(g1, 0, 1e4-1);
 	initializeMutationRate(1e-6);
 	initializeRecombinationRate(0.0);
@@ -125,13 +117,11 @@ initialize() {
 	//chromosome 2: autosome
 	//adding chromosome length
 	initializeChromosome(2,1e6,type="A");
-	//nuclear genome is 3.1 billion base pairs
-	//ours is like 100k
-	initializeGenomicElement(g2, 0, 1e5-1);
+	initializeGenomicElement(g2, 0, 1e6-1);
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
 
-	
+
 
 }
 
@@ -145,7 +135,7 @@ initialize() {
 	} else {
 		p1.setCloningRate(0.0);
 	}
-
+	
 	//Vector to store fitness over time
 	p1.setValue("fitness_over_time", c());
 }
@@ -166,35 +156,35 @@ initialize() {
 			}
 		}
 	}
-
+	
 	if (preload_location == "mito"){
 		for (i in 1:20){
 			//seed deleterious mutations into mitochondrial chromosomes
-			mut_chroms.addNewDrawnMutation(m5, rdunif(1,0,chrom_length));
-			mut_chroms.addNewDrawnMutation(m6, rdunif(1,0,chrom_length));
+			mut_chroms.addNewDrawnMutation(m11, rdunif(1,0,chrom_length));
+			//mut_chroms.addNewDrawnMutation(m6, rdunif(1,0,chrom_length));
 		}
 	} else {
 		for (i in 1:20){
 			//seed deleterious mutations into nuclear chromosomes
-			mut_chroms.addNewDrawnMutation(m1, rdunif(1,0,chrom_length));
-			mut_chroms.addNewDrawnMutation(m2, rdunif(1,0,chrom_length));
+			mut_chroms.addNewDrawnMutation(m10, rdunif(1,0,chrom_length));
+			//mut_chroms.addNewDrawnMutation(m2, rdunif(1,0,chrom_length));
 		}
 	}
 	return T;
 }
 
 1: late() {
-
+	
 	inds = sim.subpopulations.individuals;
 	popFitt = c();
-
+	
 	// loop through each individual in the population to calculate fitness
 	for (ind in inds) {
 		globalFitness = 0;
 		unique = ind.uniqueMutations; // get the unique mutations for the individual
-		uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m3 | unique.mutationType == m4]; // subset to get only nuclear mutations
-		uniqueMito = unique[unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7 | unique.mutationType == m8]; // subset to get only mitochondrial mutations
-
+		uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m3 | unique.mutationType == m4| unique.mutationType == m10]; // subset to get only nuclear mutations
+		uniqueMito = unique[unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7 | unique.mutationType == m8| unique.mutationType == m11 ]; // subset to get only mitochondrial mutations
+		
 		// loop through each mitochondrial mutation to calculate the epistatic interactions with nuclear mutations
 		for (m in uniqueMito) {
 			if (!epi) {
@@ -202,7 +192,7 @@ initialize() {
 			} else {
 				total = 0;
 				epistatic = uniqueNuc[uniqueNuc.position % 125 == m.position % 125]; // get the nuclear mutations that are epistatic with the mitochondrial mutation (i.e., those that occur at the same position modulo 125)
-
+				
 				// loop through the epistatic nuclear mutations to calculate the total effect on fitness
 				for (n in epistatic) {
 					if (n.mutationType == m1 | n.mutationType == m3) {
@@ -212,19 +202,19 @@ initialize() {
 				}
 				
 				// If there are no epistatic interactions, add the effect of the mitochondrial mutation to fitness
-
-	//			globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
-
+				
+				//			globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
+				
 				if (length(epistatic) == 0) {
 					globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 				}
-
+				
 				if (m.mutationType == m6 | m.mutationType == m8) {
 					globalFitness = globalFitness - (total * abs(m.selectionCoeff));
 				}
-
-				else 
-					{globalFitness = globalFitness + (total * abs(m.selectionCoeff));
+				
+				else
+				{globalFitness = globalFitness + (total * abs(m.selectionCoeff));
 				}
 			}
 		}
@@ -232,12 +222,12 @@ initialize() {
 		for (mut in uniqueNuc) {
 			globalFitness = globalFitness + (abs(mut.selectionCoeff) * mut.selectionCoeff);
 		}
-
+		
 		// calculate the final fitness for the individual, ensuring it is not negative
 		Fitness = max(0.0, 1.0 + globalFitness * 3.0); // scale fitness to ensure it is positive and has a reasonable range
 		popFitt = c(popFitt, Fitness);
 	}
-
+	
 	inds.fitnessScaling = popFitt;
 }
 
@@ -273,6 +263,17 @@ mutationEffect(m8) {
 	return 1.0;
 }
 
+mutationEffect(m9) {
+	return 1.0;
+}
+
+mutationEffect(m10) {
+	return 1.0;
+}
+
+mutationEffect(m11) {
+	return 1.0;
+}
 
 
 
@@ -300,12 +301,12 @@ mutationEffect(m8) {
 	}
 }
 
-4000 late() {
+2000 late() {
 	//sim.simulationFinished(); 
 	//sim.outputFull();
 }
 
-4001 early() {
+2001 early() {
 	//Final fitness - output
 	print("Mean fitness at generation 4000:");
 	print(mean(p1.cachedFitness(NULL)));
@@ -316,24 +317,24 @@ mutationEffect(m8) {
 	}
 }
 
-2:4001 early() {
+2:2001 early() {
 	//update stored data about fitness over time for this simulation
-    f = mean(p1.cachedFitness(NULL));
-
-    v = p1.getValue("fitness_over_time");
-    v = c(v, f);
-    p1.setValue("fitness_over_time", v);
+	f = mean(p1.cachedFitness(NULL));
+	
+	v = p1.getValue("fitness_over_time");
+	v = c(v, f);
+	p1.setValue("fitness_over_time", v);
 }
 
-4001 late() {
+2001 late() {
 	//Export fitness over time data for this simulation
-    v = p1.getValue("fitness_over_time");
+	v = p1.getValue("fitness_over_time");
 	s = paste(v, sep=" ");
-    if (asexual == T)
-        writeFile(getwd() + "/asexual_fitness_over_time.txt", s, append=T);
-    else
-        writeFile(getwd() + "/sexual_fitness_over_time.txt", s, append=T);
-
-    print(length(v) + " entries exported");
+	if (asexual == T)
+		writeFile(getwd() + "/asexual_fitness_over_time.txt", s, append=T);
+	else
+		writeFile(getwd() + "/sexual_fitness_over_time.txt", s, append=T);
+	
+	print(length(v) + " entries exported");
 	print("Simulation complete");
 }
