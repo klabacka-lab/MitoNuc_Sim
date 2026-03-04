@@ -195,20 +195,37 @@ if axes[0].get_legend_handles_labels()[0]:
 
 
 # ---- Right Panel: Final Fitness Distribution
-
 any_distribution = False
 
-if BOXPLOT and sexual_final_fitness.size > 0 and asexual_final_fitness.size > 0:
+# Always prepare arrays, even if one is empty
+box_data = []
+tick_labels = []
+
+if asexual_final_fitness.size > 0:
+    box_data.append(asexual_final_fitness)
+    tick_labels.append("Asexual")
+else:
+    box_data.append([])
+    tick_labels.append("Asexual")
+
+if sexual_final_fitness.size > 0:
+    box_data.append(sexual_final_fitness)
+    tick_labels.append("Sexual")
+else:
+    box_data.append([])
+    tick_labels.append("Sexual")
+
+if BOXPLOT:
     bp = axes[1].boxplot(
-        [asexual_final_fitness, sexual_final_fitness],
-        tick_labels=["Asexual", "Sexual"],
-        patch_artist=True
+        box_data,
+        patch_artist=True,
+        labels=tick_labels
     )
 
-    bp["boxes"][0].set_facecolor(ASEXUAL_COLOR)
-    bp["boxes"][1].set_facecolor(SEXUAL_COLOR)
-
-    for patch in bp["boxes"]:
+    # Set locked colors
+    colors = [ASEXUAL_COLOR, SEXUAL_COLOR]
+    for patch, color in zip(bp["boxes"], colors):
+        patch.set_facecolor(color)
         patch.set_alpha(0.6)
 
     for median in bp["medians"]:
@@ -218,21 +235,21 @@ if BOXPLOT and sexual_final_fitness.size > 0 and asexual_final_fitness.size > 0:
     any_distribution = True
 
 else:
-    if sexual_final_fitness.size > 0:
-        axes[1].hist(sexual_final_fitness, bins=15,
-                     alpha=0.6, label="Sexual", color=SEXUAL_COLOR)
-        any_distribution = True
-
+    # Fallback to histogram if BOXPLOT is False
     if asexual_final_fitness.size > 0:
         axes[1].hist(asexual_final_fitness, bins=15,
                      alpha=0.6, label="Asexual", color=ASEXUAL_COLOR)
+        any_distribution = True
+
+    if sexual_final_fitness.size > 0:
+        axes[1].hist(sexual_final_fitness, bins=15,
+                     alpha=0.6, label="Sexual", color=SEXUAL_COLOR)
         any_distribution = True
 
 if not any_distribution:
     axes[1].text(0.5, 0.5, "No final fitness data",
                  transform=axes[1].transAxes,
                  ha="center", va="center")
-
 axes[1].set_title("Final Fitness Distribution")
 axes[1].set_xlabel("Simulation Type")
 axes[1].grid(True, alpha=0.3)

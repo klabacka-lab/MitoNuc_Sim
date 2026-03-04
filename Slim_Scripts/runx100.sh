@@ -4,17 +4,20 @@ start=$(date +%s)
 
 source venv/bin/activate
 
+
+rm -f sexual_cycles_to_escape.txt
+rm -f sexual_final_fitness.txt
+rm -f sexual_fitness_over_time.txt
+
+rm -f asexual_cycles_to_escape.txt
+rm -f asexual_final_fitness.txt
+rm -f asexual_fitness_over_time.txt
+
 for val in T F; do
     if [ "$val" = "F" ]; then
         echo "Running sexual simulations..."
-        rm -f sexual_cycles_to_escape.txt
-        rm -f sexual_final_fitness.txt
-        rm -f sexual_fitness_over_time.txt
     else
         echo "Running asexual simulations..."
-        rm -f asexual_cycles_to_escape.txt
-        rm -f asexual_final_fitness.txt
-        rm -f asexual_fitness_over_time.txt
     fi 
     for i in {1..100}; do
         echo "Running simulation $i..."
