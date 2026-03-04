@@ -1,14 +1,20 @@
 import string
 import numpy as np
-import sys
 import matplotlib.pyplot as plt
 from pathlib import Path
+
+# -----------------------------
+# Configuration Flags
+# -----------------------------
 
 BOXPLOT = True
 LOG_SCALE = False
 MEASURE_FITNESS_GAP = False
 SCATTER = False
 FIT_LINE = False
+
+SEXUAL_COLOR = "orange"
+ASEXUAL_COLOR = "blue"
 
 
 # -----------------------------
@@ -18,8 +24,7 @@ FIT_LINE = False
 def load_2d_array(path: str) -> np.ndarray:
     path_obj = Path(path)
 
-    if not path_obj.exists():
-        print(f"Warning: {path} does not exist.")
+    if not path_obj.exists() or path_obj.stat().st_size == 0:
         return np.empty((0, 0))
 
     rows = []
@@ -31,10 +36,10 @@ def load_2d_array(path: str) -> np.ndarray:
             try:
                 rows.append([float(x) for x in line.split()])
             except ValueError:
-                print(f"Warning: Non-numeric data in {path}, skipping line.")
+                # Skip partially written lines
+                continue
 
     if not rows:
-        print(f"Warning: {path} is empty.")
         return np.empty((0, 0))
 
     return np.array(rows, dtype=float)
@@ -43,18 +48,13 @@ def load_2d_array(path: str) -> np.ndarray:
 def safe_loadtxt(path: str) -> np.ndarray:
     path_obj = Path(path)
 
-    if not path_obj.exists():
-        print(f"Warning: {path} missing.")
+    if not path_obj.exists() or path_obj.stat().st_size == 0:
         return np.array([])
 
     try:
         data = np.loadtxt(path)
-        if data.size == 0:
-            print(f"Warning: {path} empty.")
-            return np.array([])
         return np.atleast_1d(data)
     except Exception:
-        print(f"Warning: Could not load {path}.")
         return np.array([])
 
 
@@ -78,6 +78,9 @@ asexual_data = load_2d_array("asexual_fitness_over_time.txt")
 sexual_mean, sexual_std_dev = compute_stats(sexual_data)
 asexual_mean, asexual_std_dev = compute_stats(asexual_data)
 
+sexual_n = sexual_data.shape[0] if sexual_data.ndim == 2 else (1 if sexual_data.size > 0 else 0)
+asexual_n = asexual_data.shape[0] if asexual_data.ndim == 2 else (1 if asexual_data.size > 0 else 0)
+
 if MEASURE_FITNESS_GAP:
     if sexual_mean.size > 0:
         sexual_mean = 1 - sexual_mean
@@ -86,50 +89,27 @@ if MEASURE_FITNESS_GAP:
 
 
 # -----------------------------
-# Align Lengths Safely
-# -----------------------------
-
-max_len = max(len(sexual_mean), len(asexual_mean))
-
-if max_len == 0:
-    print("Error: No time-series data available.")
-    sys.exit(0)
-
-cycles = np.arange(1, max_len + 1)
-
-min_len = min(len(sexual_mean), len(asexual_mean))
-
-sexual_mean = sexual_mean[:min_len]
-sexual_std_dev = sexual_std_dev[:min_len]
-asexual_mean = asexual_mean[:min_len]
-asexual_std_dev = asexual_std_dev[:min_len]
-cycles = cycles[:min_len]
-
-
-# -----------------------------
 # Optional Curve Fitting
 # -----------------------------
 
-if FIT_LINE and min_len > 5:
+if FIT_LINE:
     try:
         from scipy.optimize import curve_fit
 
         def model_function(x, a, b, c):
             return a - b * np.exp(-c * x)
 
-        if sexual_mean.size > 0:
-            popt, _ = curve_fit(
-                model_function, cycles, sexual_mean,
-                p0=[1.0, 0.1, 0.001], maxfev=10000
-            )
-            print(f"Line of best fit (sexual): y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
+        if sexual_mean.size > 5:
+            x = np.arange(1, len(sexual_mean) + 1)
+            popt, _ = curve_fit(model_function, x, sexual_mean,
+                                p0=[1.0, 0.1, 0.001], maxfev=10000)
+            print(f"Sexual fit: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
 
-        if asexual_mean.size > 0:
-            popt, _ = curve_fit(
-                model_function, cycles, asexual_mean,
-                p0=[1.0, 0.1, 0.001], maxfev=10000
-            )
-            print(f"Line of best fit (asexual): y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
+        if asexual_mean.size > 5:
+            x = np.arange(1, len(asexual_mean) + 1)
+            popt, _ = curve_fit(model_function, x, asexual_mean,
+                                p0=[1.0, 0.1, 0.001], maxfev=10000)
+            print(f"Asexual fit: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
 
     except Exception as e:
         print(f"Curve fitting failed: {e}")
@@ -149,62 +129,84 @@ asexual_final_fitness = safe_loadtxt("asexual_final_fitness.txt")
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
 
-# ---- Left Plot: Mean Fitness Over Time
+# ---- Left Panel: Time-Series
 
-if min_len > 0:
+any_time_series = False
 
+if sexual_mean.size > 0:
+    x = np.arange(1, len(sexual_mean) + 1)
     if SCATTER:
-        if asexual_mean.size > 0:
-            axes[0].scatter(cycles, asexual_mean, label="Asexual", s=4)
-        if sexual_mean.size > 0:
-            axes[0].scatter(cycles, sexual_mean, label="Sexual", s=4)
-
+        axes[0].scatter(x, sexual_mean, label="Sexual", s=4, color=SEXUAL_COLOR)
     else:
-        if asexual_mean.size > 0:
-            axes[0].plot(cycles, asexual_mean, label="Asexual Mean")
-            axes[0].fill_between(
-                cycles,
-                asexual_mean - asexual_std_dev,
-                asexual_mean + asexual_std_dev,
-                alpha=0.3,
-                label="Asexual ±1 SD"
-            )
+        axes[0].plot(x, sexual_mean, label="Sexual Mean", color=SEXUAL_COLOR)
+        axes[0].fill_between(
+            x,
+            sexual_mean - sexual_std_dev,
+            sexual_mean + sexual_std_dev,
+            alpha=0.3,
+            color=SEXUAL_COLOR,
+            label="Sexual ±1 SD"
+        )
+    any_time_series = True
 
-        if sexual_mean.size > 0:
-            axes[0].plot(cycles, sexual_mean, label="Sexual Mean")
-            axes[0].fill_between(
-                cycles,
-                sexual_mean - sexual_std_dev,
-                sexual_mean + sexual_std_dev,
-                alpha=0.3,
-                label="Sexual ±1 SD"
-            )
+if asexual_mean.size > 0:
+    x = np.arange(1, len(asexual_mean) + 1)
+    if SCATTER:
+        axes[0].scatter(x, asexual_mean, label="Asexual", s=4, color=ASEXUAL_COLOR)
+    else:
+        axes[0].plot(x, asexual_mean, label="Asexual Mean", color=ASEXUAL_COLOR)
+        axes[0].fill_between(
+            x,
+            asexual_mean - asexual_std_dev,
+            asexual_mean + asexual_std_dev,
+            alpha=0.3,
+            color=ASEXUAL_COLOR,
+            label="Asexual ±1 SD"
+        )
+    any_time_series = True
 
-else:
+if not any_time_series:
     axes[0].text(0.5, 0.5, "No time-series data",
                  transform=axes[0].transAxes,
                  ha="center", va="center")
 
 axes[0].set_xlabel("Generation")
 axes[0].set_ylabel("Mean Fitness")
-axes[0].set_title("Mean Fitness Over Time")
+
+# ---- Title Logic
+
+if sexual_n == asexual_n and sexual_n > 0:
+    axes[0].set_title(f"Mean Fitness Over Time ({sexual_n} Simulations)")
+elif sexual_n > 0 or asexual_n > 0:
+    axes[0].set_title(
+        f"Mean Fitness Over Time "
+        f"(Sexual: {sexual_n}, Asexual: {asexual_n} Simulations)"
+    )
+else:
+    axes[0].set_title("Mean Fitness Over Time")
+
 axes[0].grid(True)
 
 if LOG_SCALE:
     axes[0].set_yscale('log')
 
-axes[0].legend()
+if axes[0].get_legend_handles_labels()[0]:
+    axes[0].legend()
 
 
-# ---- Right Plot: Final Fitness Distribution
+# ---- Right Panel: Final Fitness Distribution
+
+any_distribution = False
 
 if BOXPLOT and sexual_final_fitness.size > 0 and asexual_final_fitness.size > 0:
-
     bp = axes[1].boxplot(
         [asexual_final_fitness, sexual_final_fitness],
         tick_labels=["Asexual", "Sexual"],
         patch_artist=True
     )
+
+    bp["boxes"][0].set_facecolor(ASEXUAL_COLOR)
+    bp["boxes"][1].set_facecolor(SEXUAL_COLOR)
 
     for patch in bp["boxes"]:
         patch.set_alpha(0.6)
@@ -213,12 +215,20 @@ if BOXPLOT and sexual_final_fitness.size > 0 and asexual_final_fitness.size > 0:
         median.set_color("black")
         median.set_linewidth(2)
 
-elif sexual_final_fitness.size > 0 and asexual_final_fitness.size > 0:
-
-    axes[1].hist(asexual_final_fitness, bins=15, alpha=0.6, label="Asexual")
-    axes[1].hist(sexual_final_fitness, bins=15, alpha=0.6, label="Sexual")
+    any_distribution = True
 
 else:
+    if sexual_final_fitness.size > 0:
+        axes[1].hist(sexual_final_fitness, bins=15,
+                     alpha=0.6, label="Sexual", color=SEXUAL_COLOR)
+        any_distribution = True
+
+    if asexual_final_fitness.size > 0:
+        axes[1].hist(asexual_final_fitness, bins=15,
+                     alpha=0.6, label="Asexual", color=ASEXUAL_COLOR)
+        any_distribution = True
+
+if not any_distribution:
     axes[1].text(0.5, 0.5, "No final fitness data",
                  transform=axes[1].transAxes,
                  ha="center", va="center")
@@ -226,6 +236,9 @@ else:
 axes[1].set_title("Final Fitness Distribution")
 axes[1].set_xlabel("Simulation Type")
 axes[1].grid(True, alpha=0.3)
+
+if axes[1].get_legend_handles_labels()[0]:
+    axes[1].legend()
 
 
 # ---- Panel Labels
