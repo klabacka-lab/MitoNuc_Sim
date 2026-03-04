@@ -2,7 +2,7 @@ initialize() {
 	print("Initializing simulation...");
 	if (!exists("asexual")){
 		//parameter to toggle asexual reproduction
-		defineConstant("asexual", T);
+		defineConstant("asexual", F);
 	}
 	defineConstant("popSize", 250);
 	defineConstant("epi", T); // whether to include epistasis between mito and nuc muts
@@ -10,7 +10,7 @@ initialize() {
 	//Where to preload the mutations - mitochondria or the nuclear genome
 	defineConstant("preload_location", "nucl");
 	//WHich mutational profile to use 1: del and ben, 2: only del, 3: no mutations with fitness effects
-	defineConstant("mut_profile", 3);
+	defineConstant("mut_profile", 1);
 	
 	if (preload_location == "mito"){
 		defineConstant("chrom_length",1e4-1);
@@ -30,10 +30,12 @@ initialize() {
 	initializeMutationType("m12", 0.7, "f", -0.09); // preload
 	
 	//Nuclear
-	initializeMutationType("m11", 0.7, "g", -0.09, 1); // preload
+	initializeMutationType("m11", 0.7, "g", -0.09, 1.0); // preload
 	//initializeMutationType("m6", 0.3, "f", -0.05); // preload
 	
-
+	initializeMutationType("m9", 1.0, "f", 0.0); //synonymous
+	initializeMutationType("m10", 1.0, "f", 0.0); //synonymous
+	
 	//create normal mutation distributions
 	if (mut_profile == 1){
 		//Both del and ben muts
@@ -81,9 +83,6 @@ initialize() {
 		initializeMutationType("m6", 1.0, "f", 0.0); // Mitochondrial negative B
 		initializeMutationType("m7", 1.0, "f", 0.0); // Mitochondrial negative A
 		initializeMutationType("m8", 1.0, "f", 0.0); // Mitochondrial negative B
-		
-		initializeMutationType("m9", 1.0, "f", 0.0); //synonymous
-		initializeMutationType("m10", 1.0, "f", 0.0); //synonymous
 		
 		initializeGenomicElementType("g1", c(m9), c(1));
 		//autosomal
@@ -194,7 +193,7 @@ initialize() {
 				for (n in epistatic) {
 					if (n.mutationType == m1 | n.mutationType == m3) {
 						total = total + abs(n.selectionCoeff);
-
+					
 					}
 					else {total = total - abs(n.selectionCoeff);}
 				}
