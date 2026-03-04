@@ -20,6 +20,7 @@ for val in T F; do
         echo "Running asexual simulations..."
     fi 
     for i in {1..100}; do
+        echo "\n\n\n"
         echo "Running simulation $i..."
         slim -d asexual="\"$val\"" GrowthFitness.slim
         python3 figure_maker.py

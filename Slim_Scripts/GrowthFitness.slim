@@ -1,4 +1,5 @@
 initialize() {
+	print("-------Sim Start-------");
 	print("Initializing simulation...");
 	if (!exists("asexual")){
 		//parameter to toggle asexual reproduction
@@ -22,9 +23,9 @@ initialize() {
 	//Enable pedigree tracking
 	initializeSLiMOptions(keepPedigrees=T);
 	
-	//TODO: Make depend on asexual param?
-	initializeSex();
-	
+	if (!asexual){ 
+		initializeSex();
+	}
 	//Preloaded mutations types for seeding initial population.
 	//Mito
 	initializeMutationType("m12", 0.7, "f", -0.09); // preload

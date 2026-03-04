@@ -219,7 +219,7 @@ if BOXPLOT:
     bp = axes[1].boxplot(
         box_data,
         patch_artist=True,
-        labels=tick_labels
+        tick_labels=tick_labels
     )
 
     # Set locked colors
