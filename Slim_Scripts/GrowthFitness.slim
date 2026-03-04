@@ -8,9 +8,9 @@ initialize() {
 	defineConstant("epi", T); // whether to include epistasis between mito and nuc muts
 	
 	//Where to preload the mutations - mitochondria or the nuclear genome
-	defineConstant("preload_location", "nucl");
+	defineConstant("preload_location", "mito");
 	//WHich mutational profile to use 1: del and ben, 2: only del, 3: no mutations with fitness effects
-	defineConstant("mut_profile", 1);
+	defineConstant("mut_profile", 3);
 	
 	if (preload_location == "mito"){
 		defineConstant("chrom_length",1e4-1);
@@ -178,8 +178,8 @@ initialize() {
 	for (ind in inds) {
 		globalFitness = 0;
 		unique = ind.uniqueMutations; // get the unique mutations for the individual
-		uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m3 | unique.mutationType == m4 | unique.mutationType == m10 | unique.mutationType == m11]; // subset to get only nuclear mutations
-		uniqueMito = unique[unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7 | unique.mutationType == m8|unique.mutationType == m9 | unique.mutationType == m12]; // subset to get only mitochondrial mutations
+		uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m3 | unique.mutationType == m4 | unique.mutationType == m11]; // subset to get only nuclear mutations
+		uniqueMito = unique[unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7 | unique.mutationType == m8| unique.mutationType == m12]; // subset to get only mitochondrial mutations
 		
 		// loop through each mitochondrial mutation to calculate the epistatic interactions with nuclear mutations
 		for (m in uniqueMito) {
