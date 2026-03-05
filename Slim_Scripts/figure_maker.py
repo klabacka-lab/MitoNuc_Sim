@@ -75,6 +75,9 @@ def compute_stats(arr: np.ndarray):
 sexual_data = load_2d_array("sexual_fitness_over_time.txt")
 asexual_data = load_2d_array("asexual_fitness_over_time.txt")
 
+print(f"Sexual fitness_over_time shape: {sexual_data.shape}")
+print(f"Asexual fitness_over_time shape: {asexual_data.shape}")
+
 sexual_mean, sexual_std_dev = compute_stats(sexual_data)
 asexual_mean, asexual_std_dev = compute_stats(asexual_data)
 
