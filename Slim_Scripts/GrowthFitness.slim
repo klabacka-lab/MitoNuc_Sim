@@ -13,12 +13,7 @@ initialize() {
 	//WHich mutational profile to use 1: del and ben, 2: only del, 3: no mutations with fitness effects
 	defineConstant("mut_profile", 2);
 	
-	if (preload_location == "mito"){
-		defineConstant("chrom_length",1e4-1);
-	}
-	else {
-		defineConstant("chrom_length",1e6-1);
-	}
+	defineConstant("chrom_length", 1e5);
 	
 	//Enable pedigree tracking
 	initializeSLiMOptions(keepPedigrees=T);
@@ -103,18 +98,21 @@ initialize() {
 	m10.convertToSubstitution = F;
 	m11.convertToSubstitution = F;
 	m12.convertToSubstitution = F;
+
+	defineConstant("mito_chrom_length", 1e5-1);
+	defineConstant("nuc_chrom_length", 1e5-1);
 	
 	//chromosome 1: mitochondrial chromosome
 	//adding in chromosome length
-	initializeChromosome(1,1e4, type="HF");
-	initializeGenomicElement(g1, 0, 1e4-1);
+	initializeChromosome(1,mito_chrom_length, type="HF");
+	initializeGenomicElement(g1, 0, mito_chrom_length);
 	initializeMutationRate(1e-6);
 	initializeRecombinationRate(0.0);
 	
 	//chromosome 2: autosome
 	//adding chromosome length
-	initializeChromosome(2,1e6,type="A");
-	initializeGenomicElement(g2, 0, 1e6-1);
+	initializeChromosome(2,nuc_chrom_length,type="A");
+	initializeGenomicElement(g2, 0, nuc_chrom_length);
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
 
@@ -310,7 +308,7 @@ mutationEffect(m12) {
 
 2001 early() {
 	//Final fitness - output
-	print("Mean fitness at generation 4000:");
+	print("Mean fitness at generation 2000:");
 	print(mean(p1.cachedFitness(NULL)));
 	if (asexual == T){
 		writeFile(getwd() + "/asexual_final_fitness.txt", asString(mean(p1.cachedFitness(NULL))), append=T);
