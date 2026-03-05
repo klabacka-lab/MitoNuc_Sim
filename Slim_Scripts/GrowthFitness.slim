@@ -99,20 +99,20 @@ initialize() {
 	m11.convertToSubstitution = F;
 	m12.convertToSubstitution = F;
 
-	defineConstant("mito_chrom_length", 1e5-1);
-	defineConstant("nuc_chrom_length", 1e5-1);
+	defineConstant("mito_chrom_length", 1e5);
+	defineConstant("nuc_chrom_length", 1e5);
 	
 	//chromosome 1: mitochondrial chromosome
 	//adding in chromosome length
 	initializeChromosome(1,mito_chrom_length, type="HF");
-	initializeGenomicElement(g1, 0, mito_chrom_length);
+	initializeGenomicElement(g1, 0, mito_chrom_length-1);
 	initializeMutationRate(1e-6);
 	initializeRecombinationRate(0.0);
 	
 	//chromosome 2: autosome
 	//adding chromosome length
 	initializeChromosome(2,nuc_chrom_length,type="A");
-	initializeGenomicElement(g2, 0, nuc_chrom_length);
+	initializeGenomicElement(g2, 0, nuc_chrom_length-1);
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
 
