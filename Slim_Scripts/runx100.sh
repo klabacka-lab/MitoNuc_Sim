@@ -8,7 +8,7 @@ source venv/bin/activate
 for epi in T F; do
     for mut_profile in 1 2 3; do
         for preload_location in "mito" "nuc"; do
-            echo "Running simulations with mut_profile=$mut_profile and preload_location=$preload_location"
+            echo "Running simulations with mut_profile=$mut_profile and preload_location=$preload_location, epistasis=$epi..."
 
             rm -f sexual_cycles_to_escape.txt
             rm -f sexual_final_fitness.txt

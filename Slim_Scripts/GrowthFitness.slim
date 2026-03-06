@@ -44,6 +44,12 @@ initialize() {
 	
 	initializeMutationType("m9", 1.0, "f", 0.0); //synonymous
 	initializeMutationType("m10", 1.0, "f", 0.0); //synonymous
+
+	m9.convertToSubstitution = F;
+	m10.convertToSubstitution = F;
+	m11.convertToSubstitution = F;
+	m12.convertToSubstitution = F;
+
 	
 	if (epi == T){
 		//create normal mutation distributions
@@ -98,6 +104,15 @@ initialize() {
 			//autosomal
 			initializeGenomicElementType("g2", c(m10), c(1));
 		}
+
+		m1.convertToSubstitution = F;
+		m2.convertToSubstitution = F;
+		m3.convertToSubstitution = F;
+		m4.convertToSubstitution = F;
+		m5.convertToSubstitution = F;
+		m6.convertToSubstitution = F;
+		m7.convertToSubstitution = F;
+		m8.convertToSubstitution = F;
 	} else {
 		initializeMutationType("m2", 0.1, "g", -0.001, 1); // deleterious
 		initializeMutationType("m3", 0.1, "g", 0.001, 1); //beneficial
@@ -122,22 +137,16 @@ initialize() {
 			//autosomal
 			initializeGenomicElementType("g2", c(m4), c(1));
 		}
+
+
+		m2.convertToSubstitution = F;
+		m3.convertToSubstitution = F;
+		m4.convertToSubstitution = F;
 	}
 		
 	
-	m1.convertToSubstitution = F;
-	m2.convertToSubstitution = F;
-	m3.convertToSubstitution = F;
-	m4.convertToSubstitution = F;
-	m5.convertToSubstitution = F;
-	m6.convertToSubstitution = F;
-	m7.convertToSubstitution = F;
-	m8.convertToSubstitution = F;
-	m9.convertToSubstitution = F;
-	m10.convertToSubstitution = F;
-	m11.convertToSubstitution = F;
-	m12.convertToSubstitution = F;
-
+	
+	
 	
 	
 	//chromosome 1: mitochondrial chromosome
