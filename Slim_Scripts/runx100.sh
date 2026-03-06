@@ -4,6 +4,7 @@ start=$(date +%s)
 
 source venv/bin/activate
 
+epi=T
 
 for mut_profile in 1 2 3; do
     for preload_location in "mito" "nuc"; do
@@ -19,7 +20,7 @@ for mut_profile in 1 2 3; do
 
         plot_dir="automatic_figures"
 
-        plot_filename = "plot_mut${mut_profile}_preload[${preload_location}].png"
+        plot_filename="plot_mut${mut_profile}_preload[${preload_location}]_epi${epi}.png"
 
         for val in T F; do
             if [ "$val" = "F" ]; then
@@ -30,8 +31,8 @@ for mut_profile in 1 2 3; do
             for i in {1..100}; do
                 echo "\n\n\n"
                 echo "Running simulation $i..."
-                slim -d asexual="\"$val\"" -d mut_profile="$mut_profile" -d preload_location="\"$preload_location\"" GrowthFitness.slim
-                python3 figure_maker.py ${plot_dir}/${plot_filename}
+                slim -d asexual="\"$val\"" -d mut_profile="$mut_profile" -d preload_location="\"$preload_location\"" -d epi="\"$epi\"" GrowthFitness.slim
+                python3 figure_maker.py --output ${plot_dir}/${plot_filename}
 
             done
         done

@@ -14,10 +14,13 @@ initialize() {
 		//parameter to toggle which mutational profile to use
 		defineConstant("mut_profile", 2);
 	}
+	if (!exists("epi")){
+		//parameter to toggle whether to include epistasis between mito and nuc muts
+		defineConstant("epi", T);
+
+	}
 
 	defineConstant("popSize", 250);
-	defineConstant("epi", F); // whether to include epistasis between mito and nuc muts
-
 	defineConstant("mito_chrom_length", 1e4);
 	defineConstant("nuc_chrom_length", 1e6);
 	
@@ -163,14 +166,14 @@ initialize() {
 	if (preload_location == "mito"){
 		for (i in 1:20){
 			//seed deleterious mutations into mitochondrial chromosomes
-			mut_chroms.addNewDrawnMutation(m12, rdunif(1,0,mito_chrom_length));
+			mut_chroms.addNewDrawnMutation(m12, rdunif(1,0,mito_chrom_length-1));
 			//mut_chroms.addNewDrawnMutation(m6, rdunif(1,0,chrom_length));
 		}
 	} else {
 		for (i in 1:20){
 			//seed deleterious mutations into nuclear chromosomes
 			//mut_chroms.addNewDrawnMutation(m11, rdunif(1,0,chrom_length));
-			mut_chroms.addNewDrawnMutation(m2, rdunif(1,0,nuc_chrom_length));
+			mut_chroms.addNewDrawnMutation(m2, rdunif(1,0,nuc_chrom_length-1));
 		}
 	}
 	return T;
