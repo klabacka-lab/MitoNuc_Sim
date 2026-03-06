@@ -2,6 +2,7 @@ import string
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
+import argparse
 
 # -----------------------------
 # Configuration Flags
@@ -67,6 +68,21 @@ def compute_stats(arr: np.ndarray):
 
     return arr.mean(axis=0), arr.std(axis=0)
 
+
+# -----------------------------
+# Command Line Arguments
+# -----------------------------
+
+parser = argparse.ArgumentParser(description="Plot fitness results from SLiM simulations.")
+parser.add_argument(
+    "--output",
+    type=str,
+    default="fitness_over_time.png",
+    help="Path to save the output figure"
+)
+
+args = parser.parse_args()
+OUTPUT_PATH = args.output
 
 # -----------------------------
 # Load Time-Series Data
@@ -272,5 +288,5 @@ for ax, label in zip(axes.flat, string.ascii_uppercase):
 
 
 plt.tight_layout()
-plt.savefig("fitness_over_time.png", dpi=300)
-print("Saved: fitness_over_time.png")
+plt.savefig(OUTPUT_PATH, dpi=300)
+print(f"Saved: {OUTPUT_PATH}")

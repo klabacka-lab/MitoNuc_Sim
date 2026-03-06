@@ -5,15 +5,23 @@ initialize() {
 		//parameter to toggle asexual reproduction
 		defineConstant("asexual", F);
 	}
+
+	if (!exists("preload_location")){
+		//parameter to toggle where to preload mutations
+		defineConstant("preload_location", "mito");
+	}
+	if (!exists("mut_profile")){
+		//parameter to toggle which mutational profile to use
+		defineConstant("mut_profile", 2);
+	}
+
 	defineConstant("popSize", 250);
-	defineConstant("epi", T); // whether to include epistasis between mito and nuc muts
+	defineConstant("epi", F); // whether to include epistasis between mito and nuc muts
+
+	defineConstant("mito_chrom_length", 1e4);
+	defineConstant("nuc_chrom_length", 1e6);
 	
-	//Where to preload the mutations - mitochondria or the nuclear genome
-	defineConstant("preload_location", "mito");
-	//WHich mutational profile to use 1: del and ben, 2: only del, 3: no mutations with fitness effects
-	defineConstant("mut_profile", 2);
 	
-	defineConstant("chrom_length", 1e5);
 	
 	//Enable pedigree tracking
 	initializeSLiMOptions(keepPedigrees=T);
@@ -100,8 +108,7 @@ initialize() {
 	m11.convertToSubstitution = F;
 	m12.convertToSubstitution = F;
 
-	defineConstant("mito_chrom_length", 1e5);
-	defineConstant("nuc_chrom_length", 1e5);
+	
 	
 	//chromosome 1: mitochondrial chromosome
 	//adding in chromosome length
@@ -156,14 +163,14 @@ initialize() {
 	if (preload_location == "mito"){
 		for (i in 1:20){
 			//seed deleterious mutations into mitochondrial chromosomes
-			mut_chroms.addNewDrawnMutation(m12, rdunif(1,0,chrom_length));
+			mut_chroms.addNewDrawnMutation(m12, rdunif(1,0,mito_chrom_length));
 			//mut_chroms.addNewDrawnMutation(m6, rdunif(1,0,chrom_length));
 		}
 	} else {
 		for (i in 1:20){
 			//seed deleterious mutations into nuclear chromosomes
 			//mut_chroms.addNewDrawnMutation(m11, rdunif(1,0,chrom_length));
-			mut_chroms.addNewDrawnMutation(m2, rdunif(1,0,chrom_length));
+			mut_chroms.addNewDrawnMutation(m2, rdunif(1,0,nuc_chrom_length));
 		}
 	}
 	return T;
