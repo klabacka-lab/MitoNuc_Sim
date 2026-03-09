@@ -216,15 +216,16 @@ initialize() {
 	// loop through each individual in the population to calculate fitness
 	for (ind in inds) {
 		globalFitness = 0;
-		unique = ind.uniqueMutations; // get the unique mutations for the individual
-		uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m3 | unique.mutationType == m4 | unique.mutationType == m11]; // subset to get only nuclear mutations
-		uniqueMito = unique[unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7 | unique.mutationType == m8| unique.mutationType == m12]; // subset to get only mitochondrial mutations
 		
 		// loop through each mitochondrial mutation to calculate the epistatic interactions with nuclear mutations
 		for (m in uniqueMito) {
 			if (!epi) {
 				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 			} else {
+				unique = ind.uniqueMutations; // get the unique mutations for the individual
+				uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m3 | unique.mutationType == m4 | unique.mutationType == m11]; // subset to get only nuclear mutations
+				uniqueMito = unique[unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7 | unique.mutationType == m8| unique.mutationType == m12]; // subset to get only mitochondrial mutations
+				
 				total = 0;
 				epistatic = uniqueNuc[uniqueNuc.position % 125 == m.position % 125]; // get the nuclear mutations that are epistatic with the mitochondrial mutation (i.e., those that occur at the same position modulo 125)
 				
