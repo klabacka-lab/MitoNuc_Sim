@@ -351,12 +351,12 @@ mutationEffect(m12) {
 	}
 }
 
-2000 late() {
+4000 late() {
 	//sim.simulationFinished(); 
 	//sim.outputFull();
 }
 
-2001 early() {
+4001 early() {
 	//Final fitness - output
 	print("Mean fitness at generation 2000:");
 	print(mean(p1.cachedFitness(NULL)));
@@ -369,7 +369,7 @@ mutationEffect(m12) {
 	}
 }
 
-2:2001 early() {
+2:4001 early() {
 	//update stored data about fitness over time for this simulation
 	f = mean(p1.cachedFitness(NULL));
 	
@@ -378,7 +378,7 @@ mutationEffect(m12) {
 	p1.setValue("fitness_over_time", v);
 }
 
-2001 late() {
+4001 late() {
 	//Export fitness over time data for this simulation
 	v = p1.getValue("fitness_over_time");
 	s = paste(v, sep=" ");
