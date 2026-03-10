@@ -20,14 +20,12 @@ initialize() {
 
 	}
 	if (!exists("logging")){
-		defineConstant("logging", T);
+		defineConstant("logging", F);
 	}
 
 	defineConstant("popSize", 250);
 	defineConstant("mito_chrom_length", 1e4);
 	defineConstant("nuc_chrom_length", 1e6);
-	
-	
 	
 	//Enable pedigree tracking
 	initializeSLiMOptions(keepPedigrees=T);
@@ -35,6 +33,8 @@ initialize() {
 	if (!asexual){ 
 		initializeSex();
 	}
+
+
 	//Preloaded mutations types for seeding initial population.
 	//Mito
 	initializeMutationType("m12", 0.7, "f", -0.09); // preload
@@ -42,8 +42,7 @@ initialize() {
 	//changing back to fixed for consistency
 	initializeMutationType("m11", 0.7, "f", -0.09); // preload
 	
-	initializeMutationType("m9", 1.0, "f", 0.0); //synonymous
-	initializeMutationType("m10", 1.0, "f", 0.0); //synonymous
+	
 
 	m9.convertToSubstitution = F;
 	m10.convertToSubstitution = F;
@@ -52,6 +51,8 @@ initialize() {
 
 	
 	if (epi == T){
+		initializeMutationType("m9", 1.0, "f", 0.0); //synonymous
+		initializeMutationType("m10", 1.0, "f", 0.0); //synonymous
 		//create normal mutation distributions
 		if (mut_profile == 1){
 			//Both del and ben muts
@@ -155,7 +156,6 @@ initialize() {
 	initializeGenomicElement(g2, 0, nuc_chrom_length-1);
 	initializeMutationRate(1e-7);
 	initializeRecombinationRate(1e-7);
-
 
 
 }

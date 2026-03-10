@@ -6,7 +6,7 @@ source venv/bin/activate
 
 for epi in T F; do
     for mut_profile in 1 2 3; do
-        for preload_location in "mito" "nuc"; do
+        for preload_location in "mito" "nucl"; do
             echo "Preparing mut_profile=$mut_profile preload_location=$preload_location epistasis=$epi..."
 
             plot_dir="automatic_figures"
@@ -36,7 +36,7 @@ for epi in T F; do
                     echo "Running asexual simulations..."
                 fi 
 
-                for i in {1..100}; do
+                for i in {1..5}; do
                     echo
                     echo
                     echo
