@@ -209,6 +209,7 @@ initialize() {
 }
 
 1: late() {
+
 	
 	inds = sim.subpopulations.individuals;
 	popFitt = c();
@@ -219,7 +220,7 @@ initialize() {
 
 		unique = ind.uniqueMutations; // get the unique mutations for the individual
 		
-		if (!epi) {
+		if (epi == F) {
 			for (m in unique) {
 				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 			}
