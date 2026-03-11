@@ -9,7 +9,7 @@ for epi in T F; do
         for preload_location in "mito" "nucl"; do
             echo "Preparing mut_profile=$mut_profile preload_location=$preload_location epistasis=$epi..."
 
-            plot_dir="automatic_figures"
+            plot_dir="automatic_figures/4000"
             plot_filename="plot_mut${mut_profile}_preload[${preload_location}]_epi${epi}.png"
             plot_path="${plot_dir}/${plot_filename}"
 

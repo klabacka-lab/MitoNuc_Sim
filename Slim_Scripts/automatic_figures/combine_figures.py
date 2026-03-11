@@ -11,6 +11,8 @@ mutation_labels = {
 preloads = ["mito","nuc"]
 epis = ["F","T"]
 
+folder = "plots"
+
 fig, axes = plt.subplots(3,4, figsize=(16,12))
 
 for i, mut in enumerate(mutation_profiles):
@@ -19,7 +21,7 @@ for i, mut in enumerate(mutation_profiles):
     for preload in preloads:
         for epi in epis:
 
-            fname = f"plot_mut{mut}_preload[{preload}]_epi{epi}.png"
+            fname = f"{folder}/plot_mut{mut}_preload[{preload}]_epi{epi}.png"
             img = Image.open(fname)
 
             ax = axes[i, col]
