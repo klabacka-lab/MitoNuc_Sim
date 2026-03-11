@@ -138,9 +138,18 @@ if FIT_LINE:
 # Load Final Fitness Data
 # -----------------------------
 
-sexual_final_fitness = safe_loadtxt("sexual_final_fitness.txt")
-asexual_final_fitness = safe_loadtxt("asexual_final_fitness.txt")
+#sexual_final_fitness = safe_loadtxt("sexual_final_fitness.txt")
+#asexual_final_fitness = safe_loadtxt("asexual_final_fitness.txt")
 
+sexual_final_fitness = (
+    sexual_data[:, -1] if sexual_data.ndim == 2 and sexual_data.shape[1] > 0
+    else np.array([])
+)
+
+asexual_final_fitness = (
+    asexual_data[:, -1] if asexual_data.ndim == 2 and asexual_data.shape[1] > 0
+    else np.array([])
+)
 
 # -----------------------------
 # Plotting
