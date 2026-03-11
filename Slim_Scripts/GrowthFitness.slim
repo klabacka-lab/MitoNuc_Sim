@@ -44,8 +44,6 @@ initialize() {
 	
 	
 
-	m9.convertToSubstitution = F;
-	m10.convertToSubstitution = F;
 	m11.convertToSubstitution = F;
 	m12.convertToSubstitution = F;
 
@@ -53,6 +51,10 @@ initialize() {
 	if (epi == T){
 		initializeMutationType("m9", 1.0, "f", 0.0); //synonymous
 		initializeMutationType("m10", 1.0, "f", 0.0); //synonymous
+
+
+		m9.convertToSubstitution = F;
+		m10.convertToSubstitution = F;
 		//create normal mutation distributions
 		if (mut_profile == 1){
 			//Both del and ben muts
