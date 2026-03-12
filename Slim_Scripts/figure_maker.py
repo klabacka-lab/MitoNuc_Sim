@@ -74,6 +74,21 @@ def compute_stats(arr: np.ndarray):
 # -----------------------------
 
 parser = argparse.ArgumentParser(description="Plot fitness results from SLiM simulations.")
+
+parser.add_argument(
+    "--sexual_data",
+    type=str,
+    default="sexual_fitness_over_time.txt",
+    help="Path to sexual fitness over time data"
+)
+
+parser.add_argument(
+    "--asexual_data",
+    type=str,
+    default="asexual_fitness_over_time.txt",
+    help="Path to asexual fitness over time data"
+)
+
 parser.add_argument(
     "--output",
     type=str,
@@ -82,14 +97,17 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+
+SEXUAL_DATA_PATH = args.sexual_data
+ASEXUAL_DATA_PATH = args.asexual_data
 OUTPUT_PATH = args.output
 
 # -----------------------------
 # Load Time-Series Data
 # -----------------------------
 
-sexual_data = load_2d_array("sexual_fitness_over_time.txt")
-asexual_data = load_2d_array("asexual_fitness_over_time.txt")
+sexual_data = load_2d_array(SEXUAL_DATA_PATH)
+asexual_data = load_2d_array(ASEXUAL_DATA_PATH)
 
 print(f"Sexual fitness_over_time shape: {sexual_data.shape}")
 print(f"Asexual fitness_over_time shape: {asexual_data.shape}")

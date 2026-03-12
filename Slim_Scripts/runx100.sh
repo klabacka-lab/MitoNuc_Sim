@@ -52,9 +52,9 @@ for epi in T F; do
                     GrowthFitness.slim
 
                     python3 figure_maker.py \
-                        --input "$data_dir" \
+                        --sexual_data "sexual_${run_id}_data.txt" \
+                        --asexual_data "asexual_${run_id}_data.txt" \
                         --output "$plot_path"
-
                 done
             done
         done
