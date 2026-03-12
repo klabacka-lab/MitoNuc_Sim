@@ -97,6 +97,8 @@ print(f"Asexual fitness_over_time shape: {asexual_data.shape}")
 sexual_mean, sexual_std_dev = compute_stats(sexual_data)
 asexual_mean, asexual_std_dev = compute_stats(asexual_data)
 
+print(asexual_mean)
+
 sexual_n = sexual_data.shape[0] if sexual_data.ndim == 2 else (1 if sexual_data.size > 0 else 0)
 asexual_n = asexual_data.shape[0] if asexual_data.ndim == 2 else (1 if asexual_data.size > 0 else 0)
 
