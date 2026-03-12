@@ -330,7 +330,6 @@ mutationEffect(m12) {
 
 2 early() {
 	//Mutational metdown fitness
-	print("WE GO PRINTING");
 	print("Mean fitness at generation 1:");
 	print(mean(p1.cachedFitness(NULL)));
 }
@@ -362,6 +361,7 @@ mutationEffect(m12) {
 	s = paste(v, sep=" ");
 	if (logging == T){
 		writeFile(getwd() + data_file, s, append=T);
+		print("Data exported to " + data_file);
 	}
 
 	print(length(v) + " entries exported");
