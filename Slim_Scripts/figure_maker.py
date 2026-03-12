@@ -203,6 +203,8 @@ if not any_time_series:
 axes[0].set_xlabel("Generation")
 axes[0].set_ylabel("Mean Fitness")
 
+axes[0].yaxis.get_major_formatter().set_useOffset(False)
+
 # ---- Title Logic
 
 if sexual_n == asexual_n and sexual_n > 0:
