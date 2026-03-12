@@ -12,8 +12,6 @@ for epi in T F; do
 
             echo "Preparing $run_id..."
 
-            mkdir -p "$data_dir"
-
             plot_dir="automatic_figures/2000"
             plot_filename="plot_${run_id}.png"
             plot_path="${plot_dir}/${plot_filename}"
