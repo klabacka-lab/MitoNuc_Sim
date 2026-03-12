@@ -1,3 +1,17 @@
+12 March 2026
+
+Sim 1
+  Cloning, not recombination, appears to drive the difference bewtwen sexual and asexual fitness
+  (at least with current recombinatoion rate, which is low)
+  sexual simulations with and without recombination (crossing over) show very small differences
+  
+Sim 2
+  12 simulations based on 3 mutational profiles, epistasis on/off, and preload location nucl/mito are complete
+  possible focus on mut_2_preload[mito]_epiT
+  Should rerun with recombination rate and epistasis rate determined by other group
+  Redo plots with same y axis (maybe log scale)
+  
+
 5 March 2026
 
 12 simulations - all setups - save and document for comparison
