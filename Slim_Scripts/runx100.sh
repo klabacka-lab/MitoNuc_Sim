@@ -34,7 +34,7 @@ for epi in T F; do
                     prefix="asexual"
                 fi 
 
-                data_file="${prefix}_${run_id}_data.txt"
+                data_file="${plot_dir}/${prefix}_${run_id}_data.txt"
 
 
 
@@ -52,8 +52,8 @@ for epi in T F; do
                     GrowthFitness.slim
 
                     python3 figure_maker.py \
-                        --sexual_data "sexual_${run_id}_data.txt" \
-                        --asexual_data "asexual_${run_id}_data.txt" \
+                        --sexual_data "${plot_dir}/sexual_${run_id}_data.txt" \
+                        --asexual_data "${plot_dir}/asexual_${run_id}_data.txt" \
                         --output "$plot_path"
                 done
             done
