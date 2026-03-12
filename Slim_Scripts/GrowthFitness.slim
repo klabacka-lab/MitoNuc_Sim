@@ -360,8 +360,8 @@ mutationEffect(m12) {
 	v = p1.getValue("fitness_over_time");
 	s = paste(v, sep=" ");
 	if (logging == T){
-		writeFile(getwd() + data_file, s, append=T);
-		print("Data exported to " + getwd() + data_file);
+		writeFile(getwd() + "/" + data_file, s, append=T);
+		print("Data exported to " + getwd() + "/" + data_file);
 	}
 
 	print(length(v) + " entries exported");
