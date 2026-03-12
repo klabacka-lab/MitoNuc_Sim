@@ -361,7 +361,7 @@ mutationEffect(m12) {
 	s = paste(v, sep=" ");
 	if (logging == T){
 		writeFile(getwd() + data_file, s, append=T);
-		print("Data exported to " + data_file);
+		print("Data exported to " + getwd() + data_file);
 	}
 
 	print(length(v) + " entries exported");
