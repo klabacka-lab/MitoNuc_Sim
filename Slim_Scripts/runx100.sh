@@ -36,6 +36,8 @@ for epi in T F; do
 
                 data_file="${plot_dir}/${prefix}_${run_id}_data.txt"
 
+                rm -f $data_file
+
 
 
                 for i in {1..100}; do

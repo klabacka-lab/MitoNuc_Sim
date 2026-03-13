@@ -9,7 +9,6 @@ import argparse
 # -----------------------------
 
 BOXPLOT = True
-LOG_SCALE = False
 MEASURE_FITNESS_GAP = False
 SCATTER = False
 FIT_LINE = False
@@ -37,7 +36,6 @@ def load_2d_array(path: str) -> np.ndarray:
             try:
                 rows.append([float(x) for x in line.split()])
             except ValueError:
-                # Skip partially written lines
                 continue
 
     if not rows:
@@ -96,6 +94,26 @@ parser.add_argument(
     help="Path to save the output figure"
 )
 
+parser.add_argument(
+    "--ymin",
+    type=float,
+    default=None,
+    help="Optional shared y-axis minimum"
+)
+
+parser.add_argument(
+    "--ymax",
+    type=float,
+    default=None,
+    help="Optional shared y-axis maximum"
+)
+
+parser.add_argument(
+    "--log_scale",
+    action="store_true",
+    help="Use log scale for y-axis"
+)
+
 args = parser.parse_args()
 
 SEXUAL_DATA_PATH = args.sexual_data
@@ -124,41 +142,6 @@ if MEASURE_FITNESS_GAP:
     if asexual_mean.size > 0:
         asexual_mean = 1 - asexual_mean
 
-
-# -----------------------------
-# Optional Curve Fitting
-# -----------------------------
-
-if FIT_LINE:
-    try:
-        from scipy.optimize import curve_fit
-
-        def model_function(x, a, b, c):
-            return a - b * np.exp(-c * x)
-
-        if sexual_mean.size > 5:
-            x = np.arange(1, len(sexual_mean) + 1)
-            popt, _ = curve_fit(model_function, x, sexual_mean,
-                                p0=[1.0, 0.1, 0.001], maxfev=10000)
-            print(f"Sexual fit: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
-
-        if asexual_mean.size > 5:
-            x = np.arange(1, len(asexual_mean) + 1)
-            popt, _ = curve_fit(model_function, x, asexual_mean,
-                                p0=[1.0, 0.1, 0.001], maxfev=10000)
-            print(f"Asexual fit: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
-
-    except Exception as e:
-        print(f"Curve fitting failed: {e}")
-
-
-# -----------------------------
-# Load Final Fitness Data
-# -----------------------------
-
-#sexual_final_fitness = safe_loadtxt("sexual_final_fitness.txt")
-#asexual_final_fitness = safe_loadtxt("asexual_final_fitness.txt")
-
 sexual_final_fitness = (
     sexual_data[:, -1] if sexual_data.ndim == 2 and sexual_data.shape[1] > 0
     else np.array([])
@@ -168,6 +151,7 @@ asexual_final_fitness = (
     asexual_data[:, -1] if asexual_data.ndim == 2 and asexual_data.shape[1] > 0
     else np.array([])
 )
+
 
 # -----------------------------
 # Plotting
@@ -235,17 +219,18 @@ else:
 
 axes[0].grid(True)
 
-if LOG_SCALE:
-    axes[0].set_yscale('log')
+if args.log_scale:
+    axes[0].set_yscale("log")
+    axes[1].set_yscale("log")
 
 if axes[0].get_legend_handles_labels()[0]:
     axes[0].legend()
 
 
 # ---- Right Panel: Final Fitness Distribution
+
 any_distribution = False
 
-# Always prepare arrays, even if one is empty
 box_data = []
 tick_labels = []
 
@@ -270,8 +255,8 @@ if BOXPLOT:
         tick_labels=tick_labels
     )
 
-    # Set locked colors
     colors = [ASEXUAL_COLOR, SEXUAL_COLOR]
+
     for patch, color in zip(bp["boxes"], colors):
         patch.set_facecolor(color)
         patch.set_alpha(0.6)
@@ -283,7 +268,7 @@ if BOXPLOT:
     any_distribution = True
 
 else:
-    # Fallback to histogram if BOXPLOT is False
+
     if asexual_final_fitness.size > 0:
         axes[1].hist(asexual_final_fitness, bins=15,
                      alpha=0.6, label="Asexual", color=ASEXUAL_COLOR)
@@ -298,6 +283,7 @@ if not any_distribution:
     axes[1].text(0.5, 0.5, "No final fitness data",
                  transform=axes[1].transAxes,
                  ha="center", va="center")
+
 axes[1].set_title("Final Fitness Distribution")
 axes[1].set_xlabel("Simulation Type")
 axes[1].grid(True, alpha=0.3)
@@ -316,6 +302,12 @@ for ax, label in zip(axes.flat, string.ascii_uppercase):
             va='top')
 
 
+if args.ymin is not None and args.ymax is not None:
+    axes[0].set_ylim(args.ymin, args.ymax)
+    axes[1].set_ylim(args.ymin, args.ymax)
+
+
 plt.tight_layout()
 plt.savefig(OUTPUT_PATH, dpi=300)
+
 print(f"Saved: {OUTPUT_PATH}")
