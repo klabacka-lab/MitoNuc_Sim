@@ -29,6 +29,8 @@ initialize() {
 	defineConstant("popSize", 250);
 	defineConstant("mito_chrom_length", 1e4);
 	defineConstant("nuc_chrom_length", 1e6);
+
+	defineConstant("epi_rate", 750);
 	
 	//Enable pedigree tracking
 	initializeSLiMOptions(keepPedigrees=T);
@@ -160,7 +162,7 @@ initialize() {
 	initializeChromosome(2,nuc_chrom_length,type="A");
 	initializeGenomicElement(g2, 0, nuc_chrom_length-1);
 	initializeMutationRate(1e-7);
-	initializeRecombinationRate(1e-7);
+	initializeRecombinationRate(1e-5);
 }
 
 1 early() {
@@ -236,7 +238,7 @@ initialize() {
 				
 					
 					total = 0;
-					epistatic = uniqueNuc[uniqueNuc.position % 125 == m.position % 125]; // get the nuclear mutations that are epistatic with the mitochondrial mutation (i.e., those that occur at the same position modulo 125)
+					epistatic = uniqueNuc[uniqueNuc.position % epi_rate == m.position % epi_rate]; // get the nuclear mutations that are epistatic with the mitochondrial mutation (i.e., those that occur at the same position modulo 125)
 					
 					// loop through the epistatic nuclear mutations to calculate the total effect on fitness
 					for (n in epistatic) {

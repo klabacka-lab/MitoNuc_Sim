@@ -17,8 +17,8 @@ epis = ["F", "T"]
 folder = "automatic_figures/2000"
 folder_path = Path(folder)
 
-
-LOG_SCALE = True
+LOG_SCALE = False
+Y_SHARE = False
 
 # --------------------------------------------
 # Build configuration list
@@ -53,39 +53,64 @@ def safe_load(path):
         return None
 
 # --------------------------------------------
-# Step 1 — Determine global y-axis
+# Step 1 — Load all data ONCE
 # --------------------------------------------
 
-global_min = float("inf")
-global_max = float("-inf")
-
-for mut, preload, epi in configs:
-
-    for f in [sexual_path(mut, preload, epi),
-              asexual_path(mut, preload, epi)]:
-
-        data = safe_load(f)
-        if data is None:
-            continue
-
-        global_min = min(global_min, np.min(data))
-        global_max = max(global_max, np.max(data))
-
-print("Global y-axis limits:", global_min, global_max)
-
-# --------------------------------------------
-# Step 2 — Generate figures
-# --------------------------------------------
+data_cache = {}
 
 for mut, preload, epi in configs:
 
     sexual_file = sexual_path(mut, preload, epi)
     asexual_file = asexual_path(mut, preload, epi)
 
-    sexual_exists = sexual_file.exists() and sexual_file.stat().st_size > 0
-    asexual_exists = asexual_file.exists() and asexual_file.stat().st_size > 0
+    sexual_data = safe_load(sexual_file)
+    asexual_data = safe_load(asexual_file)
 
-    # Skip if BOTH are missing
+    data_cache[(mut, preload, epi)] = {
+        "sexual_data": sexual_data,
+        "asexual_data": asexual_data,
+        "sexual_file": sexual_file,
+        "asexual_file": asexual_file
+    }
+
+# --------------------------------------------
+# Step 2 — Compute global y limits ONLY if needed
+# --------------------------------------------
+
+global_min = None
+global_max = None
+
+if Y_SHARE:
+
+    global_min = float("inf")
+    global_max = float("-inf")
+
+    for cfg in data_cache.values():
+
+        for data in [cfg["sexual_data"], cfg["asexual_data"]]:
+
+            if data is None:
+                continue
+
+            global_min = min(global_min, np.min(data))
+            global_max = max(global_max, np.max(data))
+
+    print("Global y-axis limits:", global_min, global_max)
+
+# --------------------------------------------
+# Step 3 — Generate figures
+# --------------------------------------------
+
+for mut, preload, epi in configs:
+
+    cfg = data_cache[(mut, preload, epi)]
+
+    sexual_file = cfg["sexual_file"]
+    asexual_file = cfg["asexual_file"]
+
+    sexual_exists = cfg["sexual_data"] is not None
+    asexual_exists = cfg["asexual_data"] is not None
+
     if not sexual_exists and not asexual_exists:
         print(f"Skipping mut{mut} {preload} epi{epi} (no data)")
         continue
@@ -95,10 +120,14 @@ for mut, preload, epi in configs:
         "figure_maker.py",
         "--sexual_data", str(sexual_file),
         "--asexual_data", str(asexual_file),
-        "--output", str(plot_path(mut, preload, epi)),
-        "--ymin", str(global_min),
-        "--ymax", str(global_max)
+        "--output", str(plot_path(mut, preload, epi))
     ]
+
+    if Y_SHARE:
+        cmd.append("--ymin")
+        cmd.append(str(global_min))
+        cmd.append("--ymax")
+        cmd.append(str(global_max))
 
     if LOG_SCALE:
         cmd.append("--log_scale")
@@ -107,7 +136,7 @@ for mut, preload, epi in configs:
     subprocess.run(cmd)
 
 # --------------------------------------------
-# Step 3 — Combine PNGs
+# Step 4 — Combine PNGs
 # --------------------------------------------
 
 fig, axes = plt.subplots(3, 4, figsize=(16, 12))
@@ -147,8 +176,14 @@ for i, mut in enumerate(mutation_profiles):
                 ha="right"
             )
 
-fig.text(0.02, 0.5, "Mutation Profile", va='center',
-         rotation='vertical', fontsize=16)
+fig.text(
+    0.02,
+    0.5,
+    "Mutation Profile",
+    va="center",
+    rotation="vertical",
+    fontsize=16
+)
 
 plt.tight_layout(rect=[0.06, 0, 1, 1])
 plt.savefig(folder_path / "combined_comparison.png", dpi=300)
