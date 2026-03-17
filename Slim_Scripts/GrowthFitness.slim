@@ -53,102 +53,74 @@ initialize() {
 	m12.convertToSubstitution = F;
 
 	
-	if (epi == T){
-		initializeMutationType("m9", 1.0, "f", 0.0); //synonymous
-		initializeMutationType("m10", 1.0, "f", 0.0); //synonymous
+	
+	initializeMutationType("m9", 1.0, "f", 0.0); //synonymous
+	initializeMutationType("m10", 1.0, "f", 0.0); //synonymous
 
 
-		m9.convertToSubstitution = F;
-		m10.convertToSubstitution = F;
-		//create normal mutation distributions
-		if (mut_profile == 1){
-			//Both del and ben muts
-			
-			// Nuclear mutations
-			initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
-			initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
-			initializeMutationType("m3", 0.5, "g", 0.001, 1); // Nuclear positive A
-			initializeMutationType("m4", 0.5, "g", 0.001, 1); // Nuclear positive B
-			
-			// Mitochondrial mutations
-			initializeMutationType("m5", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
-			initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
-			initializeMutationType("m7", 1.0, "g", 0.001, 1); // Mitochondrial positive A
-			initializeMutationType("m8", 1.0, "g", 0.001, 1); // Mitochondrial positive B
-			
-			initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
-			initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
-		} else if (mut_profile == 2){
-			//only del muts
-			
-			initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
-			initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
-			initializeMutationType("m3", 0.5, "g", -0.01, 0.2); // Nuclear negative A
-			initializeMutationType("m4", 0.5, "g", -0.01, 0.2); // Nuclear negative B
-			
-			// Mitochondrial mutations
-			initializeMutationType("m5", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
-			initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
-			initializeMutationType("m7", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
-			initializeMutationType("m8", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
-			
-			initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
-			initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
-		} else if (mut_profile == 3){
-			//no muts (techincially synonymous muts with no fitness effect)
-			//Nuclear
-			initializeMutationType("m1", 0.5, "f", 0.0); // Nuclear negative A
-			initializeMutationType("m2", 0.5, "f", 0.0); // Nuclear negative B
-			initializeMutationType("m3", 0.5, "f", 0.0); // Nuclear negative A
-			initializeMutationType("m4", 0.5, "f", 0.0); // Nuclear negative B
-			
-			// Mitochondrial mutations
-			initializeMutationType("m5", 1.0, "f", 0.0); // Mitochondrial negative A
-			initializeMutationType("m6", 1.0, "f", 0.0); // Mitochondrial negative B
-			initializeMutationType("m7", 1.0, "f", 0.0); // Mitochondrial negative A
-			initializeMutationType("m8", 1.0, "f", 0.0); // Mitochondrial negative B
-			
-			initializeGenomicElementType("g1", c(m9), c(1));
-			//autosomal
-			initializeGenomicElementType("g2", c(m10), c(1));
-		}
-
-		m1.convertToSubstitution = F;
-		m2.convertToSubstitution = F;
-		m3.convertToSubstitution = F;
-		m4.convertToSubstitution = F;
-		m5.convertToSubstitution = F;
-		m6.convertToSubstitution = F;
-		m7.convertToSubstitution = F;
-		m8.convertToSubstitution = F;
-	} else {
-		initializeMutationType("m2", 0.1, "g", -0.001, 1); // deleterious
-		initializeMutationType("m3", 0.1, "g", 0.001, 1); //beneficial
-		initializeMutationType("m4", 1, "f", 0.0); //synonymous
-
-		if (mut_profile == 1){
-			//Both del and ben muts
-			//mito
-			initializeGenomicElementType("g1",c(m2, m3, m4) , c(1, 1, 1));
-			//autosomal
-			initializeGenomicElementType("g2",c(m2, m3, m4) , c(1, 1, 1));
-		} else if (mut_profile == 2){ 
-			//only del muts
-			//mito
-			initializeGenomicElementType("g1",c(m2, m4) , c(1, 1));
-			//autosomal
-			initializeGenomicElementType("g2",c(m2, m4) , c(1, 1));
-		} else if (mut_profile == 3){
-			//no muts (techincially synonymous muts with no fitness effect)
-			//mito
-			initializeGenomicElementType("g1", c(m4), c(1));
-			//autosomal
-			initializeGenomicElementType("g2", c(m4), c(1));
-		}
-		m2.convertToSubstitution = F;
-		m3.convertToSubstitution = F;
-		m4.convertToSubstitution = F;
+	m9.convertToSubstitution = F;
+	m10.convertToSubstitution = F;
+	//create normal mutation distributions
+	if (mut_profile == 1){
+		//Both del and ben muts
+		
+		// Nuclear mutations
+		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
+		initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
+		initializeMutationType("m3", 0.5, "g", 0.001, 1); // Nuclear positive A
+		initializeMutationType("m4", 0.5, "g", 0.001, 1); // Nuclear positive B
+		
+		// Mitochondrial mutations
+		initializeMutationType("m5", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
+		initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
+		initializeMutationType("m7", 1.0, "g", 0.001, 1); // Mitochondrial positive A
+		initializeMutationType("m8", 1.0, "g", 0.001, 1); // Mitochondrial positive B
+		
+		initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
+		initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
+	} else if (mut_profile == 2){
+		//only del muts
+		
+		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
+		initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
+		initializeMutationType("m3", 0.5, "g", -0.01, 0.2); // Nuclear negative A
+		initializeMutationType("m4", 0.5, "g", -0.01, 0.2); // Nuclear negative B
+		
+		// Mitochondrial mutations
+		initializeMutationType("m5", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
+		initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
+		initializeMutationType("m7", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
+		initializeMutationType("m8", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
+		
+		initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
+		initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
+	} else if (mut_profile == 3){
+		//no muts (techincially synonymous muts with no fitness effect)
+		//Nuclear
+		initializeMutationType("m1", 0.5, "f", 0.0); // Nuclear negative A
+		initializeMutationType("m2", 0.5, "f", 0.0); // Nuclear negative B
+		initializeMutationType("m3", 0.5, "f", 0.0); // Nuclear negative A
+		initializeMutationType("m4", 0.5, "f", 0.0); // Nuclear negative B
+		
+		// Mitochondrial mutations
+		initializeMutationType("m5", 1.0, "f", 0.0); // Mitochondrial negative A
+		initializeMutationType("m6", 1.0, "f", 0.0); // Mitochondrial negative B
+		initializeMutationType("m7", 1.0, "f", 0.0); // Mitochondrial negative A
+		initializeMutationType("m8", 1.0, "f", 0.0); // Mitochondrial negative B
+		
+		initializeGenomicElementType("g1", c(m9), c(1));
+		//autosomal
+		initializeGenomicElementType("g2", c(m10), c(1));
 	}
+
+	m1.convertToSubstitution = F;
+	m2.convertToSubstitution = F;
+	m3.convertToSubstitution = F;
+	m4.convertToSubstitution = F;
+	m5.convertToSubstitution = F;
+	m6.convertToSubstitution = F;
+	m7.convertToSubstitution = F;
+	m8.convertToSubstitution = F;
 		
 	//chromosome 1: mitochondrial chromosome
 	//adding in chromosome length

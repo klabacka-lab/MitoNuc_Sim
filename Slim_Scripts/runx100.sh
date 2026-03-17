@@ -40,7 +40,7 @@ for epi in T F; do
 
 
 
-                for i in {1..100}; do
+                for i in {1..5}; do
                     echo
                     echo "Running simulation $i..."
 
