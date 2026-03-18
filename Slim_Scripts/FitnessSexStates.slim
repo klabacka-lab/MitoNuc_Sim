@@ -55,7 +55,7 @@ initialize() {
 	initializeMutationRate(1e-7);
 	
 	if (sex) {
-		initializeRecombinationRate(1e-8); // recombination rate of 1e-8 per base pair per generation for sexual reproduction
+		initializeRecombinationRate(recom); // recombination rate of 1e-8 per base pair per generation for sexual reproduction
 	}
 	else {
 		initializeRecombinationRate(0);
@@ -106,7 +106,7 @@ initialize() {
 				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 			} else {
 				total = 0;
-				epistatic = uniqueNuc[uniqueNuc.position % epiSt == m.position % epiSt]; // get the nuclear mutations that are epistatic with the mitochondrial mutation (i.e., those that occur at the same position modulo 125)
+				epistatic = uniqueNuc[uniqueNuc.position % epiSt == m.position % epiSt]; // get the nuclear mutations that are epistatic with the mitochondrial mutation (i.e., those that occur at the same position modulo epiSt)
 
 				// loop through the epistatic nuclear mutations to calculate the total effect on fitness
 				for (n in epistatic) {
@@ -118,7 +118,7 @@ initialize() {
 				
 				// If there are no epistatic interactions, add the effect of the mitochondrial mutation to fitness
 
-	//			globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
+	
 
 				if (length(epistatic) == 0) {
 					globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
@@ -180,7 +180,7 @@ mutationEffect(m8) {
 	return 1.0;
 }
 
-2:4001 early() {
+2:10001 early() {
 	fitness = mean(p1.cachedFitness(NULL));
 
 	values = sim.getValue("fitness_over_time");
@@ -188,8 +188,8 @@ mutationEffect(m8) {
 	sim.setValue("fitness_over_time", values);
 }
 
-// End the simulation after 4000 generations
-4000 late() {
+// End the simulation after 10000 generations
+10000 late() {
 	if (sex) {
 		S = "/sex_";
 	} else {
@@ -208,7 +208,10 @@ mutationEffect(m8) {
 		Ep = "noepi";
 	}
 	
-	finalPath = getwd() + S + B + Ep + ".csv";
+	Rc = asString(recom);
+	EpSt = asString(epiSt);
+
+	finalPath = getwd() + S + B + Ep +"_" + EpSt +"_" + Rc +"_" + "10000" + ".csv";
 
 	values = sim.getValue("fitness_over_time");
 	line = paste(values, sep=",");
