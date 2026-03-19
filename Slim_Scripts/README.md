@@ -1,1 +1,0 @@
-Run runx100.sh. This script runs GrowthFitness.slim 100 times with sexual reproduction of the autosomal chromosome and 100 with asexual. The SLiM program called bythe bash cript writes its simulation results to text files that the bash script then passes into figure_maker.py, a python script that 
