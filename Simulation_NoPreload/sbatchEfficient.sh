@@ -19,6 +19,8 @@ BEN=$2
 EPI=$3
 STRENGTH=$4
 RECOM=$5
+TRIALNUM=$6
+
 
 
 /home/jac2002/.local/bin/slim \
@@ -27,4 +29,5 @@ RECOM=$5
         -d epi=$EPI \
         -d epiSt=$STRENGTH \
         -d recom=$RECOM \
+        -d repID=$TRIALNUM \
         NoPreload.slim
