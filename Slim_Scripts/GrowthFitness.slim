@@ -1,31 +1,38 @@
 initialize() {
 	print("-------Sim Start-------");
 	print("Initializing simulation...");
+
+	//parameter to toggle asexual reproduction
 	if (!exists("asexual")){
-		//parameter to toggle asexual reproduction
 		defineConstant("asexual", T);
 	}
 	
+	//parameter to toggle where to preload mutations
 	if (!exists("preload_location")){
-		//parameter to toggle where to preload mutations
 		defineConstant("preload_location", "nucl");
 	}
+
+	//parameter to toggle which mutational profile to use
 	if (!exists("mut_profile")){
-		//parameter to toggle which mutational profile to use
 		defineConstant("mut_profile", 3);
 	}
+
+	//parameter to toggle whether to include epistasis between mito and nuc muts
 	if (!exists("epi")){
-		//parameter to toggle whether to include epistasis between mito and nuc muts
 		defineConstant("epi", T);
 	}
+
+	//parameter to specify file to output data to
 	if (!exists("data_file")){
-		//parameter to specify file to output data to
 		defineConstant("data_file", "default_fitness_over_time.txt");
 	}
+
+	//parameter to specify if we log the simulation
 	if (!exists("logging")){
 		defineConstant("logging", F);
 	}
 	
+	//constants created to define population size, chromosome length, and rate of epistasis
 	defineConstant("popSize", 250);
 	defineConstant("mito_chrom_length", 1e4);
 	defineConstant("nuc_chrom_length", 1e6);
@@ -37,7 +44,6 @@ initialize() {
 	
 	if (!asexual){
 		initializeSex();
-	
 	}
 	
 	
@@ -56,6 +62,7 @@ initialize() {
 	initializeMutationType("m18", 0.7, "f", -0.075); // preload
 	initializeMutationType("m19", 0.7, "f", -0.07355); // preload
 	
+	//ensures mutations do not "fix" if the entire population has it
 	m11.convertToSubstitution = F;
 	m12.convertToSubstitution = F;
 	m13.convertToSubstitution = F;
@@ -67,7 +74,7 @@ initialize() {
 	m19.convertToSubstitution = F;
 	
 	
-	
+	//initialize synonymous mutations for mut_profile 3
 	initializeMutationType("m9", 1.0, "f", 0.0); //synonymous
 	initializeMutationType("m10", 1.0, "f", 0.0); //synonymous
 	
@@ -75,7 +82,7 @@ initialize() {
 	m9.convertToSubstitution = F;
 	m10.convertToSubstitution = F;
 
-	//create normal mutation distributions
+	//create mutation distributions
 	if (mut_profile == 1){
 		//Both del and ben muts
 		
@@ -91,6 +98,7 @@ initialize() {
 		initializeMutationType("m7", 1.0, "g", 0.001, 1); // Mitochondrial positive A
 		initializeMutationType("m8", 1.0, "g", 0.001, 1); // Mitochondrial positive B
 		
+		//create genomic element types to determine where these mutations can mutate and their proportions
 		initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
 		initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
 	} else if (mut_profile == 2){
@@ -169,8 +177,8 @@ initialize() {
 
 //seeds deleterious mutations
 1 modifyChild() {
-	//gather mitochondrial chromosomes
 	
+	//gather haplosomes from designated pre-seeding chromosome
 	mut_chroms = c();
 	for (hap in child.haplosomes){
 		if (preload_location == "mito" ){
@@ -194,7 +202,7 @@ initialize() {
 	} else {
 		if (asexual == T){
 			for (i in 1:20){
-				//seed deleterious mutations into nuclear chromosomes
+				//seed deleterious mutations into nuclear chromosomes when population is asexual
 				mut_chroms.addNewDrawnMutation(m17, rdunif(1,0,nuc_chrom_length-1));
 				mut_chroms.addNewDrawnMutation(m18, rdunif(1,0,nuc_chrom_length-1));
 				mut_chroms.addNewDrawnMutation(m19, rdunif(1,0,nuc_chrom_length-1));
@@ -202,7 +210,7 @@ initialize() {
 		}
 		else{
 			for (i in 1:20){
-				//seed deleterious mutations into nuclear chromosomes
+				//seed deleterious mutations into nuclear chromosomes when population is sexual
 				mut_chroms.addNewDrawnMutation(m13, rdunif(1,0,nuc_chrom_length-1));
 				mut_chroms.addNewDrawnMutation(m11, rdunif(1,0,nuc_chrom_length-1));
 				mut_chroms.addNewDrawnMutation(m15, rdunif(1,0,nuc_chrom_length-1));
@@ -279,6 +287,7 @@ initialize() {
 	inds.fitnessScaling = popFitt;
 }
 
+//override SLiM's current fitness calculation
 mutationEffect(m1) {
 	return 1.0;
 }
