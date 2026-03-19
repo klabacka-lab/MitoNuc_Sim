@@ -180,7 +180,7 @@ mutationEffect(m8) {
 	return 1.0;
 }
 
-2:10001 early() {
+2:4001 early() {
 	fitness = mean(p1.cachedFitness(NULL));
 
 	values = sim.getValue("fitness_over_time");
@@ -189,7 +189,7 @@ mutationEffect(m8) {
 }
 
 // End the simulation after 10000 generations
-10000 late() {
+4000 late() {
 	if (sex) {
 		S = "/sex_";
 	} else {
@@ -211,7 +211,7 @@ mutationEffect(m8) {
 	Rc = asString(recom);
 	EpSt = asString(epiSt);
 
-	finalPath = getwd() + S + B + Ep +"_" + EpSt +"_" + Rc +"_" + "10000" + ".csv";
+	finalPath = getwd() + "/temp" + S + B + Ep +"_" + EpSt +"_" + Rc  +"_Trial" + repID + ".csv";
 
 	values = sim.getValue("fitness_over_time");
 	line = paste(values, sep=",");
