@@ -2,3 +2,5 @@
 venv/
 .env/
 .venv/
+Slim_Scripts/venv/
+Slim_Scripts/.venv/
