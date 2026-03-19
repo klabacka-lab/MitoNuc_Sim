@@ -14,7 +14,7 @@ mutation_labels = {
 preloads = ["mito", "nucl"]
 epis = ["F", "T"]
 
-folder = "automatic_figures/2000"
+folder = "automatic_figures/4000"
 folder_path = Path(folder)
 
 LOG_SCALE = False
