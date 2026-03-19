@@ -18,7 +18,7 @@ folder = "automatic_figures/2000"
 folder_path = Path(folder)
 
 LOG_SCALE = False
-Y_SHARE = False
+Y_SHARE = True
 
 # --------------------------------------------
 # Build configuration list
