@@ -3,7 +3,7 @@ initialize() {
 	print("Initializing simulation...");
 	if (!exists("asexual")){
 		//parameter to toggle asexual reproduction
-		defineConstant("asexual", F);
+		defineConstant("asexual", T);
 	}
 	
 	if (!exists("preload_location")){
@@ -54,9 +54,9 @@ initialize() {
 	initializeMutationType("m13", 0.7, "f", -0.052); // preload
 	initializeMutationType("m15", 0.7, "f", -0.051); // preload
 	//asexual
-	initializeMutationType("m17", 0.7, "f", -0.055); // preload
-	initializeMutationType("m18", 0.7, "f", -0.052); // preload
-	initializeMutationType("m19", 0.7, "f", -0.051); // preload
+	initializeMutationType("m17", 0.7, "f", -0.075); // preload
+	initializeMutationType("m18", 0.7, "f", -0.075); // preload
+	initializeMutationType("m19", 0.7, "f", -0.07355); // preload
 	
 	m11.convertToSubstitution = F;
 	m12.convertToSubstitution = F;
@@ -73,6 +73,7 @@ initialize() {
 	initializeMutationType("m9", 1.0, "f", 0.0); //synonymous
 	initializeMutationType("m10", 1.0, "f", 0.0); //synonymous
 	
+
 	m9.convertToSubstitution = F;
 	m10.convertToSubstitution = F;
 
@@ -195,7 +196,7 @@ initialize() {
 	} else {
 		//probably a prettier way to do this
 		if (asexual == T){
-			for (i in 1:40){
+			for (i in 1:20){
 				//seed deleterious mutations into nuclear chromosomes
 				mut_chroms.addNewDrawnMutation(m17, rdunif(1,0,nuc_chrom_length-1));
 				mut_chroms.addNewDrawnMutation(m18, rdunif(1,0,nuc_chrom_length-1));
