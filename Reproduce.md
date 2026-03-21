@@ -24,8 +24,8 @@ The main simulation of interest should be run with `asexual` both on and off (th
 Suggested commands:
 
 ```bash
-slim -d logging=T -d asexual=T -d mut_profile=1 -d preload_location="mito" -d epi=T -d data_file=asex_result.txt GrowthFitness.slim
-slim -d logging=T -d asexual=F -d mut_profile=1 -d preload_location="mito" -d epi=T -d data_file=sex_result.txt GrowthFitness.slim
+slim -d logging=T -d asexual=T -d mut_profile=1 -d preload_location=\"mito\" -d epi=T -d data_file=\"asex_result.txt\" GrowthFitness.slim
+slim -d logging=T -d asexual=F -d mut_profile=1 -d preload_location=\"mito\" -d epi=T -d data_file=\"sex_result.txt\" GrowthFitness.slim
 ```
 
 This simulation can be run multiple times with the same output location to append the results of several runs together. This can be done many times (5–10 each for sexual and asexual is a reasonable number for a manual replication check).
