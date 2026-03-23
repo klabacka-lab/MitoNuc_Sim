@@ -39,7 +39,16 @@ slim -d logging=T -d asexual=T -d mut_profile=1 -d preload_location=\"mito\" -d 
 slim -d logging=T -d asexual=F -d mut_profile=1 -d preload_location=\"mito\" -d epi=T -d data_file=\"sex_result.txt\" GrowthFitness.slim
 ```
 
-This simulation can be run multiple times with the same output location to append the results of several runs together. This can be done many times (5–10 each for sexual and asexual is a reasonable number for a manual replication check).
+This simulation can be run multiple times with the same output location to append the results of several runs together. This can be done many times (5–10 each for sexual and asexual is a reasonable number for a manual replication check). (The statictal tests later will not work properly with any less than 3.)
+
+For convenience, a repeat-runner script is provided run the two `slim` lines above a given number of times.
+
+```bash
+./run_repeat.sh 10
+```
+
+As can be seen by inspecting the file, this is simply a for loop wrapped around the commands suggested above.
+
 
 # Plots/Figures
 
@@ -59,7 +68,9 @@ This will produce an average fitness-over-time line plot alongside a boxplot for
 
 # Statistical Testing
 
-Finally, feed the data to the statistical testing script:
+Finally, feed the data to the statistical testing script. As a reminder, this step will not work with less than 3 runs of the simulation in both sexual and asexual mode
+
+Syntax:
 
 ```bash
 python stat_analysis.py [input data file from asexual sim] [input data file from sexual sim] [output file location for a distribution visualization plot]
