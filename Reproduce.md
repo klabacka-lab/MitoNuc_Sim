@@ -41,7 +41,7 @@ python figure_maker.py --sexual_data [data from sexual sim] --asexual_data [data
 Suggested command:
 
 ```bash
-python figure_maker.py --sexual_data sex_result --asexual_data asex_result.txt --output result_plot.png
+python figure_maker.py --sexual_data sex_result.txt --asexual_data asex_result.txt --output result_plot.png
 ```
 
 This will produce an average fitness-over-time line plot alongside a boxplot for final fitnesses. These will be averaged across the different trials, and will show a shaded ±1 standard deviation around the average line. The boxplot will show the distribution of final fitnesses across all runs for each.
