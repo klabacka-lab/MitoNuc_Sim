@@ -11,6 +11,17 @@ First, set up the Python virtual environment with the setup script:
 source venv/bin/activate
 ```
 
+Also, ensure that the filenames to be used in the test do not already exist, since the simulation scripts append to such files without overwriting them to allow multiple runs and increase the sample size. The "Suggested Commands" below use the following filenames:
+
+```bash
+asex_result.txt
+sex_result.txt
+result_plot.txt
+distro.png
+```
+
+So any reproducibility test that plans to use the "Suggested Commands" should ensure these files are deleted from or not found in the ```Simulation_Preload``` directory. The same is true of any alternative filenames chosen for the test.
+
 # Main Simulation
 
 GrowthFitness.slim runs a single simulation. It can be executed through the command line with the syntax:
