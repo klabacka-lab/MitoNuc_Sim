@@ -39,15 +39,17 @@ slim -d logging=T -d asexual=T -d mut_profile=1 -d preload_location=\"mito\" -d 
 slim -d logging=T -d asexual=F -d mut_profile=1 -d preload_location=\"mito\" -d epi=T -d data_file=\"sex_result.txt\" GrowthFitness.slim
 ```
 
-This simulation can be run multiple times with the same output location to append the results of several runs together. This can be done many times (5–10 each for sexual and asexual is a reasonable number for a manual replication check). (The statictal tests later will not work properly with any less than 3.)
+This simulation can be run multiple times with the same output location to append the results of several runs together. This can be done many times (5–10 each for sexual and asexual is a reasonable number for a manual replication check). (The statistical tests later will not work properly with fewer than 3.)
 
-For convenience, a repeat-runner script is provided run the two `slim` lines above a given number of times.
+For convenience, a repeat-runner script is provided to run the two `slim` lines above a given number of times.
 
 ```bash
 ./run_repeat.sh 10
 ```
 
-As can be seen by inspecting the file, this is simply a for loop wrapped around the commands suggested above.
+As can be seen by inspecting the file, this is simply a for loop wrapped around the commands suggested above. It is exactly equivalent to running the simulation script manually a number of times, with the notable difference that it does not require the user to wait for it to finish and run it again.
+
+Whatever approach is used, these simulations take several minutes apiece, so some time should be given for the data to be produced. Once the data gathering is complete, however, the analysis, plotting, statistical testing, and interpretation of the data is simple and should run quickly.
 
 
 # Plots/Figures
@@ -89,7 +91,3 @@ This will output a written description of the results of running various statist
 - Mann–Whitney U test for difference of central tendency (does not require normality)
 
 The output file will be an extra PNG comparing the final fitness distributions as histograms, for intuitive visualization.
-
-
-
-
