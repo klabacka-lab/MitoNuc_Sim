@@ -71,6 +71,10 @@ Path(output_png).parent.mkdir(parents=True, exist_ok=True)
 dist1 = load_file(file1)
 dist2 = load_file(file2)
 
+if len(dist1) < 3 or len(dist2) < 3:
+    print("Each distribution must have at least 3 data points for statistical analysis.")
+    sys.exit(1)
+
 mean1, std1 = np.mean(dist1), np.std(dist1, ddof=1)
 mean2, std2 = np.mean(dist2), np.std(dist2, ddof=1)
 
@@ -93,8 +97,13 @@ print("\nSummary:")
 print(summary)
 
 plt.figure(figsize=(10, 6))
-plt.hist(dist1, bins=15, alpha=0.6, label='Distribution 1 (Asexual)')
-plt.hist(dist2, bins=15, alpha=0.6, label='Distribution 2 (Sexual)')
+
+# compute shared bins from combined data
+combined = np.concatenate([dist1, dist2])
+bins = np.histogram_bin_edges(combined, bins=15)
+
+plt.hist(dist1, bins=bins, alpha=0.6, label='Distribution 1 (Asexual)')
+plt.hist(dist2, bins=bins, alpha=0.6, label='Distribution 2 (Sexual)')
 
 plt.xlabel('Value')
 plt.ylabel('Frequency')
