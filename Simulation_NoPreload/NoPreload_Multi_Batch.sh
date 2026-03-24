@@ -3,10 +3,11 @@ BEN=$2
 EPI=$3
 STRENGTH=$4
 RECOM=$5
+GEN=$6
 echo "Running combination: sex=$SEX ben=$BEN epi=$EPI strength=$STRENGTH"
 
 # Run 100 replicates
 for i in {1..120}; do
     echo "Replicate $i"
-    sbatch NoPreload_Single_Batch.sh $SEX $BEN $EPI $STRENGTH $RECOM $i
+    sbatch NoPreload_Single_Batch.sh $SEX $BEN $EPI $STRENGTH $RECOM $GEN $i
 done

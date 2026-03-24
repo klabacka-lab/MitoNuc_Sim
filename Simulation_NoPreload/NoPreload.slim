@@ -211,7 +211,7 @@ mutationEffect(m8) {
 	Rc = asString(recom);
 	EpSt = asString(epiSt);
 
-	finalPath = getwd() + "/temp" + S + B + Ep +"_" + EpSt +"_" + Rc  +"_Trial" + repID + ".csv";
+	finalPath = getwd() + "/temp" + S + B + Ep +"_" + EpSt +"_" + Rc  + "_" + gen + "_Trial" + repID + ".csv";
 
 	values = sim.getValue("fitness_over_time");
 	line = paste(values, sep=",");
