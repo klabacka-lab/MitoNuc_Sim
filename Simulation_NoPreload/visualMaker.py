@@ -3,10 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 import argparse
-
+import sys
 # -----------------------------
 # Configuration Flags
 # -----------------------------
+
+sexual = sys.argv[1]
+asexual = sys.argv[2]
+output = sys.argv[3]
 
 BOXPLOT = True
 LOG_SCALE = False
@@ -77,7 +81,7 @@ parser = argparse.ArgumentParser(description="Plot fitness results from SLiM sim
 parser.add_argument(
     "--output",
     type=str,
-    default="Epi_Reco_Vary_Figures/100000epi_1e-4Recom_SimpleGen.png",
+    default=output,
     help="Path to save the output figure"
 )
 
@@ -88,8 +92,8 @@ OUTPUT_PATH = args.output
 # Load Time-Series Data
 # -----------------------------
 
-sexual_data = np.loadtxt("Epi_Reco_Vary_Trials/sex_ben_epi_100000_0.0001_SIMPLE.csv", delimiter=",")
-asexual_data = np.loadtxt("Epi_Reco_Vary_Trials/asex_ben_epi_100000_0.0001_SIMPLE.csv", delimiter=",")
+sexual_data = np.loadtxt(sexual, delimiter=",")
+asexual_data = np.loadtxt(asexual, delimiter=",")
 
 print(f"Sexual fitness_over_time shape: {sexual_data.shape}")
 print(f"Sexual No Recombination fitness_over_time shape: {asexual_data.shape}")
