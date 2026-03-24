@@ -30,14 +30,14 @@ slim -d logging=T -d asexual=F -d mut_profile=1 -d preload_location=\"mito\" -d 
 
 This simulation can be run multiple times with the same output location to append the results of several runs together. This can be done many times (5–10 each for sexual and asexual is a reasonable number for a manual replication check).
 
-OPTIONALLY: If time or computing power prohibit the running of many simulations, pre-produced data from 100 runs each of the asexual and sexual simulations are included in the `Simulation_Preload` directory under the names `asexual_example_data.txt` and `sexual_example_data.txt` These can be fed into the figure-making and statistical testing scripts instead of files made by running the simulations directly.
+OPTIONALLY: If imited time or computing power prohibit the running of many simulations, pre-produced data from 100 runs each of the asexual and sexual simulations are included in the `Simulation_Preload` directory under the names `asexual_example_data.txt` and `sexual_example_data.txt` These can be fed into the figure-making and statistical testing scripts instead of files made by running the simulations directly.
 
 # Plots/Figures
 
 The files written by the above commands can be used to generate the figures in the paper when they are passed into the Python script `figure_maker.py` using the following syntax:
 
 ```bash
-python figure_maker.py --sexual_data [data from sexual sim] --asexual_data [data from asexual sim] --output [desired output location]
+python figure_maker.py --sexual_data <data from sexual sim> --asexual_data <data from asexual sim> --output <desired output location>
 ```
 
 Suggested command:
@@ -53,7 +53,7 @@ This will produce an average fitness-over-time line plot alongside a boxplot for
 Finally, feed the data to the statistical testing script:
 
 ```bash
-python stat_analysis.py [input data file from asexual sim] [input data file from sexual sim] [output file location for a distribution visualization plot]
+python stat_analysis.py <input data file from asexual sim> <input data file from sexual sim> <output file location for a distribution visualization plot>
 ```
 
 Suggested command:
