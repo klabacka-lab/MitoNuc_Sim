@@ -16,7 +16,7 @@ BOXPLOT = True
 LOG_SCALE = False
 MEASURE_FITNESS_GAP = False
 SCATTER = False
-FIT_LINE = False
+
 
 SEXUAL_COLOR = "orange"
 ASEXUAL_COLOR = "blue"
@@ -125,35 +125,7 @@ if MEASURE_FITNESS_GAP:
         sexual_mean = 1 - sexual_mean
     if asexual_mean.size > 0:
         asexual_mean = 1 - asexual_mean
-
-
-# -----------------------------
-# Optional Curve Fitting
-# -----------------------------
-
-if FIT_LINE:
-    try:
-        from scipy.optimize import curve_fit
-
-        def model_function(x, a, b, c):
-            return a - b * np.exp(-c * x)
-
-        if sexual_mean.size > 5:
-            x = np.arange(1, len(sexual_mean) + 1)
-            popt, _ = curve_fit(model_function, x, sexual_mean,
-                                p0=[1.0, 0.1, 0.001], maxfev=10000)
-            print(f"Sexual fit: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
-
-        if asexual_mean.size > 5:
-            x = np.arange(1, len(asexual_mean) + 1)
-            popt, _ = curve_fit(model_function, x, asexual_mean,
-                                p0=[1.0, 0.1, 0.001], maxfev=10000)
-            print(f"Asexual fit: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
-
-    except Exception as e:
-        print(f"Curve fitting failed: {e}")
-
-
+        
 # -----------------------------
 # Load Final Fitness Data
 # -----------------------------
