@@ -23,7 +23,7 @@ TRIALNUM=$6
 
 
 
-/home/jac2002/.local/bin/slim \
+slim \
         -d sex=$SEX \
         -d ben=$BEN \
         -d epi=$EPI \
