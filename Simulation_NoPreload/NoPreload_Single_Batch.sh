@@ -19,15 +19,17 @@ BEN=$2
 EPI=$3
 STRENGTH=$4
 RECOM=$5
-TRIALNUM=$6
+GEN=$6
+TRIALNUM=$7
 
 
 
-/home/jac2002/.local/bin/slim \
+slim \
         -d sex=$SEX \
         -d ben=$BEN \
         -d epi=$EPI \
         -d epiSt=$STRENGTH \
         -d recom=$RECOM \
+        -d gen=$GEN \
         -d repID=$TRIALNUM \
         NoPreload.slim

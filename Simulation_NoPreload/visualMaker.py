@@ -3,16 +3,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 import argparse
-
+import sys
 # -----------------------------
 # Configuration Flags
 # -----------------------------
+
+sexual = sys.argv[1]
+asexual = sys.argv[2]
+output = sys.argv[3]
 
 BOXPLOT = True
 LOG_SCALE = False
 MEASURE_FITNESS_GAP = False
 SCATTER = False
-FIT_LINE = False
+
 
 SEXUAL_COLOR = "orange"
 ASEXUAL_COLOR = "blue"
@@ -77,7 +81,7 @@ parser = argparse.ArgumentParser(description="Plot fitness results from SLiM sim
 parser.add_argument(
     "--output",
     type=str,
-    default="Epi_Reco_Vary_Figures/100000epi_1e-4Recom_SimpleGen.png",
+    default=output,
     help="Path to save the output figure"
 )
 
@@ -88,8 +92,8 @@ OUTPUT_PATH = args.output
 # Load Time-Series Data
 # -----------------------------
 
-sexual_data = np.loadtxt("Epi_Reco_Vary_Trials/sex_ben_epi_100000_0.0001_SIMPLE.csv", delimiter=",")
-asexual_data = np.loadtxt("Epi_Reco_Vary_Trials/asex_ben_epi_100000_0.0001_SIMPLE.csv", delimiter=",")
+sexual_data = np.loadtxt(sexual, delimiter=",")
+asexual_data = np.loadtxt(asexual, delimiter=",")
 
 print(f"Sexual fitness_over_time shape: {sexual_data.shape}")
 print(f"Sexual No Recombination fitness_over_time shape: {asexual_data.shape}")
@@ -121,35 +125,7 @@ if MEASURE_FITNESS_GAP:
         sexual_mean = 1 - sexual_mean
     if asexual_mean.size > 0:
         asexual_mean = 1 - asexual_mean
-
-
-# -----------------------------
-# Optional Curve Fitting
-# -----------------------------
-
-if FIT_LINE:
-    try:
-        from scipy.optimize import curve_fit
-
-        def model_function(x, a, b, c):
-            return a - b * np.exp(-c * x)
-
-        if sexual_mean.size > 5:
-            x = np.arange(1, len(sexual_mean) + 1)
-            popt, _ = curve_fit(model_function, x, sexual_mean,
-                                p0=[1.0, 0.1, 0.001], maxfev=10000)
-            print(f"Sexual fit: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
-
-        if asexual_mean.size > 5:
-            x = np.arange(1, len(asexual_mean) + 1)
-            popt, _ = curve_fit(model_function, x, asexual_mean,
-                                p0=[1.0, 0.1, 0.001], maxfev=10000)
-            print(f"Asexual fit: y = {popt[0]:.4f} - {popt[1]:.4f} * exp(-{popt[2]:.4f} * x)")
-
-    except Exception as e:
-        print(f"Curve fitting failed: {e}")
-
-
+        
 # -----------------------------
 # Load Final Fitness Data
 # -----------------------------

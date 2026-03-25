@@ -1,8 +1,4 @@
-SIM 2
-
 # Setup
-
-(All commands should be executed in the Simulation_Preload directory)
 
 First, set up the Python virtual environment with the setup script:
 
@@ -11,20 +7,13 @@ First, set up the Python virtual environment with the setup script:
 source venv/bin/activate
 ```
 
-Also, ensure that the filenames to be used in the test do not already exist, since the simulation scripts append to such files without overwriting them to allow multiple runs and increase the sample size. The "Suggested Commands" below use the following filenames:
+# SIM 2
 
-```bash
-asex_result.txt
-sex_result.txt
-result_plot.txt
-distro.png
-```
-
-So any reproducibility test that plans to use the "Suggested Commands" should ensure these files are deleted from or not found in the ```Simulation_Preload``` directory. The same is true of any alternative filenames chosen for the test.
+(All Sim 2 commands should be run from inside the Simulation_Preload directory)
 
 # Main Simulation
 
-GrowthFitness.slim runs a single simulation. It can be executed through the command line with the syntax:
+GrowthFitness.slim runs a single simulation. It can be executed through the command line with the following syntax:
 
 ```bash
 slim -d logging=T -d asexual=[T or F] -d mut_profile=[1, 2, or 3] -d preload_location=["mito" or "nucl"] -d epi=[T or F] -d data_file=[file_location] GrowthFitness.slim
@@ -39,25 +28,16 @@ slim -d logging=T -d asexual=T -d mut_profile=1 -d preload_location=\"mito\" -d 
 slim -d logging=T -d asexual=F -d mut_profile=1 -d preload_location=\"mito\" -d epi=T -d data_file=\"sex_result.txt\" GrowthFitness.slim
 ```
 
-This simulation can be run multiple times with the same output location to append the results of several runs together. This can be done many times (5–10 each for sexual and asexual is a reasonable number for a manual replication check). (The statistical tests later will not work properly with fewer than 3.)
+This simulation can be run multiple times with the same output location to append the results of several runs together. This can be done many times (5–10 each for sexual and asexual is a reasonable number for a manual replication check).
 
-For convenience, a repeat-runner script is provided to run the two `slim` lines above a given number of times.
-
-```bash
-./run_repeat.sh 10
-```
-
-As can be seen by inspecting the file, this is simply a for loop wrapped around the commands suggested above. It is exactly equivalent to running the simulation script manually a number of times, with the notable difference that it does not require the user to wait for it to finish and run it again.
-
-Whatever approach is used, these simulations take several minutes apiece, so some time should be given for the data to be produced. Once the data gathering is complete, however, the analysis, plotting, statistical testing, and interpretation of the data is simple and should run quickly.
-
+OPTIONALLY: If limited time or computing power prohibit the running of many simulations, pre-produced data from 100 runs each of the asexual and sexual simulations are included in the `Simulation_Preload` directory under the names `asexual_example_data.txt` and `sexual_example_data.txt` These can be fed into the figure-making and statistical testing scripts instead of files made by running the simulations directly.
 
 # Plots/Figures
 
 The files written by the above commands can be used to generate the figures in the paper when they are passed into the Python script `figure_maker.py` using the following syntax:
 
 ```bash
-python figure_maker.py --sexual_data [data from sexual sim] --asexual_data [data from asexual sim] --output [desired output location]
+python figure_maker.py --sexual_data <data from sexual sim> --asexual_data <data from asexual sim> --output <desired output location>
 ```
 
 Suggested command:
@@ -70,12 +50,10 @@ This will produce an average fitness-over-time line plot alongside a boxplot for
 
 # Statistical Testing
 
-Finally, feed the data to the statistical testing script. As a reminder, this step will not work with less than 3 runs of the simulation in both sexual and asexual mode
-
-Syntax:
+Finally, feed the data to the statistical testing script:
 
 ```bash
-python stat_analysis.py [input data file from asexual sim] [input data file from sexual sim] [output file location for a distribution visualization plot]
+python stat_analysis.py <input data file from asexual sim> <input data file from sexual sim> <output file location for a distribution visualization plot>
 ```
 
 Suggested command:
