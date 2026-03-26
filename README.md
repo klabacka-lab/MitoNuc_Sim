@@ -33,7 +33,7 @@ pip install -r requirements.txt
 ```
 
 ## Installing SLiM on a personal computer:
-The github repo https://github.com/MesserLab/SLiM has a readme with instructions for installing SLiM on a personal computer. The instructions are also explained in the SLiM manual (found on the Mercer Lab webpage) in section 2 (starting on page 60).
+The github repo https://github.com/MesserLab/SLiM/blob/master/README.md has a readme with instructions for installing SLiM on a personal computer. The instructions are also explained in the SLiM manual (found on the Mercer Lab webpage) in section 2 (starting on page 60).
 
 ## How to Set Up SLiM on the Supercomputer:
 
