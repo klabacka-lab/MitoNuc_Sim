@@ -15,48 +15,60 @@ source venv/bin/activate
 
 These instructions are explained, in section 2.2.2 (page 68), in the SLiM manual.
 First, create a directory for software, or use one that has already been created.
-```mkdir software
+
+```bash
+mkdir software
 ```
 Enter the new directory.
-```cd software
+```bash
+cd software
 ```
 Download the source code.
-``` wget https://github.com/MesserLab/SLiM/releases/download/v5.1/SLiM.zip
+```bash 
+wget https://github.com/MesserLab/SLiM/releases/download/v5.1/SLiM.zip
 unzip SLiM.zip
 ```
 You will need to use cmake in order to install SLiM.
 Check to see if you already have it installed.
-``` which cmake
+```bash 
+which cmake
 ```
 If not, we’ll want to find cmake within the supercomputer.
-``` module spider cmake
+```bash 
+module spider cmake
 ```
 Then load it.
-``` module load [cmake version spider found]
+```bash
+module load [cmake version spider found]
 ```
 Next, we will follow the instructions as they appear in the manual.
-```cd SLiM 
+```bash
+cd SLiM 
 cd .. 
 mkdir build 
 cd build
 ```
 Inside the build file, we will need to change cmake’s install prefix. 
 
-```nano cmake
+```bash
+nano cmake
 ```
 Inside cmake, select ^r then ^t
 Select and enter the cmake_install.cmake file. At the top of the file, you are able to set the install prefix. 
 
 Edit that section so it looks something like this:
-# Set the install prefix
+Set the install prefix
+
+```bash
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
   set(CMAKE_INSTALL_PREFIX "[path to your slim file]")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
-
+```
 Once that is complete and saved, you can finish installing.
  
-```cmake ../SLiM 
+```bash 
+cmake ../SLiM 
 make slim 
 make install slim
 ```
@@ -67,7 +79,8 @@ Create path to SLiM
 Include alias slim="/pathway/to/slim" within your .bashrc file. Make sure to replace /pathway/to/slim with the path in your system
 
 Clone github
-```git clone https://github.com/klabacka-lab/MitoNuc_Sim.git
+```bash
+git clone https://github.com/klabacka-lab/MitoNuc_Sim.git
 ```
 
 
