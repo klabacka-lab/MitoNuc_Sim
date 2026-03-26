@@ -76,17 +76,8 @@ def compute_stats(arr: np.ndarray):
 # -----------------------------
 # Command Line Arguments
 # -----------------------------
+OUTPUT_PATH = output
 
-parser = argparse.ArgumentParser(description="Plot fitness results from SLiM simulations.")
-parser.add_argument(
-    "--output",
-    type=str,
-    default=output,
-    help="Path to save the output figure"
-)
-
-args = parser.parse_args()
-OUTPUT_PATH = args.output
 
 # -----------------------------
 # Load Time-Series Data
