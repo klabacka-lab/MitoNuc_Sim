@@ -1,3 +1,9 @@
+26 March 2026
+
+New idea to fix epistasis - will require reimpleentation and full reruns
+Reflects biological reality better and will probably favor sexual reproduction
+Postive epistatic interactions are determined by tags 1-100 rather than A/B
+
 12 March 2026
 
 Sim 1
