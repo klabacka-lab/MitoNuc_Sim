@@ -6,12 +6,32 @@ Webpage for SLiM documentation: https://messerlab.org/slim/
 # Setup
 
 ## How to Set Up the Python Virtual Environment:
-First, set up the Python virtual environment with the setup script:
+
+### Linux / macOS (recommended)
+Run the setup script:
 
 ```bash
 ./setup-venv.sh
 source venv/bin/activate
 ```
+
+### Windows (PowerShell - recommended)
+```powershell
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Or for cmd:
+```cmd
+python -m venv venv
+venv\Scripts\activate.bat
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+
 ## How to Set Up SLiM on the Supercomputer:
 
 These instructions are explained, in section 2.2.2 (page 68), in the SLiM manual.
@@ -84,6 +104,8 @@ git clone https://github.com/klabacka-lab/MitoNuc_Sim.git
 
 
 # SIM 2
+
+This simulation starts a population at a low initial fitness to compare the ability of sexually and asexually reproducing populations to recover from that low fitness.
 
 (All Sim 2 commands should be run from inside the Simulation_Preload directory)
 
