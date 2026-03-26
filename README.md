@@ -56,7 +56,7 @@ Inside cmake, select ^r then ^t
 Select and enter the cmake_install.cmake file. At the top of the file, you are able to set the install prefix. 
 
 Edit that section so it looks something like this:
-# Set the install prefix
+#Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
   set(CMAKE_INSTALL_PREFIX "[path to your slim file]")
 endif()
