@@ -54,7 +54,7 @@ Inside the build file, we will need to change cmake’s install prefix.
 nano cmake
 ```
 Inside cmake, select ^r then ^t
-Select and enter the cmake_install.cmake file. At the top of the file, you are able to set the install prefix. 
+Select and enter the `cmake_install.cmake` file. At the top of the file, you are able to set the install prefix. 
 
 Edit that section so it looks something like this:
 ```
@@ -75,7 +75,7 @@ make install slim
 
 Create path to SLiM
 
-Include alias slim="/pathway/to/slim" within your .bashrc file. Make sure to replace /pathway/to/slim with the path in your system
+Include ```alias slim="/pathway/to/slim"``` within your .bashrc file. Make sure to replace ```/pathway/to/slim``` with the path in your system
 
 Clone github
 ```
