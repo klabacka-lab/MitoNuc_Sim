@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 
+
 def load_file(filename):
     """Load a file of numbers, keeping only the last value in each row if it's a 2D array."""
     try:
