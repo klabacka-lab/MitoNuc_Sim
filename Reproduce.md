@@ -11,7 +11,7 @@ source venv/bin/activate
 
 (All Sim 2 commands should be run from inside the Simulation_Preload directory)
 
-# Main Simulation
+## Main Simulation
 
 GrowthFitness.slim runs a single simulation. It can be executed through the command line with the following syntax:
 
@@ -32,7 +32,7 @@ This simulation can be run multiple times with the same output location to appen
 
 OPTIONALLY: If limited time or computing power prohibit the running of many simulations, pre-produced data from 800 runs each of the asexual and sexual simulations are included in the `Simulation_Preload` directory under the names `asexual_example_data.txt` and `sexual_example_data.txt` These can be fed into the figure-making and statistical testing scripts instead of files made by running the simulations directly.
 
-# Plots/Figures
+## Plots/Figures
 
 The files written by the above commands can be used to generate the figures in the paper when they are passed into the Python script `figure_maker.py` using the following syntax:
 
@@ -48,7 +48,7 @@ python figure_maker.py --sexual_data sex_result.txt --asexual_data asex_result.t
 
 This will produce an average fitness-over-time line plot alongside a boxplot for final fitnesses. These will be averaged across the different trials, and will show a shaded ±1 standard deviation around the average line. The boxplot will show the distribution of final fitnesses across all runs for each.
 
-# Statistical Testing
+## Statistical Testing
 
 Finally, feed the data to the statistical testing script:
 
