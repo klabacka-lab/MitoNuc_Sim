@@ -14,22 +14,17 @@ source venv/bin/activate
 # How to Set Up SLiM on the Supercomputer:
 
 These instructions are explained, in section 2.2.2 (page 68), in the SLiM manual.
-
 First, create a directory for software, or use one that has already been created.
-
 ```mkdir software
 ```
 Enter the new directory.
-
 ```cd software
 ```
 Download the source code.
-
 ``` wget https://github.com/MesserLab/SLiM/releases/download/v5.1/SLiM.zip
 unzip SLiM.zip
 ```
 You will need to use cmake in order to install SLiM.
-
 Check to see if you already have it installed.
 ``` which cmake
 ```
