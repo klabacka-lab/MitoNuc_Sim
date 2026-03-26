@@ -5,13 +5,14 @@ Webpage for SLiM documentation: https://messerlab.org/slim/
 
 # Setup
 
+## How to Set Up the Python Virtual Environment:
 First, set up the Python virtual environment with the setup script:
 
 ```bash
 ./setup-venv.sh
 source venv/bin/activate
 ```
-# How to Set Up SLiM on the Supercomputer:
+## How to Set Up SLiM on the Supercomputer:
 
 These instructions are explained, in section 2.2.2 (page 68), in the SLiM manual.
 First, create a directory for software, or use one that has already been created.
