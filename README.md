@@ -135,7 +135,13 @@ slim -d logging=T -d asexual=F -d mut_profile=1 -d preload_location=\"mito\" -d 
 
 This simulation can be run multiple times with the same output location to append the results of several runs together. This can be done many times (5–10 each for sexual and asexual is a reasonable number for a manual replication check).
 
-OPTIONALLY: If limited time or computing power prohibit the running of many simulations, pre-produced data from 1000 runs each of the asexual and sexual simulations are included in the `Simulation_Preload` directory under the names `asexual_example_data.txt` and `sexual_example_data.txt` These can be fed into the figure-making and statistical testing scripts instead of files made by running the simulations directly.
+For convenience, the obove lines are wrapped in a for loop in the script `run_repeat.sh`. It takes a command line argument with the number of times to run both the sexual and asexual simulations. it can be run for 10 simulations like so:
+
+```bash
+./run_repeat.sh 10
+```
+
+OPTIONALLY: If limited time or computing power prohibit the running of many simulations, pre-produced data from 1000 runs each of the asexual and sexual simulations are included in the `premade_data` directory under the names `asexual_example_data.txt` and `sexual_example_data.txt` These can be fed into the figure-making and statistical testing scripts instead of files made by running the simulations directly. This may be the only way to obtain our exact results, as they require a high sample size to gain statistical power.
 
 ## Plots/Figures
 
