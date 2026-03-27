@@ -8,12 +8,20 @@ Webpage for SLiM documentation: https://messerlab.org/slim/
 
 ## How to Set Up the Python Virtual Environment:
 
-### Linux / macOS (recommended)
+### Linux (recommended)
 Run the setup script:
 
 ```bash
 ./setup-venv.sh
 source venv/bin/activate
+```
+### MacOS (recommended)
+```
+python3 -m venv venv
+```
+or
+```
+pip install -r requirements.txt
 ```
 
 ### Windows (PowerShell - recommended)
