@@ -112,6 +112,10 @@ This simulation starts a population at a low initial fitness to compare the abil
 
 (All Sim 2 commands should be run from inside the Simulation_Preload directory)
 
+```bash
+cd Simulation_Preload
+```
+
 ## Main Simulation
 
 GrowthFitness.slim runs a single simulation. It can be executed through the command line with the following syntax:
