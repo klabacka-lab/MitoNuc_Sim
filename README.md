@@ -124,10 +124,22 @@ This simulation starts a population at a low initial fitness to compare the abil
 cd Simulation_Preload
 ```
 
+## Quickstart/TL;DR
 For a quick start with preloaded data, excecute the following:
 ```bash
-
+python figure_maker.py --sexual_data premade_data/sexual_example_data.txt  --asexual_data premade_data/asexual_example_data.txt --output result_plot.png 
+python stat_analysis.py premade_data/asexual_example_data.txt premade_data/sexual_example_data.txt distro.png
 ```
+
+For a quick start that actually runs the simulations, excecute the following:
+```bash
+./run_repeat.sh 10
+python figure_maker.py --sexual_data sexual_result.txt  --asexual_data asexual_result.txt --output result_plot.png 
+python stat_analysis.py asexual_result.txt sexual_result.txt distro.png
+```
+
+
+In either case, the output results are found in result_plot.png (fitness over time graph with final fitness distubution boxplots) and the terminal output
 
 ## Main Simulation
 
