@@ -124,6 +124,11 @@ This simulation starts a population at a low initial fitness to compare the abil
 cd Simulation_Preload
 ```
 
+For a quick start with preloaded data, excecute the following:
+```bash
+
+```
+
 ## Main Simulation
 
 GrowthFitness.slim runs a single simulation. It can be executed through the command line with the following syntax:
