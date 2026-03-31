@@ -138,7 +138,7 @@ mutationEffect(m1) {
 }
 
 mutation(m1) {
-	mut.tag = rdunif(1, 0, 19);
+	mut.tag = rdunif(1, 0, tagAmount-1);
 	return T;
 }
 
@@ -147,7 +147,7 @@ mutationEffect(m2) {
 }
 
 mutation(m2) {
-	mut.tag = rdunif(1, 0, 19);
+	mut.tag = rdunif(1, 0, tagAmount-1);
 	return T;
 }
 
@@ -156,7 +156,7 @@ mutationEffect(m3) {
 }
 
 mutation(m3) {
-	mut.tag = rdunif(1, 0, 19);
+	mut.tag = rdunif(1, 0, tagAmount-1);
 	return T;
 }
 
@@ -165,7 +165,7 @@ mutationEffect(m4) {
 }
 
 mutation(m4) {
-	mut.tag = rdunif(1, 0, 19);
+	mut.tag = rdunif(1, 0, tagAmount-1);
 	return T;
 }
 
@@ -200,7 +200,7 @@ mutation(m4) {
 	Rc = asString(recom);
 	EpSt = asString(epiSt);
 
-	finalPath = getwd() + "/temp" + S + B + Ep +"_" + EpSt +"_" + Rc + "_20"+ "_Trial" + repID + ".csv";
+	finalPath = getwd() + "/temp" + S + B + Ep +"_" + EpSt +"_" + Rc + "_" + tagAmount + "_Trial" + repID + ".csv";
 
 	values = sim.getValue("fitness_over_time");
 	line = paste(values, sep=",");

@@ -19,17 +19,16 @@ BEN=$2
 EPI=$3
 STRENGTH=$4
 RECOM=$5
-GEN=$6
+TAGS=$6
 TRIALNUM=$7
 
 
-
-slim \
+/home/jac2002/.local/bin/slim \
         -d sex=$SEX \
         -d ben=$BEN \
         -d epi=$EPI \
         -d epiSt=$STRENGTH \
         -d recom=$RECOM \
-        -d gen=$GEN \
         -d repID=$TRIALNUM \
-        NoPreload.slim
+        -d tagAmount=$TAGS \
+        FitnessSexStates.slim
