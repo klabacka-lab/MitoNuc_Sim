@@ -134,8 +134,8 @@ python stat_analysis.py premade_data/asexual_example_data.txt premade_data/sexua
 For a quick start that actually runs the simulations, excecute the following:
 ```bash
 ./run_repeat.sh 10
-python figure_maker.py --sexual_data sexual_result.txt  --asexual_data asexual_result.txt --output result_plot.png 
-python stat_analysis.py asexual_result.txt sexual_result.txt distro.png
+python figure_maker.py --sexual_data sex_result.txt  --asexual_data asex_result.txt --output result_plot.png 
+python stat_analysis.py asex_result.txt sex_result.txt distro.png
 ```
 
 

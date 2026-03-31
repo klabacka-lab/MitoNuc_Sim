@@ -175,6 +175,165 @@ initialize() {
 	p1.setValue("fitness_over_time", c());
 }
 
+//override SLiM's current fitness calculation
+mutationEffect(m1) {
+	return 1.0;
+}
+
+mutation(m1) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m2) {
+	return 1.0;
+}
+
+mutation(m2) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m3) {
+	return 1.0;
+}
+
+mutation(m3) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m4) {
+	return 1.0;
+}
+
+mutation(m4) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m5) {
+	return 1.0;
+}
+
+mutation(m5) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m6) {
+	return 1.0;
+}
+
+mutation(m6) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m7) {
+	return 1.0;
+}
+
+mutation(m7) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m8) {
+	return 1.0;
+}
+
+mutation(m8) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m9) {
+	return 1.0;
+}
+
+mutation(m9) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m10) {
+	return 1.0;
+}
+
+mutation(m10) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m11) {
+	return 1.0;
+}
+
+mutation(m11) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m12) {
+	return 1.0;
+}
+
+mutation(m12) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
+mutationEffect(m13) {
+	return 1.0;
+}
+mutation(m13) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+mutationEffect(m14) {
+	return 1.0;
+}
+mutation(m14) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+mutationEffect(m15) {
+	return 1.0;
+}
+mutation(m15) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+mutationEffect(m16) {
+	return 1.0;
+}
+mutation(m16) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+mutationEffect(m17) {
+	return 1.0;
+}
+mutation(m17) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+mutationEffect(m18) {
+	return 1.0;
+}
+mutation(m18) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+mutationEffect(m19) {
+	return 1.0;
+}
+mutation(m19) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
 //seeds deleterious mutations
 1 modifyChild() {
 	
@@ -195,25 +354,43 @@ initialize() {
 	if (preload_location == "mito"){
 		for (i in 1:20){
 			//seed deleterious mutations into mitochondrial chromosomes
-			mut_chroms.addNewDrawnMutation(m12, rdunif(1,0,mito_chrom_length-1));
-			mut_chroms.addNewDrawnMutation(m14, rdunif(1,0,mito_chrom_length-1));
-			mut_chroms.addNewDrawnMutation(m16, rdunif(1,0,mito_chrom_length-1));
+			newMuts = mut_chroms.addNewDrawnMutation(m12, rdunif(1,0,mito_chrom_length-1));
+			for (newMut in newMuts)
+				newMut.tag = rdunif(1, 0, 19);
+			newMuts = mut_chroms.addNewDrawnMutation(m14, rdunif(1,0,mito_chrom_length-1));
+			for (newMut in newMuts)
+				newMut.tag = rdunif(1, 0, 19);
+			newMuts = mut_chroms.addNewDrawnMutation(m16, rdunif(1,0,mito_chrom_length-1));
+			for (newMut in newMuts)
+				newMut.tag = rdunif(1, 0, 19);
 		}
 	} else {
 		if (asexual == T){
 			for (i in 1:20){
 				//seed deleterious mutations into nuclear chromosomes when population is asexual
-				mut_chroms.addNewDrawnMutation(m17, rdunif(1,0,nuc_chrom_length-1));
-				mut_chroms.addNewDrawnMutation(m18, rdunif(1,0,nuc_chrom_length-1));
-				mut_chroms.addNewDrawnMutation(m19, rdunif(1,0,nuc_chrom_length-1));
+				newMuts = mut_chroms.addNewDrawnMutation(m17, rdunif(1,0,nuc_chrom_length-1));
+				for (newMut in newMuts)
+					newMut.tag = rdunif(1, 0, 19);
+				newMuts = mut_chroms.addNewDrawnMutation(m18, rdunif(1,0,nuc_chrom_length-1));
+				for (newMut in newMuts)
+					newMut.tag = rdunif(1, 0, 19);
+				newMuts = mut_chroms.addNewDrawnMutation(m19, rdunif(1,0,nuc_chrom_length-1));
+				for (newMut in newMuts)
+					newMut.tag = rdunif(1, 0, 19);
 			}
 		}
 		else{
 			for (i in 1:20){
 				//seed deleterious mutations into nuclear chromosomes when population is sexual
-				mut_chroms.addNewDrawnMutation(m13, rdunif(1,0,nuc_chrom_length-1));
-				mut_chroms.addNewDrawnMutation(m11, rdunif(1,0,nuc_chrom_length-1));
-				mut_chroms.addNewDrawnMutation(m15, rdunif(1,0,nuc_chrom_length-1));
+				newMuts = mut_chroms.addNewDrawnMutation(m13, rdunif(1,0,nuc_chrom_length-1));
+				for (newMut in newMuts)
+					newMut.tag = rdunif(1, 0, 19);
+				newMuts = mut_chroms.addNewDrawnMutation(m11, rdunif(1,0,nuc_chrom_length-1));
+				for (newMut in newMuts)
+					newMut.tag = rdunif(1, 0, 19);
+				newMuts = mut_chroms.addNewDrawnMutation(m15, rdunif(1,0,nuc_chrom_length-1));
+				for (newMut in newMuts)
+					newMut.tag = rdunif(1, 0, 19);
 			}
 		}
 	}
@@ -247,11 +424,11 @@ initialize() {
 				total = 0;
 				epistatic = uniqueNuc[uniqueNuc.position % epi_rate == m.position % epi_rate]; // get the nuclear mutations that are epistatic with the mitochondrial mutation (i.e., those that occur at the same position modulo 125)
 				
+				//UPGRADE
 				// loop through the epistatic nuclear mutations to calculate the total effect on fitness
 				for (n in epistatic) {
-					if (n.mutationType == m1 | n.mutationType == m3) {
+					if (n.tag == m.tag) {
 						total = total + abs(n.selectionCoeff);
-					
 					}
 					else {total = total - abs(n.selectionCoeff);}
 				}
@@ -264,9 +441,10 @@ initialize() {
 					globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 				}
 				
-				if (m.mutationType == m6 | m.mutationType == m8) {
-					globalFitness = globalFitness - (total * abs(m.selectionCoeff));
-				}
+				//Why did m6 and m8 orignally behave differnt?
+				// if (m.mutationType == m6 | m.mutationType == m8) {
+				// 	globalFitness = globalFitness - (total * abs(m.selectionCoeff));
+				// }
 				
 				else
 				{
@@ -287,75 +465,7 @@ initialize() {
 	inds.fitnessScaling = popFitt;
 }
 
-//override SLiM's current fitness calculation
-mutationEffect(m1) {
-	return 1.0;
-}
 
-mutationEffect(m2) {
-	return 1.0;
-}
-
-mutationEffect(m3) {
-	return 1.0;
-}
-
-mutationEffect(m4) {
-	return 1.0;
-}
-
-mutationEffect(m5) {
-	return 1.0;
-}
-
-mutationEffect(m6) {
-	return 1.0;
-}
-
-mutationEffect(m7) {
-	return 1.0;
-}
-
-mutationEffect(m8) {
-	return 1.0;
-}
-
-mutationEffect(m9) {
-	return 1.0;
-}
-
-mutationEffect(m10) {
-	return 1.0;
-}
-
-mutationEffect(m11) {
-	return 1.0;
-}
-
-mutationEffect(m12) {
-	return 1.0;
-}
-mutationEffect(m13) {
-	return 1.0;
-}
-mutationEffect(m14) {
-	return 1.0;
-}
-mutationEffect(m15) {
-	return 1.0;
-}
-mutationEffect(m16) {
-	return 1.0;
-}
-mutationEffect(m17) {
-	return 1.0;
-}
-mutationEffect(m18) {
-	return 1.0;
-}
-mutationEffect(m19) {
-	return 1.0;
-}
 
 2 early() {
 	//Mutational metdown fitness
