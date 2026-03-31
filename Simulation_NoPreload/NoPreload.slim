@@ -8,44 +8,37 @@ initialize() {
 
 	if (ben) {
 		// Nuclear mutations
-		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
-		initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
-		initializeMutationType("m3", 0.5, "g", 0.001, 1); // Nuclear positive A
-		initializeMutationType("m4", 0.5, "g", 0.001, 1); // Nuclear positive B
-		
+		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative
+		initializeMutationType("m2", 0.5, "g", 0.001, 1); // Nuclear positive
+
 		// Mitochondrial mutations
-		initializeMutationType("m5", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
-		initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
-		initializeMutationType("m7", 1.0, "g", 0.001, 1); // Mitochondrial positive A
-		initializeMutationType("m8", 1.0, "g", 0.001, 1); // Mitochondrial positive B
+		initializeMutationType("m3", 1.0, "g", -0.05, 0.2); // Mitochondrial negative
+		initializeMutationType("m4", 1.0, "g", 0.001, 1); // Mitochondrial positive
+		
+
+		
 	}
 
 	else {
-		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
-		initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
-		initializeMutationType("m3", 0.5, "g", -0.01, 0.2); // Nuclear negative A
-		initializeMutationType("m4", 0.5, "g", -0.01, 0.2); // Nuclear negative B
-		
+		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative
+		initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear positive
+				
 		// Mitochondrial mutations
-		initializeMutationType("m5", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
-		initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
-		initializeMutationType("m7", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
-		initializeMutationType("m8", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
+		initializeMutationType("m3", 1.0, "g", -0.05, 0.2); // Mitochondrial negative
+		initializeMutationType("m4", 1.0, "g", -0.05, 0.2); // Mitochondrial positive
 	}
 
 	// Set convertToSubstitution to F for all mutation types - allows epistasis
-	m1.convertToSubstitution = F;
-	m2.convertToSubstitution = F;
 	m3.convertToSubstitution = F;
 	m4.convertToSubstitution = F;
-	m5.convertToSubstitution = F;
-	m6.convertToSubstitution = F;
-	m7.convertToSubstitution = F;
-	m8.convertToSubstitution = F;
+	m1.convertToSubstitution = F;
+	m2.convertToSubstitution = F;
+
+	initializeGenomicElementType("g1", c(m1, m2), c(0.98, 0.02)); // Nuclear genome
+	initializeGenomicElementType("g2", c(m3, m4), c(0.98, 0.02)); // Mitochondrial genome
 	
-	// Genomic element types
-	initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
-	initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
+
+	
 	
 	// Chromosomes
 
@@ -55,7 +48,7 @@ initialize() {
 	initializeMutationRate(1e-7);
 	
 	if (sex) {
-		initializeRecombinationRate(recom); // recombination rate of 1e-8 per base pair per generation for sexual reproduction
+		initializeRecombinationRate(recom); 
 	}
 	else {
 		initializeRecombinationRate(0);
@@ -97,11 +90,15 @@ initialize() {
 	for (ind in inds) {
 		globalFitness = 0;
 		unique = ind.uniqueMutations; // get the unique mutations for the individual
-		uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m3 | unique.mutationType == m4]; // subset to get only nuclear mutations
-		uniqueMito = unique[unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7 | unique.mutationType == m8]; // subset to get only mitochondrial mutations
-
+		uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2]; // subset to get only nuclear mutations
+		uniqueMito = unique[unique.mutationType == m3 | unique.mutationType == m4]; // subset to get only mitochondrial mutations
+		for (mut in uniqueNuc) {
+			globalFitness = globalFitness + (abs(mut.selectionCoeff) * mut.selectionCoeff);
+		
+		}
 		// loop through each mitochondrial mutation to calculate the epistatic interactions with nuclear mutations
 		for (m in uniqueMito) {
+		
 			if (!epi) {
 				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 			} else {
@@ -110,33 +107,21 @@ initialize() {
 
 				// loop through the epistatic nuclear mutations to calculate the total effect on fitness
 				for (n in epistatic) {
-					if (n.mutationType == m1 | n.mutationType == m3) {
+					if (n.tag == m.tag) {
 						total = total + abs(n.selectionCoeff);
 					}
 					else {total = total - abs(n.selectionCoeff);}
 				}
+
+				if (length(epistatic) > 0) {
+					globalFitness = globalFitness + (total * abs(m.selectionCoeff));
+				}
+
 				
-				// If there are no epistatic interactions, add the effect of the mitochondrial mutation to fitness
-
-	
-
-				if (length(epistatic) == 0) {
-					globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
-				}
-
-				if (m.mutationType == m6 | m.mutationType == m8) {
-					globalFitness = globalFitness - (total * abs(m.selectionCoeff));
-				}
-
-				else 
-					{globalFitness = globalFitness + (total * abs(m.selectionCoeff));
-				}
 			}
 		}
 		// loop through the nuclear mutations to add their effects on fitness (after accounting for epistasis with mitochondrial mutations)
-		for (mut in uniqueNuc) {
-			globalFitness = globalFitness + (abs(mut.selectionCoeff) * mut.selectionCoeff);
-		}
+		
 
 		// calculate the final fitness for the individual, ensuring it is not negative
 		Fitness = max(0.0, 1.0 + globalFitness * 3.0); // scale fitness to ensure it is positive and has a reasonable range
@@ -152,35 +137,39 @@ mutationEffect(m1) {
 	return 1.0;
 }
 
+mutation(m1) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
 mutationEffect(m2) {
 	return 1.0;
+}
+
+mutation(m2) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
 }
 
 mutationEffect(m3) {
 	return 1.0;
 }
 
+mutation(m3) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
+}
+
 mutationEffect(m4) {
 	return 1.0;
 }
 
-mutationEffect(m5) {
-	return 1.0;
+mutation(m4) {
+	mut.tag = rdunif(1, 0, 19);
+	return T;
 }
 
-mutationEffect(m6) {
-	return 1.0;
-}
-
-mutationEffect(m7) {
-	return 1.0;
-}
-
-mutationEffect(m8) {
-	return 1.0;
-}
-
-2:4001 early() {
+2:10001 early() {
 	fitness = mean(p1.cachedFitness(NULL));
 
 	values = sim.getValue("fitness_over_time");
@@ -189,7 +178,7 @@ mutationEffect(m8) {
 }
 
 // End the simulation after 10000 generations
-4000 late() {
+10000 late() {
 	if (sex) {
 		S = "/sex_";
 	} else {
@@ -211,7 +200,7 @@ mutationEffect(m8) {
 	Rc = asString(recom);
 	EpSt = asString(epiSt);
 
-	finalPath = getwd() + "/temp" + S + B + Ep +"_" + EpSt +"_" + Rc  + "_" + gen + "_Trial" + repID + ".csv";
+	finalPath = getwd() + "/temp" + S + B + Ep +"_" + EpSt +"_" + Rc + "_20"+ "_Trial" + repID + ".csv";
 
 	values = sim.getValue("fitness_over_time");
 	line = paste(values, sep=",");
