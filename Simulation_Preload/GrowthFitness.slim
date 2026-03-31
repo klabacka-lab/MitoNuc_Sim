@@ -37,7 +37,7 @@ initialize() {
 	defineConstant("mito_chrom_length", 1e4);
 	defineConstant("nuc_chrom_length", 1e6);
 	
-	defineConstant("epi_rate", 750);
+	defineConstant("epi_rate", 100);
 	
 	//Enable pedigree tracking
 	initializeSLiMOptions(keepPedigrees=T);
@@ -157,7 +157,7 @@ initialize() {
 	initializeChromosome(2,nuc_chrom_length,type="A");
 	initializeGenomicElement(g2, 0, nuc_chrom_length-1);
 	initializeMutationRate(1e-7);
-	initializeRecombinationRate(1e-5);
+	initializeRecombinationRate(5e-6);
 }
 
 1 early() {
@@ -440,11 +440,6 @@ mutation(m19) {
 				if (length(epistatic) == 0) {
 					globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 				}
-				
-				//Why did m6 and m8 orignally behave differnt?
-				// if (m.mutationType == m6 | m.mutationType == m8) {
-				// 	globalFitness = globalFitness - (total * abs(m.selectionCoeff));
-				// }
 				
 				else
 				{
