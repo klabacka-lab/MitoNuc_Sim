@@ -3,6 +3,7 @@ from scipy import stats
 import sys
 import matplotlib.pyplot as plt
 from pathlib import Path
+import argparse
 
 
 
@@ -60,11 +61,50 @@ def generate_summary(mean1, mean2, std1, std2, shapiro1, shapiro2, ttest, mw):
 
 
 
-if len(sys.argv) != 4:
-    print("Usage: python stat_analysis.py file1.txt file2.txt output.png")
-    sys.exit(1)
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Run statistical tests on asexual vs sexual simulation outputs."
+    )
+    parser.add_argument(
+        "--asexual_data",
+        type=str,
+        default=None,
+        help="Path to asexual data file"
+    )
+    parser.add_argument(
+        "--sexual_data",
+        type=str,
+        default=None,
+        help="Path to sexual data file"
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        default=None,
+        help="Path to save histogram PNG"
+    )
+    parser.add_argument(
+        "legacy",
+        nargs="*",
+        help="Legacy positional mode: <asexual_data> <sexual_data> <output.png>"
+    )
 
-file1, file2, output_png = sys.argv[1], sys.argv[2], sys.argv[3]
+    args = parser.parse_args()
+
+    # Prefer named arguments when supplied; otherwise support legacy positional usage.
+    if args.asexual_data and args.sexual_data and args.output:
+        return args.asexual_data, args.sexual_data, args.output
+
+    if len(args.legacy) == 3:
+        return args.legacy[0], args.legacy[1], args.legacy[2]
+
+    parser.error(
+        "Provide either --asexual_data/--sexual_data/--output or "
+        "three positional args: <asexual_data> <sexual_data> <output.png>."
+    )
+
+
+file1, file2, output_png = parse_args()
 
 # ensure output directory exists
 Path(output_png).parent.mkdir(parents=True, exist_ok=True)

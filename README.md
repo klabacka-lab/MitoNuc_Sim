@@ -128,14 +128,14 @@ cd Simulation_Preload
 For a quick start with preloaded data, excecute the following:
 ```bash
 python figure_maker.py --sexual_data premade_data/sexual_example_data.txt  --asexual_data premade_data/asexual_example_data.txt --output result_plot.png 
-python stat_analysis.py premade_data/asexual_example_data.txt premade_data/sexual_example_data.txt distro.png
+python stat_analysis.py --asexual_data premade_data/asexual_example_data.txt --sexual_data premade_data/sexual_example_data.txt --output distro.png
 ```
 
 For a quick start that actually runs the simulations, excecute the following:
 ```bash
 ./run_repeat.sh 10
 python figure_maker.py --sexual_data sex_result.txt  --asexual_data asex_result.txt --output result_plot.png 
-python stat_analysis.py asex_result.txt sex_result.txt distro.png
+python stat_analysis.py --asexual_data asex_result.txt --sexual_data sex_result.txt --output distro.png
 ```
 
 
@@ -189,13 +189,13 @@ This will produce an average fitness-over-time line plot alongside a boxplot for
 Finally, feed the data to the statistical testing script:
 
 ```bash
-python stat_analysis.py <input data file from asexual sim> <input data file from sexual sim> <output file location for a distribution visualization plot>
+python stat_analysis.py --asexual_data <input data file from asexual sim> --sexual_data <input data file from sexual sim> --output <output file location for a distribution visualization plot>
 ```
 
 Suggested command:
 
 ```bash
-python stat_analysis.py asex_result.txt sex_result.txt distro.png
+python stat_analysis.py --asexual_data asex_result.txt --sexual_data sex_result.txt --output distro.png
 ```
 
 This will output a written description of the results of running various statistical tests on the two distributions:
