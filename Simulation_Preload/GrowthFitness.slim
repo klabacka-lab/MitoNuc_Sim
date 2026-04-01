@@ -46,104 +46,55 @@ initialize() {
 		initializeSex();
 	}
 	
-	
-	//Preloaded mutations types for seeding initial population.
-	//Mito
-	initializeMutationType("m12", 0.7, "f", -0.075); // preload
-	initializeMutationType("m14", 0.7, "f", -0.075); // preload
-	initializeMutationType("m16", 0.7, "f", -0.07355); // preload
-	//Nuclear
-	//sexual
-	initializeMutationType("m11", 0.7, "f", -0.055); // preload
-	initializeMutationType("m13", 0.7, "f", -0.052); // preload
-	initializeMutationType("m15", 0.7, "f", -0.051); // preload
-	//asexual
-	initializeMutationType("m17", 0.7, "f", -0.075); // preload
-	initializeMutationType("m18", 0.7, "f", -0.075); // preload
-	initializeMutationType("m19", 0.7, "f", -0.07355); // preload
-	
-	//ensures mutations do not "fix" if the entire population has it
-	m11.convertToSubstitution = F;
-	m12.convertToSubstitution = F;
-	m13.convertToSubstitution = F;
-	m14.convertToSubstitution = F;
-	m15.convertToSubstitution = F;
-	m16.convertToSubstitution = F;
-	m17.convertToSubstitution = F;
-	m18.convertToSubstitution = F;
-	m19.convertToSubstitution = F;
-	
-	
-	//initialize synonymous mutations for mut_profile 3
-	initializeMutationType("m9", 1.0, "f", 0.0); //synonymous
-	initializeMutationType("m10", 1.0, "f", 0.0); //synonymous
-	
-
-	m9.convertToSubstitution = F;
-	m10.convertToSubstitution = F;
 
 	//create mutation distributions
 	if (mut_profile == 1){
 		//Both del and ben muts
 		
 		// Nuclear mutations
-		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
-		initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
-		initializeMutationType("m3", 0.5, "g", 0.001, 1); // Nuclear positive A
-		initializeMutationType("m4", 0.5, "g", 0.001, 1); // Nuclear positive B
-		
+		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative
+		initializeMutationType("m2", 0.5, "g", 0.001, 1); // Nuclear positive
+
 		// Mitochondrial mutations
-		initializeMutationType("m5", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
-		initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
-		initializeMutationType("m7", 1.0, "g", 0.001, 1); // Mitochondrial positive A
-		initializeMutationType("m8", 1.0, "g", 0.001, 1); // Mitochondrial positive B
+		initializeMutationType("m3", 1.0, "g", -0.05, 0.2); // Mitochondrial negative
+		initializeMutationType("m4", 1.0, "g", 0.001, 1); // Mitochondrial positive
 		
-		//create genomic element types to determine where these mutations can mutate and their proportions
-		initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
-		initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
-	} else if (mut_profile == 2){
+		} else if (mut_profile == 2){
 		//only del muts
 		
-		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative A
-		initializeMutationType("m2", 0.5, "g", -0.01, 0.2); // Nuclear negative B
-		initializeMutationType("m3", 0.5, "g", -0.01, 0.2); // Nuclear negative A
-		initializeMutationType("m4", 0.5, "g", -0.01, 0.2); // Nuclear negative B
-		
+		// Nuclear mutations
+		initializeMutationType("m1", 0.5, "g", -0.01, 0.2); // Nuclear negative
+		initializeMutationType("m2", 0.5, "g", -0.01, 0.2); 
+				
 		// Mitochondrial mutations
-		initializeMutationType("m5", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
-		initializeMutationType("m6", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
-		initializeMutationType("m7", 1.0, "g", -0.05, 0.2); // Mitochondrial negative A
-		initializeMutationType("m8", 1.0, "g", -0.05, 0.2); // Mitochondrial negative B
+		initializeMutationType("m3", 1.0, "g", -0.05, 0.2); // Mitochondrial negative
+		initializeMutationType("m4", 1.0, "g", -0.05, 0.2); // Mitochondrial 
+	
 		
-		initializeGenomicElementType("g1", c(m1, m2, m3, m4), c(0.49, 0.49, 0.01, 0.01)); // Nuclear genome
-		initializeGenomicElementType("g2", c(m5, m6, m7, m8), c(0.49, 0.49, 0.01, 0.01)); // Mitochondrial genome
 	} else if (mut_profile == 3){
 		//no muts (techincially synonymous muts with no fitness effect)
 		//Nuclear
-		initializeMutationType("m1", 0.5, "f", 0.0); // Nuclear negative A
-		initializeMutationType("m2", 0.5, "f", 0.0); // Nuclear negative B
-		initializeMutationType("m3", 0.5, "f", 0.0); // Nuclear negative A
-		initializeMutationType("m4", 0.5, "f", 0.0); // Nuclear negative B
+		initializeMutationType("m1", 0.5, "f", 0.0);
+		initializeMutationType("m2", 0.5, "f", 0.0);
+		//Mitochondrial
+		initializeMutationType("m3", 0.5, "f", 0.0);
+		initializeMutationType("m4", 0.5, "f", 0.0);
 		
-		// Mitochondrial mutations
-		initializeMutationType("m5", 1.0, "f", 0.0); // Mitochondrial negative A
-		initializeMutationType("m6", 1.0, "f", 0.0); // Mitochondrial negative B
-		initializeMutationType("m7", 1.0, "f", 0.0); // Mitochondrial negative A
-		initializeMutationType("m8", 1.0, "f", 0.0); // Mitochondrial negative B
-		
-		initializeGenomicElementType("g1", c(m9), c(1));
-		//autosomal
-		initializeGenomicElementType("g2", c(m10), c(1));
 	}
-	
+
+	//create genomic element types to determine where these mutations can mutate and their proportions
+	initializeGenomicElementType("g1", c(m1, m2), c(0.49, 0.01)); // Nuclear genome
+	initializeGenomicElementType("g2", c(m3, m4), c(0.49, 0.01)); // Mitochondrial genome
+
+
 	m1.convertToSubstitution = F;
 	m2.convertToSubstitution = F;
 	m3.convertToSubstitution = F;
 	m4.convertToSubstitution = F;
+
 	m5.convertToSubstitution = F;
 	m6.convertToSubstitution = F;
 	m7.convertToSubstitution = F;
-	m8.convertToSubstitution = F;
 	
 	//chromosome 1: mitochondrial chromosome
 	//adding in chromosome length
@@ -239,101 +190,6 @@ mutation(m7) {
 	return T;
 }
 
-mutationEffect(m8) {
-	return 1.0;
-}
-
-mutation(m8) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-
-mutationEffect(m9) {
-	return 1.0;
-}
-
-mutation(m9) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-
-mutationEffect(m10) {
-	return 1.0;
-}
-
-mutation(m10) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-
-mutationEffect(m11) {
-	return 1.0;
-}
-
-mutation(m11) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-
-mutationEffect(m12) {
-	return 1.0;
-}
-
-mutation(m12) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-
-mutationEffect(m13) {
-	return 1.0;
-}
-mutation(m13) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-mutationEffect(m14) {
-	return 1.0;
-}
-mutation(m14) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-mutationEffect(m15) {
-	return 1.0;
-}
-mutation(m15) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-mutationEffect(m16) {
-	return 1.0;
-}
-mutation(m16) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-mutationEffect(m17) {
-	return 1.0;
-}
-mutation(m17) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-mutationEffect(m18) {
-	return 1.0;
-}
-mutation(m18) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-mutationEffect(m19) {
-	return 1.0;
-}
-mutation(m19) {
-	mut.tag = rdunif(1, 0, 19);
-	return T;
-}
-
 //seeds deleterious mutations
 1 modifyChild() {
 	
@@ -350,50 +206,21 @@ mutation(m19) {
 			}
 		}
 	}
-	
-	if (preload_location == "mito"){
-		for (i in 1:20){
-			//seed deleterious mutations into mitochondrial chromosomes
-			newMuts = mut_chroms.addNewDrawnMutation(m12, rdunif(1,0,mito_chrom_length-1));
-			for (newMut in newMuts)
-				newMut.tag = rdunif(1, 0, 19);
-			newMuts = mut_chroms.addNewDrawnMutation(m14, rdunif(1,0,mito_chrom_length-1));
-			for (newMut in newMuts)
-				newMut.tag = rdunif(1, 0, 19);
-			newMuts = mut_chroms.addNewDrawnMutation(m16, rdunif(1,0,mito_chrom_length-1));
-			for (newMut in newMuts)
-				newMut.tag = rdunif(1, 0, 19);
-		}
-	} else {
-		if (asexual == T){
-			for (i in 1:20){
-				//seed deleterious mutations into nuclear chromosomes when population is asexual
-				newMuts = mut_chroms.addNewDrawnMutation(m17, rdunif(1,0,nuc_chrom_length-1));
-				for (newMut in newMuts)
-					newMut.tag = rdunif(1, 0, 19);
-				newMuts = mut_chroms.addNewDrawnMutation(m18, rdunif(1,0,nuc_chrom_length-1));
-				for (newMut in newMuts)
-					newMut.tag = rdunif(1, 0, 19);
-				newMuts = mut_chroms.addNewDrawnMutation(m19, rdunif(1,0,nuc_chrom_length-1));
-				for (newMut in newMuts)
-					newMut.tag = rdunif(1, 0, 19);
-			}
-		}
-		else{
-			for (i in 1:20){
-				//seed deleterious mutations into nuclear chromosomes when population is sexual
-				newMuts = mut_chroms.addNewDrawnMutation(m13, rdunif(1,0,nuc_chrom_length-1));
-				for (newMut in newMuts)
-					newMut.tag = rdunif(1, 0, 19);
-				newMuts = mut_chroms.addNewDrawnMutation(m11, rdunif(1,0,nuc_chrom_length-1));
-				for (newMut in newMuts)
-					newMut.tag = rdunif(1, 0, 19);
-				newMuts = mut_chroms.addNewDrawnMutation(m15, rdunif(1,0,nuc_chrom_length-1));
-				for (newMut in newMuts)
-					newMut.tag = rdunif(1, 0, 19);
-			}
-		}
+
+	for (i in 1:20){
+		//seed deleterious mutations into mitochondrial chromosomes
+		newMuts = mut_chroms.addNewDrawnMutation(m5, rdunif(1,0,mito_chrom_length-1));
+		for (newMut in newMuts)
+			newMut.tag = rdunif(1, 0, 19);
+		newMuts = mut_chroms.addNewDrawnMutation(m6, rdunif(1,0,mito_chrom_length-1));
+		for (newMut in newMuts)
+			newMut.tag = rdunif(1, 0, 19);
+		newMuts = mut_chroms.addNewDrawnMutation(m7, rdunif(1,0,mito_chrom_length-1));
+		for (newMut in newMuts)
+			newMut.tag = rdunif(1, 0, 19);
 	}
+	
+	
 	return T;
 }
 
@@ -414,9 +241,13 @@ mutation(m19) {
 				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 			}
 		} else {
-			uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m3 | unique.mutationType == m4 | unique.mutationType == m11| unique.mutationType == m13| unique.mutationType == m15| unique.mutationType == m17| unique.mutationType == m18| unique.mutationType == m19]; // subset to get only nuclear mutations
-			uniqueMito = unique[unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7 | unique.mutationType == m8| unique.mutationType == m12| unique.mutationType == m14| unique.mutationType == m16]; // subset to get only mitochondrial mutations
-			
+			if preload_location == "mito" {
+				uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2]; 
+				uniqueMito = unique[unique.mutationType == m3 | unique.mutationType == m4 | unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7];
+			} else {	
+				uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2 | unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7]; 
+				uniqueMito = unique[unique.mutationType == m3 | unique.mutationType == m4];
+			}
 			// loop through each mitochondrial mutation to calculate the epistatic interactions with nuclear mutations
 			for (m in uniqueMito) {
 				
@@ -432,10 +263,6 @@ mutation(m19) {
 					}
 					else {total = total - abs(n.selectionCoeff);}
 				}
-				
-				// If there are no epistatic interactions, add the effect of the mitochondrial mutation to fitness
-				
-				//			globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 				
 				if (length(epistatic) > 0) {
 				
