@@ -86,6 +86,23 @@ initialize() {
 	initializeGenomicElementType("g1", c(m1, m2), c(0.49, 0.01)); // Nuclear genome
 	initializeGenomicElementType("g2", c(m3, m4), c(0.49, 0.01)); // Mitochondrial genome
 
+	if (preload_location == "nucl" & asexual == F){
+		print("Nuclear preloading with sexual reproduction");
+		initializeMutationType("m5", 0.7, "f", -0.055);
+		initializeMutationType("m6", 0.7, "f", -0.052);
+		initializeMutationType("m7", 0.7, "f", -0.051);
+	} else if (preload_location == "nucl" & asexual == T) {
+		print("Nuclear preloading with asexual reproduction");
+		initializeMutationType("m5", 0.7, "f", -0.075);
+		initializeMutationType("m6", 0.7, "f", -0.075);
+		initializeMutationType("m7", 0.7, "f", -0.07355);
+	} else {
+		print("Mitochondrial preloading");
+		initializeMutationType("m5", 0.7, "f", -0.075);
+		initializeMutationType("m6", 0.7, "f", -0.075);
+		initializeMutationType("m7", 0.7, "f", -0.07355);
+	}
+
 
 	m1.convertToSubstitution = F;
 	m2.convertToSubstitution = F;
@@ -207,15 +224,20 @@ mutation(m7) {
 		}
 	}
 
+	if (preload_location == "mito") {
+		seed_len = mito_chrom_length;
+	} else {
+		seed_len = nuc_chrom_length;
+	}
+
 	for (i in 1:20){
-		//seed deleterious mutations into mitochondrial chromosomes
-		newMuts = mut_chroms.addNewDrawnMutation(m5, rdunif(1,0,mito_chrom_length-1));
+		newMuts = mut_chroms.addNewDrawnMutation(m5, rdunif(1, 0, seed_len - 1));
 		for (newMut in newMuts)
 			newMut.tag = rdunif(1, 0, 19);
-		newMuts = mut_chroms.addNewDrawnMutation(m6, rdunif(1,0,mito_chrom_length-1));
+		newMuts = mut_chroms.addNewDrawnMutation(m6, rdunif(1, 0, seed_len - 1));
 		for (newMut in newMuts)
 			newMut.tag = rdunif(1, 0, 19);
-		newMuts = mut_chroms.addNewDrawnMutation(m7, rdunif(1,0,mito_chrom_length-1));
+		newMuts = mut_chroms.addNewDrawnMutation(m7, rdunif(1, 0, seed_len - 1));
 		for (newMut in newMuts)
 			newMut.tag = rdunif(1, 0, 19);
 	}
@@ -241,7 +263,7 @@ mutation(m7) {
 				globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 			}
 		} else {
-			if preload_location == "mito" {
+			if (preload_location == "mito") {
 				uniqueNuc = unique[unique.mutationType == m1 | unique.mutationType == m2]; 
 				uniqueMito = unique[unique.mutationType == m3 | unique.mutationType == m4 | unique.mutationType == m5 | unique.mutationType == m6 | unique.mutationType == m7];
 			} else {	
@@ -264,8 +286,10 @@ mutation(m7) {
 					else {total = total - abs(n.selectionCoeff);}
 				}
 				
-				if (length(epistatic) > 0) {
-				
+				if (length(epistatic) == 0) {
+					globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
+				}
+				else {
 					globalFitness = globalFitness + (total * abs(m.selectionCoeff));
 				}
 			}
