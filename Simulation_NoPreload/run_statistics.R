@@ -75,7 +75,7 @@ pvals[["epistasis_tag_sex"]] = tmp
 # Test significance of different epistasis TAGS in asexual
 tmp = kruskal.test(list(results_list[["asex_ben_epi_100_0_2"]]$X9999,
                         results_list[["asex_ben_epi_100_0_5"]]$X9999,
-                        results_list[["sex_ben_epi_100_5.0e-06_10"]]$X9999,
+                        results_list[["asex_ben_epi_100_0_10"]]$X9999,
                         results_list[["asex_ben_epi_100_0_15"]]$X9999,
                         results_list[["asex_ben_epi_100_0_20"]]$X9999,
                         results_list[["asex_ben_epi_100_0_25"]]$X9999,
@@ -149,5 +149,5 @@ pval_table = tibble(
   direction = map_chr(names(pvals), ~ if (.x %in% names(directions)) directions[[.x]] else "-")
 )
 
-write_csv(pval_table, "pvalues_results.csv")
+write_csv(pval_table, "noPreload_results.csv")
 }
