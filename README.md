@@ -127,14 +127,14 @@ cd Simulation_Preload
 ## Quickstart/TL;DR
 For a quick start with preloaded data, excecute the following:
 ```bash
-python figure_maker.py --sexual_data premade_data/sexual_example_data.txt  --asexual_data premade_data/asexual_example_data.txt --output result_plot.png 
+python figure_maker.py --asexual_data premade_data/asexual_example_data.txt --sexual_data premade_data/sexual_example_data.txt --output result_plot.png 
 python stat_analysis.py --asexual_data premade_data/asexual_example_data.txt --sexual_data premade_data/sexual_example_data.txt --output distro.png
 ```
 
 For a quick start that actually runs the simulations, excecute the following:
 ```bash
 ./run_repeat.sh 10
-python figure_maker.py --sexual_data sex_result.txt  --asexual_data asex_result.txt --output result_plot.png 
+python figure_maker.py --asexual_data asex_result.txt --sexual_data sex_result.txt --output result_plot.png 
 python stat_analysis.py --asexual_data asex_result.txt --sexual_data sex_result.txt --output distro.png
 ```
 
@@ -173,13 +173,13 @@ OPTIONALLY: If limited time or computing power prohibit the running of many simu
 The files written by the above commands can be used to generate the figures in the paper when they are passed into the Python script `figure_maker.py` using the following syntax:
 
 ```bash
-python figure_maker.py --sexual_data <SEXUAL_DATA_FILE> --asexual_data <ASEXUAL_DATA_FILE> --output <OUTPUT_PNG>
+python figure_maker.py --asexual_data <ASEXUAL_DATA_FILE> --sexual_data <SEXUAL_DATA_FILE> --output <OUTPUT_PNG>
 ```
 
 Suggested command:
 
 ```bash
-python figure_maker.py --sexual_data sex_result.txt --asexual_data asex_result.txt --output result_plot.png
+python figure_maker.py --asexual_data asex_result.txt --sexual_data sex_result.txt --output result_plot.png
 ```
 
 This will produce an average fitness-over-time line plot alongside a boxplot for final fitnesses. These will be averaged across the different trials, and will show a shaded ±1 standard deviation around the average line. The boxplot will show the distribution of final fitnesses across all runs for each.
