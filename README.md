@@ -173,7 +173,7 @@ OPTIONALLY: If limited time or computing power prohibit the running of many simu
 The files written by the above commands can be used to generate the figures in the paper when they are passed into the Python script `figure_maker.py` using the following syntax:
 
 ```bash
-python figure_maker.py --sexual_data <data from sexual sim> --asexual_data <data from asexual sim> --output <desired output location>
+python figure_maker.py --sexual_data <SEXUAL_DATA_FILE> --asexual_data <ASEXUAL_DATA_FILE> --output <OUTPUT_PNG>
 ```
 
 Suggested command:
@@ -189,7 +189,7 @@ This will produce an average fitness-over-time line plot alongside a boxplot for
 Finally, feed the data to the statistical testing script:
 
 ```bash
-python stat_analysis.py --asexual_data <input data file from asexual sim> --sexual_data <input data file from sexual sim> --output <output file location for a distribution visualization plot>
+python stat_analysis.py --asexual_data <ASEXUAL_DATA_FILE> --sexual_data <SEXUAL_DATA_FILE> --output <DISTRO_PNG>
 ```
 
 Suggested command:
