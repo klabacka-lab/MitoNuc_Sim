@@ -437,12 +437,8 @@ mutation(m19) {
 				
 				//			globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
 				
-				if (length(epistatic) == 0) {
-					globalFitness = globalFitness + (m.selectionCoeff * abs(m.selectionCoeff));
-				}
+				if (length(epistatic) > 0) {
 				
-				else
-				{
 					globalFitness = globalFitness + (total * abs(m.selectionCoeff));
 				}
 			}
