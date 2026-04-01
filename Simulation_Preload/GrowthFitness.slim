@@ -39,8 +39,8 @@ initialize() {
 	
 	defineConstant("epi_rate", 100);
 	
-	//Enable pedigree tracking
-	initializeSLiMOptions(keepPedigrees=T);
+	//Pedigree tracking is not used elsewhere, so keep it off to reduce overhead
+	initializeSLiMOptions(keepPedigrees=F);
 	
 	if (!asexual){
 		initializeSex();

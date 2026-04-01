@@ -201,7 +201,7 @@ python stat_analysis.py asex_result.txt sex_result.txt distro.png
 This will output a written description of the results of running various statistical tests on the two distributions:
 
 - Shapiro–Wilk test for normality
-- Welch t-test for difference of means (results irrelevant if normality is rejected)
-- Mann–Whitney U test for difference of central tendency (does not require normality)
+- Welch t-test for difference of means 
+- Mann–Whitney U test for difference of central tendency 
 
 The output file will be an extra PNG comparing the final fitness distributions as histograms, for intuitive visualization.
