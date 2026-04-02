@@ -48,7 +48,7 @@ for epi_const in "${epis[@]}"; do
                 -d logging=T \
                 -d asexual="\"$val\"" \
                 -d mut_profile=1 \
-                -d preload_location=mito \
+                -d preload_location="\"mito\"" \
                 -d epi=T \
                 -d data_file="\"$data_file\"" \
                 -d num_tags="$num_tags" \
