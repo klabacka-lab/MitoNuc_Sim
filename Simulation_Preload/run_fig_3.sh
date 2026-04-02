@@ -4,12 +4,12 @@ start=$(date +%s)
 
 source venv/bin/activate
 
-tags=${2 20 100 20 20}
-epis=${100 100 100 50 1000}
+tags=(2 20 100 20 20)
+epis=(100 100 100 50 1000)
 
 
-for epi_const in epis; do
-    for num_tags in tags; do
+for epi_const in "${epis[@]}"; do
+    for num_tags in "${tags[@]}"; do
         run_id="tags${num_tags}_epi${epi_const}"
 
         echo "Preparing $run_id..."
