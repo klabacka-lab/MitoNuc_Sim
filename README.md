@@ -205,7 +205,7 @@ To run statistical analysis and generate noPreload_results.csv, which contains t
 ```
 R run_statistics.R
 ```
-To generate figures of trials, use the following syntax:
+To generate figures comparing trials, use the following syntax:
 ```
 Py visualMaker.py <path/to/csv/1> <path/to/csv/2>
 ```
