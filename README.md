@@ -185,6 +185,7 @@ R run_statistics.R
 To generate figures of trials, use the following syntax:
 ```
 Py visualMaker.py
+```
 
 # SIM 2
 
