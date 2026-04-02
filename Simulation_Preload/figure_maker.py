@@ -8,7 +8,6 @@ import argparse
 # Configuration Flags
 # -----------------------------
 
-BOXPLOT = True
 MEASURE_FITNESS_GAP = False
 SCATTER = False
 FIT_LINE = False
@@ -114,7 +113,15 @@ parser.add_argument(
     help="Use log scale for y-axis"
 )
 
+parser.add_argument(
+    "--no_boxplot",
+    action="store_true",
+    help="Use histogram instead of boxplot for final fitness distribution"
+)
+
 args = parser.parse_args()
+
+BOXPLOT = not args.no_boxplot
 
 SEXUAL_DATA_PATH = args.sexual_data
 ASEXUAL_DATA_PATH = args.asexual_data
