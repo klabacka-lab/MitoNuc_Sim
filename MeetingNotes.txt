@@ -1,3 +1,10 @@
+2 April 2026
+
+New figure format for 2 and 3 - one row of plots showing effects of different epistasis constants, 
+and one showing the effects of increasing number of compatibility tags. Will require a 6-fold sim
+
+Structured ideas for SuppMat - figures S1-S3
+
 26 March 2026
 
 New idea to fix epistasis - will require reimpleentation and full reruns

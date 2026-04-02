@@ -31,14 +31,23 @@ initialize() {
 	if (!exists("logging")){
 		defineConstant("logging", F);
 	}
-	
+
+
+	if (!exists("num_tags")){
+		defineConstant("num_tags", 20);
+	}
+
+	if (!exists("epi_rate")){
+		defineConstant("epi_rate", 100);
+	}
+
 	//constants created to define population size, chromosome length, and rate of epistasis
 	defineConstant("popSize", 250);
 	defineConstant("mito_chrom_length", 1e4);
 	defineConstant("nuc_chrom_length", 1e6);
 	
-	defineConstant("epi_rate", 100);
-	
+
+
 	//Pedigree tracking is not used elsewhere, so keep it off to reduce overhead
 	initializeSLiMOptions(keepPedigrees=F);
 	
@@ -46,6 +55,10 @@ initialize() {
 		initializeSex();
 	}
 	
+	//Synonymous muts: will experience not net fitness effects
+	//or epistaic interactions. 
+	initializeMutationType("m8", 0.5, "f", 0.0);
+	initializeMutationType("m9", 0.5, "f", 0.0);
 
 	//create mutation distributions
 	if (mut_profile == 1){
@@ -59,7 +72,9 @@ initialize() {
 		initializeMutationType("m3", 1.0, "g", -0.05, 0.2); // Mitochondrial negative
 		initializeMutationType("m4", 1.0, "g", 0.001, 1); // Mitochondrial positive
 		
-		} else if (mut_profile == 2){
+		initializeGenomicElementType("g1", c(m1, m2), c(0.49, 0.01)); // Nuclear genome
+		initializeGenomicElementType("g2", c(m3, m4), c(0.49, 0.01)); // Mitochondrial genome
+	} else if (mut_profile == 2){
 		//only del muts
 		
 		// Nuclear mutations
@@ -70,21 +85,22 @@ initialize() {
 		initializeMutationType("m3", 1.0, "g", -0.05, 0.2); // Mitochondrial negative
 		initializeMutationType("m4", 1.0, "g", -0.05, 0.2); // Mitochondrial 
 	
-		
+		initializeGenomicElementType("g1", c(m1, m2), c(0.49, 0.01)); // Nuclear genome
+		initializeGenomicElementType("g2", c(m3, m4), c(0.49, 0.01)); // Mitochondrial genome
 	} else if (mut_profile == 3){
-		//no muts (techincially synonymous muts with no fitness effect)
+		//no muts (technicially synonymous muts with no fitness effect)
+		//These are defined ONLY so thet they can exist in the mutation schema and not break leter code
 		//Nuclear
 		initializeMutationType("m1", 0.5, "f", 0.0);
 		initializeMutationType("m2", 0.5, "f", 0.0);
 		//Mitochondrial
 		initializeMutationType("m3", 0.5, "f", 0.0);
-		initializeMutationType("m4", 0.5, "f", 0.0);
-		
-	}
+		initializeMutationType("m4", 0.5, "f", 0.0);	
 
-	//create genomic element types to determine where these mutations can mutate and their proportions
-	initializeGenomicElementType("g1", c(m1, m2), c(0.49, 0.01)); // Nuclear genome
-	initializeGenomicElementType("g2", c(m3, m4), c(0.49, 0.01)); // Mitochondrial genome
+		initializeGenomicElementType("g1", c(m8), c(1.0)); // Nuclear genome
+		initializeGenomicElementType("g2", c(m9), c(1.0)); // Mitochondrial genome
+	}
+	
 
 	if (preload_location == "nucl" & asexual == F){
 		print("Nuclear preloading with sexual reproduction");
@@ -113,6 +129,9 @@ initialize() {
 	m6.convertToSubstitution = F;
 	m7.convertToSubstitution = F;
 	
+	m8.convertToSubstitution = F;
+	m9.convertToSubstitution = F;
+
 	//chromosome 1: mitochondrial chromosome
 	//adding in chromosome length
 	initializeChromosome(1,mito_chrom_length, type="HF");
@@ -149,7 +168,7 @@ mutationEffect(m1) {
 }
 
 mutation(m1) {
-	mut.tag = rdunif(1, 0, 19);
+	mut.tag = rdunif(1, 0, num_tags - 1);
 	return T;
 }
 
@@ -158,7 +177,7 @@ mutationEffect(m2) {
 }
 
 mutation(m2) {
-	mut.tag = rdunif(1, 0, 19);
+	mut.tag = rdunif(1, 0, num_tags - 1);
 	return T;
 }
 
@@ -167,7 +186,7 @@ mutationEffect(m3) {
 }
 
 mutation(m3) {
-	mut.tag = rdunif(1, 0, 19);
+	mut.tag = rdunif(1, 0, num_tags - 1);
 	return T;
 }
 
@@ -176,7 +195,7 @@ mutationEffect(m4) {
 }
 
 mutation(m4) {
-	mut.tag = rdunif(1, 0, 19);
+	mut.tag = rdunif(1, 0, num_tags - 1);
 	return T;
 }
 
@@ -185,7 +204,7 @@ mutationEffect(m5) {
 }
 
 mutation(m5) {
-	mut.tag = rdunif(1, 0, 19);
+	mut.tag = rdunif(1, 0, num_tags - 1);
 	return T;
 }
 
@@ -194,7 +213,7 @@ mutationEffect(m6) {
 }
 
 mutation(m6) {
-	mut.tag = rdunif(1, 0, 19);
+	mut.tag = rdunif(1, 0, num_tags - 1);
 	return T;
 }
 
@@ -203,8 +222,16 @@ mutationEffect(m7) {
 }
 
 mutation(m7) {
-	mut.tag = rdunif(1, 0, 19);
+	mut.tag = rdunif(1, 0, num_tags - 1);
 	return T;
+}
+
+mutationEffect(m8) {
+	return 0.0;
+}
+
+mutationEffect(m9) {
+	return 0.0;
 }
 
 //seeds deleterious mutations
@@ -233,15 +260,14 @@ mutation(m7) {
 	for (i in 1:20){
 		newMuts = mut_chroms.addNewDrawnMutation(m5, rdunif(1, 0, seed_len - 1));
 		for (newMut in newMuts)
-			newMut.tag = rdunif(1, 0, 19);
+			newMut.tag = rdunif(1, 0, num_tags - 1);
 		newMuts = mut_chroms.addNewDrawnMutation(m6, rdunif(1, 0, seed_len - 1));
 		for (newMut in newMuts)
-			newMut.tag = rdunif(1, 0, 19);
+			newMut.tag = rdunif(1, 0, num_tags - 1);
 		newMuts = mut_chroms.addNewDrawnMutation(m7, rdunif(1, 0, seed_len - 1));
 		for (newMut in newMuts)
-			newMut.tag = rdunif(1, 0, 19);
+			newMut.tag = rdunif(1, 0, num_tags - 1);
 	}
-	
 	
 	return T;
 }
