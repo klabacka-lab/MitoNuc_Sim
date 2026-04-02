@@ -1,7 +1,7 @@
 library(tidyverse)
 
-file_names = list.files(path = "sim_results", pattern = "\\.csv$")
-results_list = map(file_names, ~ read_csv(file.path("sim_results", .x), col_names = FALSE))
+file_names = list.files(path = "NoPreload_Data", pattern = "\\.csv$")
+results_list = map(file_names, ~ read_csv(file.path("NoPreload_Data", .x), col_names = FALSE))
 names(results_list) = str_remove(file_names, "\\.csv$")
 
 saveRDS(results_list, "results_list.rds")
