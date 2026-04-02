@@ -84,6 +84,16 @@ tmp = kruskal.test(list(results_list[["asex_ben_epi_100_0_2"]]$X9999,
                         results_list[["asex_ben_epi_100_0_100"]]$X9999))$p.value
 pvals[["epistasis_tag_asex"]] = tmp
 
+# Test signifcance of presence vs absence of epistasis for sex
+tmp = wilcox.test(results_list[["sex_ben_epi_100_5.0e-06_20"]]$X9999,
+                  results_list[["sex_ben_noepi_0_5.0e-06_1"]]$X9999)$p.value
+pvals[["sex_epi_vs_noepi"]] = tmp
+
+# Test signifcance of presence vs absence of epistasis for asex
+tmp = wilcox.test(results_list[["asex_ben_epi_100_0_20"]]$X9999,
+                  results_list[["asex_ben_noepi_0_0_1"]]$X9999)$p.value
+pvals[["asex_epi_vs_noepi"]] = tmp
+
 # Test signifcance of presence vs absence of beneficial mutations for sex
 tmp = wilcox.test(results_list[["sex_ben_epi_100_5.0e-06_20"]]$X9999,
                   results_list[["sex_noben_epi_100_5.0e-06_20"]]$X9999)$p.value
