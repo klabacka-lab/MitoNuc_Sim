@@ -6,6 +6,11 @@ Webpage for SLiM documentation: https://messerlab.org/slim/
 
 # Setup
 
+Clone github
+```
+git clone https://github.com/klabacka-lab/MitoNuc_Sim.git
+```
+
 ## How to Set Up the Python Virtual Environment:
 
 ### Linux (recommended)
@@ -108,11 +113,21 @@ Create path to SLiM
 
 Include ```alias slim="/pathway/to/slim"``` within your .bashrc file. Make sure to replace ```/pathway/to/slim``` with the path in your system
 
-Clone github
-```
-git clone https://github.com/klabacka-lab/MitoNuc_Sim.git
-```
+
 # SIM 1
+
+# Supercomputer Setup
+
+Create a folder for this project on the supercomputer
+
+within that folder, add the scripts from the github directory:
+NoPreload_Multi_Batch.sh
+NoPreload_Single_Batch.sh
+NoPreload.slim
+
+Create an empty folder within your project folder named temp
+
+Add the script CombineTrials.sh into the temp folder from the github directory 
 
 # Singular Runs
 
@@ -170,21 +185,29 @@ To test the effect of no beneficial mutations in asexual populations, execute th
 ```bash
 ./NoPreload_Multi_Batch.sh F F T 100 0 20
 ```
-After running these, run the following command to organize the files in the temp directory:
+After running these, run the following command to organize the files in the temp directory after all trials are finished running:
 ```bash
 ./temp/CombineTrials.sh
 ```
-Run this command to move all the csv data files from the temp directory to the NoPreload_Data directory:
-```bash
-mv temp/*.csv NoPreload_Data/
-```
+
+Files created will be named according to the following template:
+[sex or asex]_[ben or noben]_[epi or noepi]_[Epistasis Strength]_[Recombination Rate]_[Number of Tags].csv
+
+"sex_ben_epi_1_5.0e-06_20.csv" is an example with the following parameters:
+
+sexual reproduction, beneficial mutations, epistasis on, epistasis strength = 1, recombination rate = 5.0e-06, number of tags = 20
+
+Some files with recombination values of 1.0e-03 and 1.0e-04 may be titled with 0.001 and 0.0001 respectfully. To ensure compatability with statistics file, ensure these files are named with recombination value in scientific notation following 1.0e-03 format
+
+Download and move all combined csv data files from the temp directory on the supercomputer to the NoPreload_Data folder in the github directory:
+
 To run statistical analysis and generate noPreload_results.csv, which contains the resulting p-values, run the following command:
 ```
 R run_statistics.R
 ```
 To generate figures of trials, use the following syntax:
 ```
-Py visualMaker.py
+Py visualMaker.py <path/to/csv/1> <path/to/csv/2>
 ```
 
 # SIM 2
