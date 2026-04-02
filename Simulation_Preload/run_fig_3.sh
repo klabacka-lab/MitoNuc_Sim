@@ -7,44 +7,46 @@ source venv/bin/activate
 tags=(2 20 100 20 20)
 epis=(100 100 100 50 1000)
 
+plot_dir="automatic_figures/fig_3"
 
-for epi_const in "${epis[@]}"; do
-    for num_tags in "${tags[@]}"; do
-        run_id="tags${num_tags}_epi${epi_const}"
+for idx in "${!tags[@]}"; do
+    num_tags="${tags[$idx]}"
+    epi_const="${epis[$idx]}"
 
-        echo "Preparing $run_id..."
+    run_id="tags${num_tags}_epi${epi_const}"
 
-        plot_dir="automatic_figures/fig_3"
-        plot_filename="plot_${run_id}.png"
-        plot_path="${plot_dir}/${plot_filename}"
+    echo "Preparing $run_id..."
 
-        # Skip if figure already exists
-        if [ -f "$plot_path" ]; then
-            echo "Figure $plot_path already exists. Skipping simulations."
-            continue
+    plot_filename="plot_${run_id}.png"
+    plot_path="${plot_dir}/${plot_filename}"
+
+    # Skip if figure already exists
+    if [ -f "$plot_path" ]; then
+        echo "Figure $plot_path already exists. Skipping simulations."
+        continue
+    fi
+
+    echo "Running simulations..."
+
+    for val in T F; do
+
+        if [ "$val" = "F" ]; then
+            echo "Running sexual simulations..."
+            prefix="sexual"
+        else
+            echo "Running asexual simulations..."
+            prefix="asexual"
         fi
 
-        echo "Running simulations..."
+        data_file="${plot_dir}/${prefix}_${run_id}_data.txt"
 
-        for val in T F; do
+        rm -f "$data_file"
 
-            if [ "$val" = "F" ]; then
-                echo "Running sexual simulations..."
-                prefix="sexual"
-            else
-                echo "Running asexual simulations..."
-                prefix="asexual"
-            fi 
+        for i in {1..3}; do
+            echo
+            echo "Running simulation $i..."
 
-            data_file="${plot_dir}/${prefix}_${run_id}_data.txt"
-
-            rm -f $data_file
-
-            for i in {1..3}; do
-                echo
-                echo "Running simulation $i..."
-
-                slim \
+            slim \
                 -d logging=T \
                 -d asexual="\"$val\"" \
                 -d mut_profile=1 \
@@ -55,11 +57,10 @@ for epi_const in "${epis[@]}"; do
                 -d epi_rate="$epi_const" \
                 GrowthFitness.slim
 
-                python3 figure_maker.py \
-                    --sexual_data "${plot_dir}/sexual_${run_id}_data.txt" \
-                    --asexual_data "${plot_dir}/asexual_${run_id}_data.txt" \
-                    --output "$plot_path"
-            done
+            python3 figure_maker.py \
+                --sexual_data "${plot_dir}/sexual_${run_id}_data.txt" \
+                --asexual_data "${plot_dir}/asexual_${run_id}_data.txt" \
+                --output "$plot_path"
         done
     done
 done
