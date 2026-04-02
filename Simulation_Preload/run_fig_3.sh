@@ -60,7 +60,7 @@ for idx in "${!tags[@]}"; do
             python3 figure_maker.py \
                 --sexual_data "${plot_dir}/sexual_${run_id}_data.txt" \
                 --asexual_data "${plot_dir}/asexual_${run_id}_data.txt" \
-                --output "$plot_path" --no-boxplot
+                --output "$plot_path" --no_boxplot
         done
     done
 done
