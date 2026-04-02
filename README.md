@@ -112,7 +112,79 @@ Clone github
 ```
 git clone https://github.com/klabacka-lab/MitoNuc_Sim.git
 ```
+# SIM 1
 
+# Singular Runs
+
+To run a single trial of a simulation 1, use the following syntax:
+
+```bash
+slim -d sex=[T or F] -d ben=[T or F] -d epi=[T or F] -d epiSt=[Epistasis Strength] -d recom=[Recombination Rate]  -d tagAmount=[Number of Mutation Tags] -d repID=[Trial Number] NoPreload.slim
+```
+
+To run a batch of 100 trials of simulation 1, use the following syntax:
+```bash
+./NoPreload_Multi_Batch.sh [T or F] [T or F] [T or F] [Epistasis Strength] [Recombination Strength] [Number of Mutation Tags]
+```
+
+To test recombination rates in sexual populations, execute the previous batch command once per recombination rate (a total of seven times), using:
+```bash
+./NoPreload_Multi_Batch.sh T T T 100 <recomb> 20
+```
+Where <recomb> is one of:
+0, 1.0e-07, 5.0e-6, 1.0e-06, 1.0e-05, 1.0e-04, 1.0e-03.
+
+To test epistasis strengths in sexual populations, execute the batch command once per epistasis strength (a total of six times), using:
+```bash
+./NoPreload_Multi_Batch.sh T T T <epi_strength> 5.0e-06 20
+```
+Where <epi_strength> is one of:
+50, 100, 250, 500, 1000, 10000
+
+To test epistasis strengths in asexual populations, execute the batch command once per epistasis rate (a total of six times), using:
+```bash
+./NoPreload_Multi_Batch.sh F T T <epi_strength> 0 20
+```
+Where <epi_strength> is one of:
+50, 100, 250, 500, 1000, 10000
+
+To test epistasis tags in sexual populations, execute the batch command once per epistasis tag value (a total of nine times), using:
+```bash
+./NoPreload_Multi_Batch.sh T T T 100 5.0e-06 <epi_tag>
+```
+Where <epi_tag> is one of:
+2, 5, 10, 15, 20, 25, 30, 50, 100
+
+To test epistasis tags in asexual populations, execute the batch command once per epistasis rate (a total of nine times), using:
+```bash
+./NoPreload_Multi_Batch.sh F T T 100 0 <epi_tag>
+```
+Where <epi_tag> is one of:
+2, 5, 10, 15, 20, 25, 30, 50, 100
+
+To test the effect of no beneficial mutations in sexual populations, execute the the following batch command:
+```bash
+./NoPreload_Multi_Batch.sh T F T 100 5.0e-06 20
+```
+To test the effect of no beneficial mutations in asexual populations, execute the the following batch command:
+```bash
+./NoPreload_Multi_Batch.sh F F T 100 0 20
+```
+After running these, run the following command to organize the files in the temp directory:
+```bash
+./temp/CombineTrials.sh
+```
+Run this command to move all the csv data files from the temp directory to the NoPreload_Data directory:
+```bash
+mv temp/*.csv NoPreload_Data/
+```
+To run statistical analysis and generate noPreload_results.csv, which contains the resulting p-values, run the following command:
+```
+R run_statistics.R
+```
+To generate figures of trials, use the following syntax:
+```
+Py visualMaker.py
 
 # SIM 2
 
