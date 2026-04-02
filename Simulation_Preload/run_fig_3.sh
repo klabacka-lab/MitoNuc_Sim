@@ -4,8 +4,8 @@ start=$(date +%s)
 
 source venv/bin/activate
 
-tags = (2 20 100 20 20)
-epis = (100 100 100 50 1000)
+tags = {2 20 100 20 20}
+epis = {100 100 100 50 1000}
 
 
 for epi_const in epis; do
