@@ -5,6 +5,8 @@ epistasis_rate_sex,5.365341807190297e-31,TRUE,-
 epistasis_rate_asex,2.7255918703848592e-17,TRUE,-
 epistasis_tag_sex,1.362749402895217e-129,TRUE,-
 epistasis_tag_asex,1.297414141943032e-134,TRUE,-
+sex_epi_vs_noepi,1.719949054230319e-32,TRUE,-
+asex_epi_vs_noepi,9.452431272763037e-19,TRUE,-
 sex_ben_vs_noben,0.020209194464588628,FALSE,-
 asex_ben_vs_noben,0.636358906738359,FALSE,-
 sex_vs_asex_50_20,3.556034348510684e-4,TRUE,sex
