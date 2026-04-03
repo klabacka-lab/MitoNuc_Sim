@@ -7,7 +7,15 @@ source venv/bin/activate
 tags=(2 20 100 20 20)
 epis=(100 100 100 50 1000)
 
-plot_dir="cached_data/fig_3"
+plot_dir="${1:-cached_data/fig_3}"
+iterations="${2:-100}"
+
+if ! [[ "$iterations" =~ ^[1-9][0-9]*$ ]]; then
+    echo "Error: iterations must be a positive integer (got '$iterations')."
+    exit 1
+fi
+
+mkdir -p "$plot_dir"
 
 for idx in "${!tags[@]}"; do
     num_tags="${tags[$idx]}"
@@ -42,7 +50,7 @@ for idx in "${!tags[@]}"; do
 
         rm -f "$data_file"
 
-        for i in {1..3}; do
+        for i in $(seq 1 "$iterations"); do
             echo
             echo "Running simulation $i..."
 
@@ -57,7 +65,7 @@ for idx in "${!tags[@]}"; do
                 -d epi_rate="$epi_const" \
                 GrowthFitness.slim
 
-            python3 figure_maker.py \
+            python3 helper_scripts/figure_maker.py \
                 --sexual_data "${plot_dir}/sexual_${run_id}_data.txt" \
                 --asexual_data "${plot_dir}/asexual_${run_id}_data.txt" \
                 --output "$plot_path" --no_boxplot

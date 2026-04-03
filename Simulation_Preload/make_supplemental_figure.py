@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw
 from pathlib import Path
 import numpy as np
 import subprocess
+import sys
 
 mutation_profiles = [1, 2, 3]
 mutation_labels = {
@@ -16,6 +17,8 @@ epis = ["F", "T"]
 
 folder = "cached_data/supplemental_config_sim"
 folder_path = Path(folder)
+script_dir = Path(__file__).resolve().parent
+figure_maker_script = script_dir / "helper_scripts" / "figure_maker.py"
 
 LOG_SCALE = False
 Y_SHARE = True
@@ -116,8 +119,8 @@ for mut, preload, epi in configs:
         continue
 
     cmd = [
-        "python",
-        "figure_maker.py",
+        sys.executable,
+        str(figure_maker_script),
         "--sexual_data", str(sexual_file),
         "--asexual_data", str(asexual_file),
         "--output", str(plot_path(mut, preload, epi))

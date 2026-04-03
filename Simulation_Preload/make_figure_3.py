@@ -4,6 +4,7 @@ from pathlib import Path
 import numpy as np
 import subprocess
 import argparse
+import sys
 
 parser = argparse.ArgumentParser(
     description="Generate Figure 3 panels from simulation output files."
@@ -18,6 +19,8 @@ args = parser.parse_args()
 
 folder_path = Path(args.folder)
 folder_path.mkdir(parents=True, exist_ok=True)
+script_dir = Path(__file__).resolve().parent
+figure_maker_script = script_dir / "helper_scripts" / "figure_maker.py"
 
 LOG_SCALE = False
 Y_SHARE = True
@@ -115,8 +118,8 @@ for num_tags, epi_const in configs:
         continue
 
     cmd = [
-        "python",
-        "figure_maker.py",
+        sys.executable,
+        str(figure_maker_script),
         "--sexual_data", str(sexual_path(num_tags, epi_const)),
         "--asexual_data", str(asexual_path(num_tags, epi_const)),
         "--output", str(plot_path(num_tags, epi_const)),
@@ -170,5 +173,5 @@ for i, row in enumerate(rows):
             )
 
 plt.tight_layout(rect=[0.08, 0, 1, 1])
-plt.savefig(folder_path / "combined_comparison.png", dpi=300)
+plt.savefig("figure_3.png", dpi=300)
 plt.show()

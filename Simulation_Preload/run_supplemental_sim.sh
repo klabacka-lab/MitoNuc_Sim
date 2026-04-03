@@ -53,7 +53,7 @@ for epi in T F; do
                     -d data_file="\"$data_file\"" \
                     GrowthFitness.slim
 
-                    python3 figure_maker.py \
+                    python3 helper_scripts/figure_maker.py \
                         --sexual_data "${plot_dir}/sexual_${run_id}_data.txt" \
                         --asexual_data "${plot_dir}/asexual_${run_id}_data.txt" \
                         --output "$plot_path"

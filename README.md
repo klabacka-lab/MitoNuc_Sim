@@ -121,13 +121,13 @@ Include ```alias slim="/pathway/to/slim"``` within your .bashrc file. Make sure 
 Create a folder for this project on the supercomputer
 
 within that folder, add the scripts from the github directory:
-NoPreload_Multi_Batch.sh
-NoPreload_Single_Batch.sh
-NoPreload.slim
+```NoPreload_Multi_Batch.sh```
+```NoPreload_Single_Batch.sh```
+```NoPreload.slim```
 
-Create an empty folder within your project folder named temp
+Create an empty folder within your project folder named ```temp```
 
-Add the script CombineTrials.sh into the temp folder from the github directory 
+Add the script ```CombineTrials.sh``` into the temp folder from the github directory 
 
 # Singular Runs
 
@@ -223,19 +223,18 @@ cd Simulation_Preload
 ## Quickstart/TL;DR
 The following bash blocks allow the entire proess to be run in one step
 
-For a quick start with preloaded data, excecute the following:
+For a quick start with preloaded data, execute the following:
 ```bash
-python figure_maker.py --asexual_data premade_data/asexual_example_data.txt --sexual_data premade_data/sexual_example_data.txt --output result_plot.png 
-python stat_analysis.py --asexual_data premade_data/asexual_example_data.txt --sexual_data premade_data/sexual_example_data.txt --output distro.png
+python make_figure_3.py
+python figure_3_statistics.py
 ```
 
 For a quick start that actually runs the simulations, excecute the following:
 ```bash
-./run_repeat.sh 10
-python figure_maker.py --asexual_data asex_result.txt --sexual_data sex_result.txt --output result_plot.png 
-python stat_analysis.py --asexual_data asex_result.txt --sexual_data sex_result.txt --output distro.png
+./run_fig_3.sh fig_3_test 10
+python make_figure_3.py --folder fig_3_test
+python figure_3_statistics.py --folder fig_3_test
 ```
-
 
 In either case, the output results are found in result_plot.png (fitness over time graph with final fitness distubution boxplots) and the terminal output
 
@@ -245,62 +244,39 @@ If not using the quickstart blocks, perform the following discrete steps:
 GrowthFitness.slim runs a single simulation. It can be executed through the command line with the following syntax:
 
 ```bash
-slim -d logging=T -d asexual=[T or F] -d mut_profile=[1, 2, or 3] -d preload_location=["mito" or "nucl"] -d epi=[T or F] -d data_file=[file_location] GrowthFitness.slim
+slim -d logging=T -d asexual=[T or F] -d mut_profile=[1, 2, or 3] -d preload_location=["mito" or "nucl"] -d epi=[T or F] -d data_file=[file_location] -d num_tags=[number of tags] -d epi_rate=[epistatic constant] GrowthFitness.slim
 ```
 
-The main simulation of interest should be run with `asexual` both on and off (the sim runs twice), `mut_profile` 1, `preload_location` set to "mito", and epistasis (`epi`) set to `T`. A file output location should be specified for each.
+The main simulation of interest should be run with `asexual` both on and off (the sim runs twice), `mut_profile` 1, `preload_location` set to "mito", and epistasis (`epi`) set to `T`. A file output location should be specified for each. 5 different choices for `num_tags` and `epi_rate` are needed to reproduce our exact result, so running simulations manually is not reccomended. 
 
-Suggested commands:
+For convenience, the necessary script execution lines are wrapped in a for loop in the script `run_fig_3.sh`. It takes command line arguments with a data storage directory and the number of times to run both the sexual and asexual simulations. It can be run for 10 simulations like so:
 
 ```bash
-slim -d logging=T -d asexual=T -d mut_profile=1 -d preload_location=\"mito\" -d epi=T -d data_file=\"asex_result.txt\" GrowthFitness.slim
-slim -d logging=T -d asexual=F -d mut_profile=1 -d preload_location=\"mito\" -d epi=T -d data_file=\"sex_result.txt\" GrowthFitness.slim
+./run_fig_3.sh [data dir] 10
 ```
 
-This simulation can be run multiple times with the same output location to append the results of several runs together. This can be done many times (5–10 each for sexual and asexual is a reasonable number for a manual replication check).
-
-For convenience, the obove lines are wrapped in a for loop in the script `run_repeat.sh`. It takes a command line argument with the number of times to run both the sexual and asexual simulations. it can be run for 10 simulations like so:
-
-```bash
-./run_repeat.sh 10
-```
-
-OPTIONALLY: If limited time or computing power prohibit the running of many simulations, pre-produced data from 1000 runs each of the asexual and sexual simulations are included in the `premade_data` directory under the names `asexual_example_data.txt` and `sexual_example_data.txt` These can be fed into the figure-making and statistical testing scripts instead of files made by running the simulations directly. This may be the only way to obtain our exact results, as they require a high sample size to gain statistical power.
+OPTIONALLY: If limited time or computing power prohibit the running of many simulations, pre-produced data from 100 runs each of the asexual and sexual simulations are included in the `cached_data/fig_3` directory. This is the default for the figure-making and statistical testing scripts when no file locations are passed in. This may be the only way to obtain our exact results, as they require a high sample size to gain statistical power. This can be seen in the quickstartinstructions
 
 ## Plots/Figures
 
 The files written by the above commands can be used to generate the figures in the paper when they are passed into the Python script `figure_maker.py` using the following syntax:
 
 ```bash
-python figure_maker.py --asexual_data <ASEXUAL_DATA_FILE> --sexual_data <SEXUAL_DATA_FILE> --output <OUTPUT_PNG>
+python make_figure_3.py --folder [data dir]
 ```
 
-Suggested command:
-
-```bash
-python figure_maker.py --asexual_data asex_result.txt --sexual_data sex_result.txt --output result_plot.png
-```
-
-This will produce an average fitness-over-time line plot alongside a boxplot for final fitnesses. These will be averaged across the different trials, and will show a shaded ±1 standard deviation around the average line. The boxplot will show the distribution of final fitnesses across all runs for each.
+This will produce a set of boxplots comparing the effects of differing numbers of epistatic tags (one row) and differing epistatic strength constants (the other). It will be saved as `fig_3.py`
 
 ## Statistical Testing
 
 Finally, feed the data to the statistical testing script:
 
 ```bash
-python stat_analysis.py --asexual_data <ASEXUAL_DATA_FILE> --sexual_data <SEXUAL_DATA_FILE> --output <DISTRO_PNG>
+python figure_3_statistics.py --folder [data dir]
 ```
 
-Suggested command:
+This will output a `fig3_statistics.csv` with the following column headers:
 
-```bash
-python stat_analysis.py --asexual_data asex_result.txt --sexual_data sex_result.txt --output distro.png
-```
+`test, p_value, significant, direction`
 
-This will output a written description of the results of running various statistical tests on the two distributions:
-
-- Shapiro–Wilk test for normality
-- Welch t-test for difference of means 
-- Mann–Whitney U test for difference of central tendency 
-
-The output file will be an extra PNG comparing the final fitness distributions as histograms, for intuitive visualization.
+Where the `test` column describes the configuration being tested, the `p_value` column gives the resulting p-value for the test, the `significant` column gives a boolean value for whether the result is statistically significant, and the `direction` column gives the direction of the difference (which group had higher final fitness on average).

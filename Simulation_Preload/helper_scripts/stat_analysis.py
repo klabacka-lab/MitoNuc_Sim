@@ -1,8 +1,6 @@
 import numpy as np
 from scipy import stats
 import sys
-import matplotlib.pyplot as plt
-from pathlib import Path
 import argparse
 
 
@@ -78,36 +76,27 @@ def parse_args():
         help="Path to sexual data file"
     )
     parser.add_argument(
-        "--output",
-        type=str,
-        default=None,
-        help="Path to save histogram PNG"
-    )
-    parser.add_argument(
         "legacy",
         nargs="*",
-        help="Legacy positional mode: <asexual_data> <sexual_data> <output.png>"
+        help="Legacy positional mode: <asexual_data> <sexual_data>"
     )
 
     args = parser.parse_args()
 
     # Prefer named arguments when supplied; otherwise support legacy positional usage.
-    if args.asexual_data and args.sexual_data and args.output:
-        return args.asexual_data, args.sexual_data, args.output
+    if args.asexual_data and args.sexual_data:
+        return args.asexual_data, args.sexual_data
 
-    if len(args.legacy) == 3:
-        return args.legacy[0], args.legacy[1], args.legacy[2]
+    if len(args.legacy) == 2:
+        return args.legacy[0], args.legacy[1]
 
     parser.error(
-        "Provide either --asexual_data/--sexual_data/--output or "
-        "three positional args: <asexual_data> <sexual_data> <output.png>."
+        "Provide either --asexual_data/--sexual_data or "
+        "two positional args: <asexual_data> <sexual_data>."
     )
 
 
-file1, file2, output_png = parse_args()
-
-# ensure output directory exists
-Path(output_png).parent.mkdir(parents=True, exist_ok=True)
+file1, file2 = parse_args()
 
 dist1 = load_file(file1)
 dist2 = load_file(file2)
@@ -137,21 +126,3 @@ summary = generate_summary(mean1, mean2, std1, std2, shapiro1, shapiro2, ttest_r
 print("\nSummary:")
 print(summary)
 
-plt.figure(figsize=(10, 6))
-
-# compute shared bins from combined data
-combined = np.concatenate([dist1, dist2])
-bins = np.histogram_bin_edges(combined, bins=15)
-
-plt.hist(dist1, bins=bins, alpha=0.6, label='Distribution 1 (Asexual)')
-plt.hist(dist2, bins=bins, alpha=0.6, label='Distribution 2 (Sexual)')
-
-plt.xlabel('Value')
-plt.ylabel('Frequency')
-plt.title('Comparison of Two Distributions')
-plt.legend()
-plt.grid(True, alpha=0.3)
-
-plt.tight_layout()
-plt.savefig(output_png, dpi=300)
-print(f"Histogram saved as {output_png}")
