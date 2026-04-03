@@ -6,7 +6,7 @@ Webpage for SLiM documentation: https://messerlab.org/slim/
 
 # Setup
 
-Clone github
+### Clone github
 ```
 git clone https://github.com/klabacka-lab/MitoNuc_Sim.git
 ```
@@ -48,7 +48,9 @@ pip install -r requirements.txt
 ## Installing SLiM on a personal computer:
 The github repo https://github.com/MesserLab/SLiM/blob/master/README.md has a readme with instructions for installing SLiM on a personal computer. The instructions are also explained in the SLiM manual (found on the Mercer Lab webpage) in section 2 (starting on page 60).
 
-## How to Set Up SLiM on the Supercomputer:
+<details>
+
+<summary> How to Set Up SLiM on the Supercomputer: <summary>
 
 These instructions are explained, in section 2.2.2 (page 68), in the SLiM manual.
 First, create a directory for software, or use one that has already been created.
@@ -112,7 +114,7 @@ make install slim
 Create path to SLiM
 
 Include ```alias slim="/pathway/to/slim"``` within your .bashrc file. Make sure to replace ```/pathway/to/slim``` with the path in your system
-
+</details>
 
 # SIM 1
 
