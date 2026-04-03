@@ -50,7 +50,7 @@ The github repo https://github.com/MesserLab/SLiM/blob/master/README.md has a re
 
 <details>
 
-<summary> ## How to Set Up SLiM on the Supercomputer: </summary>
+<summary>How to Set Up SLiM on the Supercomputer:</summary>
 
 These instructions are explained, in section 2.2.2 (page 68), in the SLiM manual.
 First, create a directory for software, or use one that has already been created.
