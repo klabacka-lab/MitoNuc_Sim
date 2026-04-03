@@ -7,7 +7,7 @@ source venv/bin/activate
 tags=(2 20 100 20 20)
 epis=(100 100 100 50 1000)
 
-plot_dir="automatic_figures/fig_3"
+plot_dir="cached_data/fig_3"
 
 for idx in "${!tags[@]}"; do
     num_tags="${tags[$idx]}"

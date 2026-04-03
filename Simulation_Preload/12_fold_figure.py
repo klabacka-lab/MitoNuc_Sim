@@ -14,7 +14,7 @@ mutation_labels = {
 preloads = ["mito", "nucl"]
 epis = ["F", "T"]
 
-folder = "automatic_figures/2000"
+folder = "cached_data/supplemental_config_sim"
 folder_path = Path(folder)
 
 LOG_SCALE = False

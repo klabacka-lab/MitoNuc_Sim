@@ -221,6 +221,8 @@ cd Simulation_Preload
 ```
 
 ## Quickstart/TL;DR
+The following bash blocks allow the entire proess to be run in one step
+
 For a quick start with preloaded data, excecute the following:
 ```bash
 python figure_maker.py --asexual_data premade_data/asexual_example_data.txt --sexual_data premade_data/sexual_example_data.txt --output result_plot.png 
@@ -237,8 +239,9 @@ python stat_analysis.py --asexual_data asex_result.txt --sexual_data sex_result.
 
 In either case, the output results are found in result_plot.png (fitness over time graph with final fitness distubution boxplots) and the terminal output
 
-## Main Simulation
+If not using the quickstart blocks, perform the following discrete steps:
 
+## Main Simulation
 GrowthFitness.slim runs a single simulation. It can be executed through the command line with the following syntax:
 
 ```bash

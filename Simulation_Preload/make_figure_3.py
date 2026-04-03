@@ -3,9 +3,21 @@ from PIL import Image, ImageDraw
 from pathlib import Path
 import numpy as np
 import subprocess
+import argparse
 
-folder = "automatic_figures/fig_3"
-folder_path = Path(folder)
+parser = argparse.ArgumentParser(
+    description="Generate Figure 3 panels from simulation output files."
+)
+parser.add_argument(
+    "--folder",
+    type=str,
+    default="cached_data/fig_3",
+    help="Folder containing sexual/asexual data files and where output images are written",
+)
+args = parser.parse_args()
+
+folder_path = Path(args.folder)
+folder_path.mkdir(parents=True, exist_ok=True)
 
 LOG_SCALE = False
 Y_SHARE = True
