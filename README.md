@@ -45,14 +45,15 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Installing SLiM on a personal computer:
+## Installing SLiM
 The github repo https://github.com/MesserLab/SLiM/blob/master/README.md has a readme with instructions for installing SLiM on a personal computer. The instructions are also explained in the SLiM manual (found on the Mercer Lab webpage) in section 2 (starting on page 60).
 
 <details>
 
 <summary>How to Set Up SLiM on the Supercomputer:</summary>
 
-These instructions are explained, in section 2.2.2 (page 68), in the SLiM manual.
+These instructions are explained in section 2.2.2 (page 68), in the SLiM manual. You can also download SLiM on the supercomputer using the github rather than source code: https://github.com/MesserLab/SLiM/blob/master/README.md
+
 First, create a directory for software, or use one that has already been created.
 ```
 mkdir software
