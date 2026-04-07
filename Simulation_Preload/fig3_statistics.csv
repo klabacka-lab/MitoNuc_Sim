@@ -1,0 +1,13 @@
+test,p_value,significant,direction
+panel1_tags2_epi100_welch_t_test,0.002158940566011313,True,sex
+panel1_tags2_epi100_mann_whitney_u,0.0008944288267255211,True,sex
+panel2_tags20_epi100_welch_t_test,6.712115955519375e-14,True,sex
+panel2_tags20_epi100_mann_whitney_u,2.9653294916832555e-24,True,sex
+panel3_tags100_epi100_welch_t_test,6.7425987990183756e-43,True,sex
+panel3_tags100_epi100_mann_whitney_u,8.939040453812737e-30,True,sex
+panel4_tags20_epi50_welch_t_test,4.791681047811621e-07,True,sex
+panel4_tags20_epi50_mann_whitney_u,2.0218063540097339e-16,True,sex
+panel5_tags20_epi100_welch_t_test,6.712115955519375e-14,True,sex
+panel5_tags20_epi100_mann_whitney_u,2.9653294916832555e-24,True,sex
+panel6_tags20_epi1000_welch_t_test,6.283398463143198e-39,True,sex
+panel6_tags20_epi1000_mann_whitney_u,1.6651073257654105e-28,True,sex
