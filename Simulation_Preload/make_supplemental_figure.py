@@ -3,7 +3,19 @@ from PIL import Image, ImageDraw
 from pathlib import Path
 import numpy as np
 import subprocess
+import argparse
 import sys
+
+parser = argparse.ArgumentParser(
+    description="Generate supplemental comparison panels from simulation output files."
+)
+parser.add_argument(
+    "--folder",
+    type=str,
+    default="cached_data/supplemental_config_sim",
+    help="Folder containing supplemental sexual/asexual data files and output images",
+)
+args = parser.parse_args()
 
 mutation_profiles = [1, 2, 3]
 mutation_labels = {
@@ -15,8 +27,8 @@ mutation_labels = {
 preloads = ["mito", "nucl"]
 epis = ["F", "T"]
 
-folder = "cached_data/supplemental_config_sim"
-folder_path = Path(folder)
+folder_path = Path(args.folder)
+folder_path.mkdir(parents=True, exist_ok=True)
 script_dir = Path(__file__).resolve().parent
 figure_maker_script = script_dir / "helper_scripts" / "figure_maker.py"
 
@@ -84,19 +96,19 @@ global_min = None
 global_max = None
 
 if Y_SHARE:
-
     global_min = float("inf")
     global_max = float("-inf")
 
     for cfg in data_cache.values():
-
         for data in [cfg["sexual_data"], cfg["asexual_data"]]:
-
             if data is None:
                 continue
+            global_min = min(global_min, float(np.min(data)))
+            global_max = max(global_max, float(np.max(data)))
 
-            global_min = min(global_min, np.min(data))
-            global_max = max(global_max, np.max(data))
+    if global_min == float("inf") or global_max == float("-inf"):
+        global_min = None
+        global_max = None
 
     print("Global y-axis limits:", global_min, global_max)
 
@@ -123,10 +135,11 @@ for mut, preload, epi in configs:
         str(figure_maker_script),
         "--sexual_data", str(sexual_file),
         "--asexual_data", str(asexual_file),
-        "--output", str(plot_path(mut, preload, epi))
+        "--output", str(plot_path(mut, preload, epi)),
+        "--boxplot",
     ]
 
-    if Y_SHARE:
+    if Y_SHARE and global_min is not None and global_max is not None:
         cmd.append("--ymin")
         cmd.append(str(global_min))
         cmd.append("--ymax")

@@ -4,6 +4,16 @@ start=$(date +%s)
 
 source venv/bin/activate
 
+plot_dir="${1:-cached_data/supplemental_config_sim}"
+iterations="${2:-100}"
+
+if ! [[ "$iterations" =~ ^[1-9][0-9]*$ ]]; then
+    echo "Error: iterations must be a positive integer (got '$iterations')."
+    exit 1
+fi
+
+mkdir -p "$plot_dir"
+
 for epi in T F; do
     for mut_profile in 1 2 3; do
         for preload_location in "mito" "nucl"; do
@@ -12,7 +22,6 @@ for epi in T F; do
 
             echo "Preparing $run_id..."
 
-            plot_dir="cached_data/supplemental_config_sim"
             plot_filename="plot_${run_id}.png"
             plot_path="${plot_dir}/${plot_filename}"
 
@@ -36,11 +45,11 @@ for epi in T F; do
 
                 data_file="${plot_dir}/${prefix}_${run_id}_data.txt"
 
-                rm -f $data_file
+                rm -f "$data_file"
 
 
 
-                for i in {1..100}; do
+                for i in $(seq 1 "$iterations"); do
                     echo
                     echo "Running simulation $i..."
 
@@ -49,7 +58,7 @@ for epi in T F; do
                     -d asexual="\"$val\"" \
                     -d mut_profile="$mut_profile" \
                     -d preload_location="\"$preload_location\"" \
-                    -d epi="\"$epi\"" \
+                    -d epi=$epi \
                     -d data_file="\"$data_file\"" \
                     GrowthFitness.slim
 

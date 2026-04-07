@@ -68,6 +68,24 @@ def safe_load(path):
     except Exception:
         return None
 
+
+def mean_margin_bounds(data):
+    """Return lower/upper bounds using the plotted mean ± 1 SD envelope."""
+    if data is None or data.size == 0:
+        return None
+
+    if data.ndim == 1:
+        mean = data
+        std = np.zeros_like(mean)
+    else:
+        mean = data.mean(axis=0)
+        std = data.std(axis=0)
+
+    lower = mean - std
+    upper = mean + std
+
+    return lower, upper
+
 # --------------------------------------------
 # Step 1 — Load all data ONCE
 # --------------------------------------------
@@ -92,16 +110,29 @@ global_min = None
 global_max = None
 
 if Y_SHARE:
-
-    global_min = float("inf")
-    global_max = float("-inf")
+    lower_vals = []
+    upper_vals = []
 
     for cfg in data_cache.values():
         for data in [cfg["sexual_data"], cfg["asexual_data"]]:
-            if data is None:
+            bounds = mean_margin_bounds(data)
+            if bounds is None:
                 continue
-            global_min = min(global_min, np.min(data))
-            global_max = max(global_max, np.max(data))
+            lower, upper = bounds
+            lower_vals.extend(lower.tolist())
+            upper_vals.extend(upper.tolist())
+
+    if lower_vals and upper_vals:
+        # Shared limits are based on the same plotted metric (mean ± 1 SD)
+        # and include the full envelope so panel data is never clipped.
+        low = float(np.min(lower_vals))
+        high = float(np.max(upper_vals))
+
+        span = high - low
+        pad = 0.05 * span if span > 0 else max(abs(high) * 0.05, 1e-9)
+
+        global_min = low - pad
+        global_max = high + pad
 
     print("Global y-axis limits:", global_min, global_max)
 
@@ -123,9 +154,10 @@ for num_tags, epi_const in configs:
         "--sexual_data", str(sexual_path(num_tags, epi_const)),
         "--asexual_data", str(asexual_path(num_tags, epi_const)),
         "--output", str(plot_path(num_tags, epi_const)),
+        "--no_boxplot",
     ]
 
-    if Y_SHARE:
+    if Y_SHARE and global_min is not None and global_max is not None:
         cmd += ["--ymin", str(global_min), "--ymax", str(global_max)]
 
     if LOG_SCALE:
@@ -174,4 +206,3 @@ for i, row in enumerate(rows):
 
 plt.tight_layout(rect=[0.08, 0, 1, 1])
 plt.savefig("figure_3.png", dpi=300)
-plt.show()

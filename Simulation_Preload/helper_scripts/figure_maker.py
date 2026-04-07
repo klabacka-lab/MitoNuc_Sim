@@ -114,14 +114,21 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    "--boxplot",
+    action="store_true",
+    help="Enable boxplot for final fitness distribution"
+)
+
+parser.add_argument(
     "--no_boxplot",
     action="store_true",
-    help="Use histogram instead of boxplot for final fitness distribution"
+    help="Disable boxplot for final fitness distribution (deprecated; boxplots are off by default)"
 )
 
 args = parser.parse_args()
 
-BOXPLOT = not args.no_boxplot
+SHOW_DISTRIBUTION = not args.no_boxplot
+BOXPLOT = args.boxplot and SHOW_DISTRIBUTION
 
 SEXUAL_DATA_PATH = args.sexual_data
 ASEXUAL_DATA_PATH = args.asexual_data
@@ -164,7 +171,15 @@ asexual_final_fitness = (
 # Plotting
 # -----------------------------
 
-fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
+if SHOW_DISTRIBUTION:
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
+    time_ax = axes[0]
+    dist_ax = axes[1]
+    panel_axes = axes
+else:
+    fig, time_ax = plt.subplots(1, 1, figsize=(7, 5))
+    dist_ax = None
+    panel_axes = [time_ax]
 
 # ---- Left Panel: Time-Series
 
@@ -173,10 +188,10 @@ any_time_series = False
 if sexual_mean.size > 0:
     x = np.arange(1, len(sexual_mean) + 1)
     if SCATTER:
-        axes[0].scatter(x, sexual_mean, label="Sexual", s=4, color=SEXUAL_COLOR)
+        time_ax.scatter(x, sexual_mean, label="Sexual", s=4, color=SEXUAL_COLOR)
     else:
-        axes[0].plot(x, sexual_mean, label="Sexual Mean", color=SEXUAL_COLOR)
-        axes[0].fill_between(
+        time_ax.plot(x, sexual_mean, label="Sexual Mean", color=SEXUAL_COLOR)
+        time_ax.fill_between(
             x,
             sexual_mean - sexual_std_dev,
             sexual_mean + sexual_std_dev,
@@ -189,10 +204,10 @@ if sexual_mean.size > 0:
 if asexual_mean.size > 0:
     x = np.arange(1, len(asexual_mean) + 1)
     if SCATTER:
-        axes[0].scatter(x, asexual_mean, label="Asexual", s=4, color=ASEXUAL_COLOR)
+        time_ax.scatter(x, asexual_mean, label="Asexual", s=4, color=ASEXUAL_COLOR)
     else:
-        axes[0].plot(x, asexual_mean, label="Asexual Mean", color=ASEXUAL_COLOR)
-        axes[0].fill_between(
+        time_ax.plot(x, asexual_mean, label="Asexual Mean", color=ASEXUAL_COLOR)
+        time_ax.fill_between(
             x,
             asexual_mean - asexual_std_dev,
             asexual_mean + asexual_std_dev,
@@ -203,105 +218,95 @@ if asexual_mean.size > 0:
     any_time_series = True
 
 if not any_time_series:
-    axes[0].text(0.5, 0.5, "No time-series data",
-                 transform=axes[0].transAxes,
+    time_ax.text(0.5, 0.5, "No time-series data",
+                 transform=time_ax.transAxes,
                  ha="center", va="center")
 
-axes[0].set_xlabel("Generation")
-axes[0].set_ylabel("Mean Fitness")
+time_ax.set_xlabel("Generation")
+time_ax.set_ylabel("Mean Fitness")
 
-axes[0].yaxis.get_major_formatter().set_useOffset(False)
+time_ax.yaxis.get_major_formatter().set_useOffset(False)
 
 # ---- Title Logic
 
 if sexual_n == asexual_n and sexual_n > 0:
-    axes[0].set_title(f"Mean Fitness Over Time ({sexual_n} Simulations)")
+    time_ax.set_title(f"Mean Fitness Over Time ({sexual_n} Simulations)")
 elif sexual_n > 0 or asexual_n > 0:
-    axes[0].set_title(
+    time_ax.set_title(
         f"Mean Fitness Over Time "
         f"(Sexual: {sexual_n}, Asexual: {asexual_n} Simulations)"
     )
 else:
-    axes[0].set_title("Mean Fitness Over Time")
+    time_ax.set_title("Mean Fitness Over Time")
 
-axes[0].grid(True)
+time_ax.grid(True)
 
 if args.log_scale:
-    axes[0].set_yscale("log")
-    axes[1].set_yscale("log")
+    time_ax.set_yscale("log")
+    if dist_ax is not None:
+        dist_ax.set_yscale("log")
 
-if axes[0].get_legend_handles_labels()[0]:
-    axes[0].legend()
+if time_ax.get_legend_handles_labels()[0]:
+    time_ax.legend()
 
 
 # ---- Right Panel: Final Fitness Distribution
 
-any_distribution = False
+if dist_ax is not None:
+    any_distribution = False
 
-box_data = []
-tick_labels = []
-
-if asexual_final_fitness.size > 0:
-    box_data.append(asexual_final_fitness)
-    tick_labels.append("Asexual")
-else:
-    box_data.append([])
-    tick_labels.append("Asexual")
-
-if sexual_final_fitness.size > 0:
-    box_data.append(sexual_final_fitness)
-    tick_labels.append("Sexual")
-else:
-    box_data.append([])
-    tick_labels.append("Sexual")
-
-if BOXPLOT:
-    bp = axes[1].boxplot(
-        box_data,
-        patch_artist=True,
-        tick_labels=tick_labels
-    )
-
-    colors = [ASEXUAL_COLOR, SEXUAL_COLOR]
-
-    for patch, color in zip(bp["boxes"], colors):
-        patch.set_facecolor(color)
-        patch.set_alpha(0.6)
-
-    for median in bp["medians"]:
-        median.set_color("black")
-        median.set_linewidth(2)
-
-    any_distribution = True
-
-else:
+    box_data = []
+    tick_labels = []
 
     if asexual_final_fitness.size > 0:
-        axes[1].hist(asexual_final_fitness, bins=15,
-                     alpha=0.6, label="Asexual", color=ASEXUAL_COLOR)
-        any_distribution = True
+        box_data.append(asexual_final_fitness)
+        tick_labels.append("Asexual")
+    else:
+        box_data.append([])
+        tick_labels.append("Asexual")
 
     if sexual_final_fitness.size > 0:
-        axes[1].hist(sexual_final_fitness, bins=15,
-                     alpha=0.6, label="Sexual", color=SEXUAL_COLOR)
+        box_data.append(sexual_final_fitness)
+        tick_labels.append("Sexual")
+    else:
+        box_data.append([])
+        tick_labels.append("Sexual")
+
+    if BOXPLOT:
+        bp = dist_ax.boxplot(
+            box_data,
+            patch_artist=True,
+            tick_labels=tick_labels
+        )
+
+        colors = [ASEXUAL_COLOR, SEXUAL_COLOR]
+
+        for patch, color in zip(bp["boxes"], colors):
+            patch.set_facecolor(color)
+            patch.set_alpha(0.6)
+
+        for median in bp["medians"]:
+            median.set_color("black")
+            median.set_linewidth(2)
+
         any_distribution = True
 
-if not any_distribution:
-    axes[1].text(0.5, 0.5, "No final fitness data",
-                 transform=axes[1].transAxes,
-                 ha="center", va="center")
+    if not any_distribution:
+        dist_ax.text(0.5, 0.5, "No final fitness data",
+                     transform=dist_ax.transAxes,
+                     ha="center", va="center")
 
-axes[1].set_title("Final Fitness Distribution")
-axes[1].set_xlabel("Simulation Type")
-axes[1].grid(True, alpha=0.3)
+    dist_ax.set_title("Final Fitness Distribution")
+    dist_ax.set_xlabel("Simulation Type")
+    dist_ax.grid(True, alpha=0.3)
 
-if axes[1].get_legend_handles_labels()[0]:
-    axes[1].legend()
+    if dist_ax.get_legend_handles_labels()[0]:
+        dist_ax.legend()
 
 
 # ---- Panel Labels
 
-for ax, label in zip(axes.flat, string.ascii_uppercase):
+for ax, label in zip(panel_axes, string.ascii_uppercase):
     ax.text(0.02, 0.98, f"({label})",
             transform=ax.transAxes,
             fontsize=14,
@@ -310,8 +315,9 @@ for ax, label in zip(axes.flat, string.ascii_uppercase):
 
 
 if args.ymin is not None and args.ymax is not None:
-    axes[0].set_ylim(args.ymin, args.ymax)
-    axes[1].set_ylim(args.ymin, args.ymax)
+    time_ax.set_ylim(args.ymin, args.ymax)
+    if dist_ax is not None:
+        dist_ax.set_ylim(args.ymin, args.ymax)
 
 
 plt.tight_layout()
