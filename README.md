@@ -153,14 +153,14 @@ To test recombination rates in sexual populations, execute the previous batch co
 ```bash
 ./NoPreload_Multi_Batch.sh T T T 100 <recomb> 20
 ```
-Where <recomb> is one of:
+Where `<recomb>` is one of:
 0, 1.0e-07, 5.0e-6, 1.0e-06, 1.0e-05, 1.0e-04, 1.0e-03.
 
 Or if running for just a single trial for testing recombination rate instead of a batch of 100, use the following command:
 ```bash
 slim -d sex=T -d ben=T -d epi=T -d epiSt=100 -d recom=<recomb>  -d tagAmount=20 -d repID=1 NoPreload.slim
 ```
-Where <recomb> is one of:
+Where `<recomb>` is one of:
 0, 1.0e-07, 5.0e-6, 1.0e-06, 1.0e-05, 1.0e-04, 1.0e-03.
 
 ## Testing epistasis strengths
@@ -169,7 +169,7 @@ To test epistasis strengths in sexual populations, execute the batch command onc
 ```bash
 ./NoPreload_Multi_Batch.sh T T T <epi_strength> 5.0e-06 20
 ```
-Where <epi_strength> is one of:
+Where `<epi_strength>` is one of:
 50, 100, 250, 500, 1000, 10000
 
 Or if running for just a single trial for testing epistasis strength in sexual populations instead of a batch of 100, use the following command:
