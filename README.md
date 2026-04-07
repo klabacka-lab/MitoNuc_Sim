@@ -158,7 +158,7 @@ Where <recomb> is one of:
 
 Or if running for just a single trial for testing recombination rate instead of a batch of 100, use the following command:
 ```bash
-slim -d sex=T -d ben=T -d epi=T -d epiSt=100 -d recom=<recomb>  -d tagAmount=20 -d repID=10000 NoPreload.slim
+slim -d sex=T -d ben=T -d epi=T -d epiSt=100 -d recom=<recomb>  -d tagAmount=20 -d repID=1 NoPreload.slim
 ```
 Where <recomb> is one of:
 0, 1.0e-07, 5.0e-6, 1.0e-06, 1.0e-05, 1.0e-04, 1.0e-03.
@@ -174,7 +174,7 @@ Where <epi_strength> is one of:
 
 Or if running for just a single trial for testing epistasis strength in sexual populations instead of a batch of 100, use the following command:
 ```bash
-slim -d sex=T -d ben=T -d epi=T -d epiSt=<epi_strength> -d recom=5.0e-06  -d tagAmount=20 -d repID=10000 NoPreload.slim
+slim -d sex=T -d ben=T -d epi=T -d epiSt=<epi_strength> -d recom=5.0e-06  -d tagAmount=20 -d repID=1 NoPreload.slim
 ```
 Where <epi_strength> is one of:
 50, 100, 250, 500, 1000, 10000
@@ -188,7 +188,7 @@ Where <epi_strength> is one of:
 
 Or if running for just a single trial for testing epistasis strength in asexual populations instead of a batch of 100, use the following command:
 ```bash
-slim -d sex=F -d ben=T -d epi=T -d epiSt=<epi_strength> -d recom=5.0e-06  -d tagAmount=20 -d repID=10000 NoPreload.slim
+slim -d sex=F -d ben=T -d epi=T -d epiSt=<epi_strength> -d recom=5.0e-06  -d tagAmount=20 -d repID=1 NoPreload.slim
 ```
 Where <epi_strength> is one of:
 50, 100, 250, 500, 1000, 10000
@@ -204,7 +204,7 @@ Where <epi_tag> is one of:
 
 Or if running for just a single trial for testing epistasis tags in sexual populations instead of a batch of 100, use the following command:
 ```bash
-slim -d sex=T -d ben=T -d epi=T -d epiSt=100 -d recom=5.0e-06  -d tagAmount=<epi_tag> -d repID=10000 NoPreload.slim
+slim -d sex=T -d ben=T -d epi=T -d epiSt=100 -d recom=5.0e-06  -d tagAmount=<epi_tag> -d repID=1 NoPreload.slim
 ```
 Where <epi_tag> is one of:
 2, 5, 10, 15, 20, 25, 30, 50, 100
@@ -218,7 +218,7 @@ Where <epi_tag> is one of:
 
 Or if running for just a single trial for testing epistasis tags in asexual populations instead of a batch of 100, use the following command:
 ```bash
-slim -d sex=F -d ben=T -d epi=T -d epiSt=100 -d recom=5.0e-06  -d tagAmount=<epi_tag> -d repID=10000 NoPreload.slim
+slim -d sex=F -d ben=T -d epi=T -d epiSt=100 -d recom=5.0e-06  -d tagAmount=<epi_tag> -d repID=1 NoPreload.slim
 ```
 Where <epi_tag> is one of:
 2, 5, 10, 15, 20, 25, 30, 50, 100
@@ -232,7 +232,7 @@ To test the effect of no beneficial mutations in sexual populations, execute the
 
 Or if running for just a single trial for testing absence of benefifical mutations in sexual populations instead of a batch of 100, use the following command:
 ```bash
-slim -d sex=T -d ben=F -d epi=T -d epiSt=100 -d recom=5.0e-06  -d tagAmount=20 -d repID=10000 NoPreload.slim
+slim -d sex=T -d ben=F -d epi=T -d epiSt=100 -d recom=5.0e-06  -d tagAmount=20 -d repID=1 NoPreload.slim
 ```
 
 To test the effect of no beneficial mutations in asexual populations, execute the the following batch command:
@@ -242,7 +242,7 @@ To test the effect of no beneficial mutations in asexual populations, execute th
 
 Or if running for just a single trial for testing absence of benefifical mutations in asexual populations instead of a batch of 100, use the following command:
 ```bash
-slim -d sex=F -d ben=F -d epi=T -d epiSt=100 -d recom=0  -d tagAmount=20 -d repID=10000 NoPreload.slim
+slim -d sex=F -d ben=F -d epi=T -d epiSt=100 -d recom=0  -d tagAmount=20 -d repID=1 NoPreload.slim
 ```
 
 ## Testing no epistasis
@@ -254,7 +254,7 @@ To test the effect of no epistasis in sexual populations, execute the the follow
 
 Or if running for just a single trial for testing absence of epistasis in sexual populations instead of a batch of 100, use the following command:
 ```bash
-slim -d sex=T -d ben=T -d epi=F -d epiSt=100 -d recom=5.0e-06  -d tagAmount=20 -d repID=10000 NoPreload.slim
+slim -d sex=T -d ben=T -d epi=F -d epiSt=100 -d recom=5.0e-06  -d tagAmount=20 -d repID=1 NoPreload.slim
 ```
 
 To test the effect of no epistasis in asexual populations, execute the the following batch command:
@@ -264,7 +264,7 @@ To test the effect of no epistasis in asexual populations, execute the the follo
 
 Or if running for just a single trial for testing absence of epistasis in asexual populations instead of a batch of 100, use the following command:
 ```bash
-slim -d sex=F -d ben=T -d epi=F -d epiSt=100 -d recom=0  -d tagAmount=20 -d repID=10000 NoPreload.slim
+slim -d sex=F -d ben=T -d epi=F -d epiSt=100 -d recom=0  -d tagAmount=20 -d repID=1 NoPreload.slim
 ```
 
 ## Running analysis
