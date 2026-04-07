@@ -23,7 +23,7 @@ script_dir = Path(__file__).resolve().parent
 figure_maker_script = script_dir / "helper_scripts" / "figure_maker.py"
 
 LOG_SCALE = False
-Y_SHARE = True
+Y_SHARE = False
 
 # --------------------------------------------
 # Layout: 2 rows x 3 cols
