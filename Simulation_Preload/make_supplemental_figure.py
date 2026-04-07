@@ -203,4 +203,3 @@ fig.text(
 
 plt.tight_layout(rect=[0.06, 0, 1, 1])
 plt.savefig(folder_path / "combined_comparison.png", dpi=300)
-plt.show()
