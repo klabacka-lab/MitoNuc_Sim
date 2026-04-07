@@ -6,7 +6,7 @@ Webpage for SLiM documentation: https://messerlab.org/slim/
 
 # Setup
 
-Clone github
+### Clone github
 ```
 git clone https://github.com/klabacka-lab/MitoNuc_Sim.git
 ```
@@ -45,12 +45,15 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Installing SLiM on a personal computer:
+## Installing SLiM
 The github repo https://github.com/MesserLab/SLiM/blob/master/README.md has a readme with instructions for installing SLiM on a personal computer. The instructions are also explained in the SLiM manual (found on the Mercer Lab webpage) in section 2 (starting on page 60).
 
-## How to Set Up SLiM on the Supercomputer:
+<details>
 
-These instructions are explained, in section 2.2.2 (page 68), in the SLiM manual.
+<summary>How to Set Up SLiM on the Supercomputer:</summary>
+
+These instructions are explained in section 2.2.2 (page 68), in the SLiM manual. You can also download SLiM on the supercomputer using the github rather than source code: https://github.com/MesserLab/SLiM/blob/master/README.md
+
 First, create a directory for software, or use one that has already been created.
 ```
 mkdir software
@@ -112,7 +115,7 @@ make install slim
 Create path to SLiM
 
 Include ```alias slim="/pathway/to/slim"``` within your .bashrc file. Make sure to replace ```/pathway/to/slim``` with the path in your system
-
+</details>
 
 # SIM 1
 
@@ -206,9 +209,20 @@ To run statistical analysis and generate noPreload_results.csv, which contains t
 R run_statistics.R
 ```
 To generate figures comparing trials, use the following syntax:
+```bash
+python visualMaker.py <path/to/csv/1> <path/to/csv/2>
 ```
-Py visualMaker.py <path/to/csv/1> <path/to/csv/2>
+
+To see an example of this, these are the commands we ran to generate the figures we ended up using:
+
+```bash
+python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_100_5.0e-06_2.csv ./NoPreload_Data/asex_ben_epi_100_0_2.csv
+python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_100_5.0e-06_20.csv ./NoPreload_Data/asex_ben_epi_100_0_20.csv
+python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_100_5.0e-06_100.csv ./NoPreload_Data/asex_ben_epi_100_0_100.csv
+python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_50_5.0e-06_20.csv ./NoPreload_Data/asex_ben_epi_50_0_20.csv
+python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_10000_5.0e-06_20.csv ./NoPreload_Data/asex_ben_epi_10000_0_20.csv
 ```
+
 
 # SIM 2
 

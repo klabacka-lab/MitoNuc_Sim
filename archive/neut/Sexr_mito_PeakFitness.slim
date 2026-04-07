@@ -1,0 +1,115 @@
+// set up a simple neutral simulation
+initialize() {
+	initializeMutationRate(2e-8);
+	
+	defineConstant("reproMode","Sexr");
+	defineConstant("mito",T);
+	
+	defineConstant("mitobias",0.);
+	defineConstant("autobias",0.);
+	
+	if (reproMode == "Sex" | reproMode == "Sexr"){initializeSex("A");}
+	
+	// Autosomal mutations
+	initializeMutationType("m1", 0.5, "f", 0.0);
+	initializeMutationType("m3", 0.5, "n", 0.0,0.25);
+	
+	// Mitochondrial mutations
+	initializeMutationType("m2", 1, "f", 0.0);
+	if (mito){initializeMutationType("m4", 1, "n", mitobias,0.25);}
+	else {initializeMutationType("m4", 1, "n", autobias,0.25);}
+	
+	m3.convertToSubstitution = F;
+	m4.convertToSubstitution = F;
+	
+	// Autosome
+	initializeGenomicElementType("g1", c(m1,m3), c(1.0,0.02));
+	// Mitochondrion
+	if (mito){initializeGenomicElementType("g2", c(m2,m4), c(1.0,1.55));}
+	else     {initializeGenomicElementType("g2", c(m2,m4), c(1.0,0.02));}
+	
+	initializeGenomicElement(g1, 0, 49999);
+	initializeGenomicElement(g2, 50000, 99999);
+	if (reproMode == "Haploid"){rates = c(0,0,0);}
+	else if(mito){rates = c(1e-6,0.5,0.);}
+	else {rates = c(1e-6,0.5,1e-6);}
+	ends = c(49999,50000,99999);
+	initializeRecombinationRate(rates, ends);
+}
+
+// create a population of 100 individuals
+1 early() {
+	sim.addSubpop("p1", 100);
+	
+	if (reproMode == "Sex" | reproMode == "Sexr"){}
+	else if (reproMode == "Herm"){}
+	else if (reproMode == "Asex" | reproMode == "Haploid"){p1.setCloningRate(1.0);}
+	else if (reproMode == "Self"){p1.setSelfingRate(1.0);}
+}
+
+modifyChild() {
+	if (reproMode != "Haploid" & mito){
+		// Copy maternal mitochondrial genome over paternal
+		if (reproMode != "Sexr" | runif(1) > 0.5){
+			mitom2 = child.genome1.mutationsOfType(m2);
+			mitom4 = child.genome1.mutationsOfType(m4);
+			gen2m2 = child.genome2.mutationsOfType(m2);
+			gen2m4 = child.genome2.mutationsOfType(m4);
+			child.genome2.removeMutations(c(gen2m2,gen2m4));
+			child.genome2.addMutations(c(mitom2,mitom4));}
+		else if (reproMode == "Sexr"){
+			mitom2 = child.genome2.mutationsOfType(m2);
+			mitom4 = child.genome2.mutationsOfType(m4);
+			gen2m2 = child.genome1.mutationsOfType(m2);
+			gen2m4 = child.genome1.mutationsOfType(m4);
+			child.genome1.removeMutations(c(gen2m2,gen2m4));
+			child.genome1.addMutations(c(mitom2,mitom4));
+		}
+	}
+	return T;
+}
+
+early() {
+	// Adjust subpop size for fitness
+	meanFitness = mean(p1.cachedFitness(NULL));
+	p1.setSubpopulationSize(asInteger(1000*meanFitness));
+}
+
+mutationEffect(m3){return 1.0;}
+mutationEffect(m4){return 1.0;}
+
+1: late() {
+
+	// Calculate subpop fitness
+	haploidMultiplier = 1;
+	if (reproMode == "Haploid"){
+		sim.subpopulations.individuals.genome2.removeMutations();
+		haploidMultiplier = 2;
+	}
+	
+	inds = sim.subpopulations.individuals;
+ 	nuclearMito = haploidMultiplier*inds.sumOfMutationsOfType(m3);
+ 	mitoMito = haploidMultiplier*inds.sumOfMutationsOfType(m4);
+ 	optimum = 50;
+ 	phenotype = nuclearMito*mitoMito;
+ 	inds.fitnessScaling = 0.0 + 2*dnorm(optimum - phenotype, 0.0, 25.0)/dnorm(0.0,0.0,25.0);
+ 	
+ 	meanFitness = mean(inds.fitnessScaling);
+ 	
+ 	// Output
+ 	if (sim.cycle % 100 == 0){
+ 		cat(sim.cycle+"\n");
+ 		cat("Mean fitness: " + meanFitness + "\n");
+ 		cat("Mean phenotype: " + mean(phenotype) + "\n");
+ 		cat("Mean nuclearMito: " + mean(nuclearMito) + "\n");
+ 		cat("Mean mitoMito: " + mean(mitoMito) + "\n");
+ 		cat("\n");
+ 	}
+ 	
+ 	if (abs(2-meanFitness)<0.01){
+	 	cat("End Time: " + sim.cycle);
+ 		sim.simulationFinished();
+ 	}
+}
+
+100000 late() {cat("Final Fitness: " + mean(inds.fitnessScaling));}
