@@ -289,9 +289,14 @@ To run statistical analysis and generate noPreload_results.csv, which contains t
 ```
 R run_statistics.R
 ```
+For visualization code, ensure you are located in the Simulation_NoPreload directory by running:
+```bash
+cd ./Simulation_NoPreload
+```
+
 To generate figures comparing trials, use the following syntax:
 ```bash
-python visualMaker.py <path/to/csv/1> <path/to/csv/2>
+python ./visualMaker.py <path/to/csv/1> <path/to/csv/2>
 ```
 
 To see an example of this, these are the commands we ran to generate the figures we ended up using:
@@ -304,6 +309,10 @@ python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_50_5.0e-06_20.csv ./NoPrelo
 python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_10000_5.0e-06_20.csv ./NoPreload_Data/asex_ben_epi_10000_0_20.csv
 ```
 
+We utilized this code to generate a 3x2 including the data from the 5 examples above:
+```bash
+python ./visualGrid.py 
+```
 
 # SIM 2
 
