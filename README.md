@@ -209,9 +209,20 @@ To run statistical analysis and generate noPreload_results.csv, which contains t
 R run_statistics.R
 ```
 To generate figures comparing trials, use the following syntax:
+```bash
+python visualMaker.py <path/to/csv/1> <path/to/csv/2>
 ```
-Py visualMaker.py <path/to/csv/1> <path/to/csv/2>
+
+To see an example of this, these are the commands we ran to generate the figures we ended up using:
+
+```bash
+python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_100_5.0e-06_2.csv ./NoPreload_Data/asex_ben_epi_100_0_2.csv
+python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_100_5.0e-06_20.csv ./NoPreload_Data/asex_ben_epi_100_0_20.csv
+python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_100_5.0e-06_100.csv ./NoPreload_Data/asex_ben_epi_100_0_100.csv
+python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_50_5.0e-06_20.csv ./NoPreload_Data/asex_ben_epi_50_0_20.csv
+python ./visualMaker.py ./NoPreload_Data/sex_ben_epi_10000_5.0e-06_20.csv ./NoPreload_Data/asex_ben_epi_10000_0_20.csv
 ```
+
 
 # SIM 2
 
