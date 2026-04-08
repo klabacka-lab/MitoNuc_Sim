@@ -191,7 +191,7 @@ def _render_wide_table(wide_rows: list, corrected_threshold: float, out_path: Pa
     col_headers = [
         "Config",
         "Welch p-value", "Welch Significant?", "Welch Direction",
-        "MW p-value", "MW Significant?", "MW Direction",
+        "Mann-Whitney p-value", "Mann-Whitney Significant?", "Mann-Whitney Direction",
     ]
 
     cell_data = []
