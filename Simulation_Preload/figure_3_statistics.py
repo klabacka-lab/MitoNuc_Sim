@@ -89,6 +89,7 @@ def main() -> int:
 
     threshold = 0.05
     rows = []
+    wide_rows = []
 
     for panel_index, num_tags, epi_const in PANEL_CONFIGS:
         run_id = f"tags{num_tags}_epi{epi_const}"
@@ -117,29 +118,67 @@ def main() -> int:
 
         panel_rows = summarize_pair(asexual_values, sexual_values)
 
+        by_test = {r["test"]: r for r in panel_rows}
+        welch = by_test["welch_t_test"]
+        mw = by_test["mann_whitney_u"]
+
         for panel_row in panel_rows:
             rows.append(
                 {
-                    "test": f"panel{panel_index}_{run_id}_{panel_row['test']}",
+                    "panel": panel_index,
+                    "num_tags": num_tags,
+                    "epi_const": epi_const,
+                    "test_type": panel_row["test"],
                     "p_value": panel_row["p_value"],
                     "significant": panel_row["p_value"] <= threshold,
                     "direction": panel_row["direction"],
                 }
             )
 
+        wide_rows.append(
+            {
+                "num_tags": num_tags,
+                "epi_const": epi_const,
+                "welch_p_value": welch["p_value"],
+                "welch_significant": None,  # filled after Bonferroni correction
+                "welch_direction": welch["direction"],
+                "mw_p_value": mw["p_value"],
+                "mw_significant": None,
+                "mw_direction": mw["direction"],
+            }
+        )
+
     corrected_threshold = threshold / len(rows)
     for row in rows:
         row["significant"] = row["p_value"] <= corrected_threshold
 
+    for wide_row in wide_rows:
+        wide_row["welch_significant"] = wide_row["welch_p_value"] <= corrected_threshold
+        wide_row["mw_significant"] = wide_row["mw_p_value"] <= corrected_threshold
+
     with summary_csv.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=["test", "p_value", "significant", "direction"],
+            fieldnames=["panel", "num_tags", "epi_const", "test_type", "p_value", "significant", "direction"],
         )
         writer.writeheader()
         writer.writerows(rows)
 
+    wide_csv = script_dir / "fig3_statistics_wide.csv"
+    with wide_csv.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "num_tags", "epi_const",
+                "welch_p_value", "welch_significant", "welch_direction",
+                "mw_p_value", "mw_significant", "mw_direction",
+            ],
+        )
+        writer.writeheader()
+        writer.writerows(wide_rows)
+
     print(f"Wrote summary CSV: {summary_csv}")
+    print(f"Wrote wide CSV: {wide_csv}")
     print(f"Bonferroni corrected threshold: {corrected_threshold}")
     return 0
 
