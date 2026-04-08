@@ -190,8 +190,8 @@ def main() -> int:
 def _render_wide_table(wide_rows: list, out_path: Path) -> None:
     col_headers = [
         "Config",
-        "Welch p-value", "Welch Significant?", "Welch Direction",
-        "Mann-Whitney p-value", "Mann-Whitney Significant?", "Mann-Whitney Direction",
+        "Welch\np-value", "Welch\nSignificant?", "Welch\nDirection",
+        "Mann-Whitney\np-value", "Mann-Whitney\nSignificant?", "Mann-Whitney\nDirection",
     ]
 
     cell_data = []
