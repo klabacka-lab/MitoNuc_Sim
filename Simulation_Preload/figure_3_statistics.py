@@ -190,8 +190,8 @@ def main() -> int:
 def _render_wide_table(wide_rows: list, corrected_threshold: float, out_path: Path) -> None:
     col_headers = [
         "Config",
-        "Welch p-value", "Welch sig.", "Welch dir.",
-        "MW p-value", "MW sig.", "MW dir.",
+        "Welch p-value", "Welch Significant?", "Welch Direction",
+        "MW p-value", "MW Significant?", "MW Direction",
     ]
 
     cell_data = []
@@ -231,18 +231,12 @@ def _render_wide_table(wide_rows: list, corrected_threshold: float, out_path: Pa
         cell.set_facecolor("#2c3e50")
         cell.set_text_props(color="white", fontweight="bold")
 
-    # Style data rows — highlight significant results
-    sig_cols = {1: 2, 4: 5}  # p-value col index -> significance col index
+    # Style data rows
     for row_idx, row in enumerate(cell_data, start=1):
         for col_idx in range(n_cols):
             cell = table[row_idx, col_idx]
             cell.set_facecolor("#eaf0fb" if row_idx % 2 == 0 else "white")
             cell.set_edgecolor("#cccccc")
-        # Highlight significant p-values in green
-        for p_col, sig_col in sig_cols.items():
-            if row[sig_col] == "True":
-                table[row_idx, p_col].set_facecolor("#a8e6a3")
-                table[row_idx, sig_col].set_facecolor("#a8e6a3")
 
     ax.set_title(
         f"Figure 3 Statistics  |  Bonferroni threshold: {corrected_threshold:.4g}",
