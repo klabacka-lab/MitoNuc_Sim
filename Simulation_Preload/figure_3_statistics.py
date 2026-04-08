@@ -137,8 +137,7 @@ def main() -> int:
 
         wide_rows.append(
             {
-                "num_tags": num_tags,
-                "epi_const": epi_const,
+                "config": f"tags{num_tags}_epi{epi_const}",
                 "welch_p_value": welch["p_value"],
                 "welch_significant": None,  # filled after Bonferroni correction
                 "welch_direction": welch["direction"],
@@ -169,7 +168,7 @@ def main() -> int:
         writer = csv.DictWriter(
             handle,
             fieldnames=[
-                "num_tags", "epi_const",
+                "config",
                 "welch_p_value", "welch_significant", "welch_direction",
                 "mw_p_value", "mw_significant", "mw_direction",
             ],
