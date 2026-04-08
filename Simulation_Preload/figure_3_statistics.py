@@ -178,7 +178,7 @@ def main() -> int:
         writer.writerows(wide_rows)
 
     wide_png = script_dir / "fig3_statistics_wide.png"
-    _render_wide_table(wide_rows, corrected_threshold, wide_png)
+    _render_wide_table(wide_rows, wide_png)
 
     print(f"Wrote summary CSV: {summary_csv}")
     print(f"Wrote wide CSV: {wide_csv}")
@@ -187,7 +187,7 @@ def main() -> int:
     return 0
 
 
-def _render_wide_table(wide_rows: list, corrected_threshold: float, out_path: Path) -> None:
+def _render_wide_table(wide_rows: list, out_path: Path) -> None:
     col_headers = [
         "Config",
         "Welch p-value", "Welch Significant?", "Welch Direction",
@@ -230,6 +230,7 @@ def _render_wide_table(wide_rows: list, corrected_threshold: float, out_path: Pa
         cell = table[0, col]
         cell.set_facecolor("#2c3e50")
         cell.set_text_props(color="white", fontweight="bold")
+        cell.set_height(cell.get_height() * 2.5)
 
     # Style data rows
     for row_idx, row in enumerate(cell_data, start=1):
@@ -239,7 +240,7 @@ def _render_wide_table(wide_rows: list, corrected_threshold: float, out_path: Pa
             cell.set_edgecolor("#cccccc")
 
     ax.set_title(
-        f"Figure 3 Statistics  |  Bonferroni threshold: {corrected_threshold:.4g}",
+        "Figure 3 Statistics",
         fontsize=10,
         fontweight="bold",
         pad=8,
