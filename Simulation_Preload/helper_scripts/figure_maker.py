@@ -58,12 +58,15 @@ def safe_loadtxt(path: str) -> np.ndarray:
 
 def compute_stats(arr: np.ndarray):
     if arr.size == 0:
-        return np.array([]), np.array([])
+        return np.array([]), np.array([]), np.array([])
 
     if arr.ndim == 1:
-        return arr, np.zeros_like(arr)
+        return arr, arr, arr
 
-    return arr.mean(axis=0), arr.std(axis=0)
+    median = np.median(arr, axis=0)
+    q25 = np.percentile(arr, 25, axis=0)
+    q75 = np.percentile(arr, 75, axis=0)
+    return median, q25, q75
 
 
 # -----------------------------
@@ -144,17 +147,17 @@ asexual_data = load_2d_array(ASEXUAL_DATA_PATH)
 print(f"Sexual fitness_over_time shape: {sexual_data.shape}")
 print(f"Asexual fitness_over_time shape: {asexual_data.shape}")
 
-sexual_mean, sexual_std_dev = compute_stats(sexual_data)
-asexual_mean, asexual_std_dev = compute_stats(asexual_data)
+sexual_median, sexual_q25, sexual_q75 = compute_stats(sexual_data)
+asexual_median, asexual_q25, asexual_q75 = compute_stats(asexual_data)
 
 sexual_n = sexual_data.shape[0] if sexual_data.ndim == 2 else (1 if sexual_data.size > 0 else 0)
 asexual_n = asexual_data.shape[0] if asexual_data.ndim == 2 else (1 if asexual_data.size > 0 else 0)
 
 if MEASURE_FITNESS_GAP:
-    if sexual_mean.size > 0:
-        sexual_mean = 1 - sexual_mean
-    if asexual_mean.size > 0:
-        asexual_mean = 1 - asexual_mean
+    if sexual_median.size > 0:
+        sexual_median = 1 - sexual_median
+    if asexual_median.size > 0:
+        asexual_median = 1 - asexual_median
 
 sexual_final_fitness = (
     sexual_data[:, -1] if sexual_data.ndim == 2 and sexual_data.shape[1] > 0
@@ -185,35 +188,35 @@ else:
 
 any_time_series = False
 
-if sexual_mean.size > 0:
-    x = np.arange(1, len(sexual_mean) + 1)
+if sexual_median.size > 0:
+    x = np.arange(1, len(sexual_median) + 1)
     if SCATTER:
-        time_ax.scatter(x, sexual_mean, label="Sexual", s=4, color=SEXUAL_COLOR)
+        time_ax.scatter(x, sexual_median, label="Sexual", s=4, color=SEXUAL_COLOR)
     else:
-        time_ax.plot(x, sexual_mean, label="Sexual Mean", color=SEXUAL_COLOR)
+        time_ax.plot(x, sexual_median, label="Sexual Median", color=SEXUAL_COLOR)
         time_ax.fill_between(
             x,
-            sexual_mean - sexual_std_dev,
-            sexual_mean + sexual_std_dev,
+            sexual_q25,
+            sexual_q75,
             alpha=0.3,
             color=SEXUAL_COLOR,
-            label="Sexual ±1 SD"
+            label="Sexual IQR"
         )
     any_time_series = True
 
-if asexual_mean.size > 0:
-    x = np.arange(1, len(asexual_mean) + 1)
+if asexual_median.size > 0:
+    x = np.arange(1, len(asexual_median) + 1)
     if SCATTER:
-        time_ax.scatter(x, asexual_mean, label="Asexual", s=4, color=ASEXUAL_COLOR)
+        time_ax.scatter(x, asexual_median, label="Asexual", s=4, color=ASEXUAL_COLOR)
     else:
-        time_ax.plot(x, asexual_mean, label="Asexual Mean", color=ASEXUAL_COLOR)
+        time_ax.plot(x, asexual_median, label="Asexual Median", color=ASEXUAL_COLOR)
         time_ax.fill_between(
             x,
-            asexual_mean - asexual_std_dev,
-            asexual_mean + asexual_std_dev,
+            asexual_q25,
+            asexual_q75,
             alpha=0.3,
             color=ASEXUAL_COLOR,
-            label="Asexual ±1 SD"
+            label="Asexual IQR"
         )
     any_time_series = True
 
@@ -223,21 +226,21 @@ if not any_time_series:
                  ha="center", va="center")
 
 time_ax.set_xlabel("Generation")
-time_ax.set_ylabel("Mean Fitness")
+time_ax.set_ylabel("Median Fitness")
 
 time_ax.yaxis.get_major_formatter().set_useOffset(False)
 
 # ---- Title Logic
 
 if sexual_n == asexual_n and sexual_n > 0:
-    time_ax.set_title(f"Mean Fitness Over Time ({sexual_n} Simulations)")
+    time_ax.set_title(f"Median Fitness Over Time ({sexual_n} Simulations)")
 elif sexual_n > 0 or asexual_n > 0:
     time_ax.set_title(
-        f"Mean Fitness Over Time "
+        f"Median Fitness Over Time "
         f"(Sexual: {sexual_n}, Asexual: {asexual_n} Simulations)"
     )
 else:
-    time_ax.set_title("Mean Fitness Over Time")
+    time_ax.set_title("Median Fitness Over Time")
 
 time_ax.grid(True)
 
