@@ -5,7 +5,7 @@ start=$(date +%s)
 source venv/bin/activate
 
 tags=(2 20 100 20 20)
-epis=(100 100 100 50 1000)
+epis=(100 100 100 10 10000)
 
 plot_dir="${1:-cached_data/fig_3}"
 iterations="${2:-100}"
