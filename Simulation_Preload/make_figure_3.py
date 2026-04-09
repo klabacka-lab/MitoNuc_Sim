@@ -5,6 +5,7 @@ import numpy as np
 import subprocess
 import argparse
 import sys
+from matplotlib.lines import Line2D
 
 parser = argparse.ArgumentParser(
     description="Generate Figure 3 panels from simulation output files."
@@ -27,8 +28,8 @@ Y_SHARE = False
 
 # --------------------------------------------
 # Layout: 2 rows x 3 cols
-# Row 0: varying tags  (2,100), (20,100), (100,100)
-# Row 1: varying epi   (20,50), (20,100), (20,1000)
+# Row 0: vary tags while epi is fixed at 100
+# Row 1: vary epi while tags are fixed at 20
 # --------------------------------------------
 
 rows = [
@@ -37,8 +38,8 @@ rows = [
 ]
 
 row_labels = [
-    "Varying Tags",
-    "Varying Epi",
+    "Vary tags\n(epi fixed at 100)",
+    "Vary epi\n(tags fixed at 20)",
 ]
 
 # Flat list of unique configs to generate
@@ -59,6 +60,10 @@ def asexual_path(num_tags, epi_const):
 
 def plot_path(num_tags, epi_const):
     return folder_path / f"plot_{run_id(num_tags, epi_const)}.png"
+
+
+def config_label(num_tags, epi_const):
+    return f"tags={num_tags}, epi={epi_const}"
 
 def safe_load(path):
     if not path.exists() or path.stat().st_size == 0:
@@ -171,6 +176,8 @@ for num_tags, epi_const in configs:
 # --------------------------------------------
 
 fig, axes = plt.subplots(2, 3, figsize=(18, 8))
+fig.suptitle("Simulation: Preloaded", fontsize=22, fontweight="bold", y=0.98)
+fig.subplots_adjust(left=0.08, right=1.0, bottom=0.0, top=0.88, hspace=0.55, wspace=0.0)
 
 placeholder = Image.new("RGB", (200, 200), color=(200, 200, 200))
 draw = ImageDraw.Draw(placeholder)
@@ -190,9 +197,7 @@ for i, row in enumerate(rows):
         ax = axes[i, j]
         ax.imshow(img)
         ax.axis("off")
-
-        if i == 0:
-            ax.set_title(f"tags={num_tags}, epi={epi_const}", fontsize=12)
+        ax.set_title(config_label(num_tags, epi_const), fontsize=12)
 
         if j == 0:
             ax.text(
@@ -204,5 +209,21 @@ for i, row in enumerate(rows):
                 ha="right",
             )
 
-plt.tight_layout(rect=[0.08, 0, 1, 1])
+top_row_bottom = min(ax.get_position().y0 for ax in axes[0, :])
+bottom_row_top = max(ax.get_position().y1 for ax in axes[1, :])
+separator_y = (top_row_bottom + bottom_row_top) / 2
+separator_x0 = axes[0, 0].get_position().x0
+separator_x1 = axes[0, -1].get_position().x1
+
+fig.add_artist(
+    Line2D(
+        [separator_x0, separator_x1],
+        [separator_y, separator_y],
+        transform=fig.transFigure,
+        color="#666666",
+        linewidth=0.8,
+        alpha=0.45,
+    )
+)
+
 plt.savefig("figure_3.png", dpi=300)

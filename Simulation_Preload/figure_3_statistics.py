@@ -6,6 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
 
@@ -89,6 +90,7 @@ def main() -> int:
 
     threshold = 0.05
     rows = []
+    wide_rows = []
 
     for panel_index, num_tags, epi_const in PANEL_CONFIGS:
         run_id = f"tags{num_tags}_epi{epi_const}"
@@ -117,31 +119,136 @@ def main() -> int:
 
         panel_rows = summarize_pair(asexual_values, sexual_values)
 
+        by_test = {r["test"]: r for r in panel_rows}
+        welch = by_test["welch_t_test"]
+        mw = by_test["mann_whitney_u"]
+
         for panel_row in panel_rows:
             rows.append(
                 {
-                    "test": f"panel{panel_index}_{run_id}_{panel_row['test']}",
+                    "panel": panel_index,
+                    "num_tags": num_tags,
+                    "epi_const": epi_const,
+                    "test_type": panel_row["test"],
                     "p_value": panel_row["p_value"],
                     "significant": panel_row["p_value"] <= threshold,
                     "direction": panel_row["direction"],
                 }
             )
 
+        wide_rows.append(
+            {
+                "config": f"tags{num_tags}_epi{epi_const}",
+                "welch_p_value": welch["p_value"],
+                "welch_significant": None,  # filled after Bonferroni correction
+                "welch_direction": welch["direction"],
+                "mw_p_value": mw["p_value"],
+                "mw_significant": None,
+                "mw_direction": mw["direction"],
+            }
+        )
+
     corrected_threshold = threshold / len(rows)
     for row in rows:
         row["significant"] = row["p_value"] <= corrected_threshold
 
+    for wide_row in wide_rows:
+        wide_row["welch_significant"] = wide_row["welch_p_value"] <= corrected_threshold
+        wide_row["mw_significant"] = wide_row["mw_p_value"] <= corrected_threshold
+
     with summary_csv.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=["test", "p_value", "significant", "direction"],
+            fieldnames=["panel", "num_tags", "epi_const", "test_type", "p_value", "significant", "direction"],
         )
         writer.writeheader()
         writer.writerows(rows)
 
+    wide_csv = script_dir / "fig3_statistics_wide.csv"
+    with wide_csv.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "config",
+                "welch_p_value", "welch_significant", "welch_direction",
+                "mw_p_value", "mw_significant", "mw_direction",
+            ],
+        )
+        writer.writeheader()
+        writer.writerows(wide_rows)
+
+    wide_png = script_dir / "fig3_statistics_wide.png"
+    _render_wide_table(wide_rows, wide_png)
+
     print(f"Wrote summary CSV: {summary_csv}")
+    print(f"Wrote wide CSV: {wide_csv}")
+    print(f"Wrote wide PNG: {wide_png}")
     print(f"Bonferroni corrected threshold: {corrected_threshold}")
     return 0
+
+
+def _render_wide_table(wide_rows: list, out_path: Path) -> None:
+    col_headers = [
+        "Config",
+        "Welch\np-value", "Welch\nSignificant?", "Welch\nDirection",
+        "Mann-Whitney\np-value", "Mann-Whitney\nSignificant?", "Mann-Whitney\nDirection",
+    ]
+
+    cell_data = []
+    for row in wide_rows:
+        cell_data.append([
+            row["config"],
+            f"{row['welch_p_value']:.4g}",
+            str(row["welch_significant"]),
+            row["welch_direction"],
+            f"{row['mw_p_value']:.4g}",
+            str(row["mw_significant"]),
+            row["mw_direction"],
+        ])
+
+    n_rows = len(cell_data)
+    n_cols = len(col_headers)
+    row_h = 0.45
+    fig_h = row_h * (n_rows + 1) + 0.6
+    fig_w = n_cols * 1.55
+
+    fig, ax = plt.subplots(figsize=(fig_w, fig_h))
+    ax.axis("off")
+
+    table = ax.table(
+        cellText=cell_data,
+        colLabels=col_headers,
+        cellLoc="center",
+        loc="center",
+    )
+    table.auto_set_font_size(False)
+    table.set_fontsize(9)
+    table.scale(1, 1.4)
+
+    # Style header row
+    for col in range(n_cols):
+        cell = table[0, col]
+        cell.set_facecolor("#2c3e50")
+        cell.set_text_props(color="white", fontweight="bold")
+        cell.set_height(cell.get_height() * 2.5)
+
+    # Style data rows
+    for row_idx, row in enumerate(cell_data, start=1):
+        for col_idx in range(n_cols):
+            cell = table[row_idx, col_idx]
+            cell.set_facecolor("#eaf0fb" if row_idx % 2 == 0 else "white")
+            cell.set_edgecolor("#cccccc")
+
+    ax.set_title(
+        "Figure 3 Statistics",
+        fontsize=10,
+        fontweight="bold",
+        pad=8,
+    )
+
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
 
 
 if __name__ == "__main__":

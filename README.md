@@ -1,7 +1,7 @@
 # MitoNuc_Sim
 Simulate evolutionary scenarios analogous to mitonuclear coevolution
 
-Webpage for SLiM documentation: https://messerlab.org/slim/
+Webpage for SLiM software documentation: https://messerlab.org/slim/
 (Messer Lab, Cornell University)
 
 # Setup
