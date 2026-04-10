@@ -5,9 +5,9 @@ panel,num_tags,epi_const,test_type,p_value,significant,direction
 2,20,100,mann_whitney_u,2.9653294916832555e-24,True,sex
 3,100,100,welch_t_test,6.7425987990183756e-43,True,sex
 3,100,100,mann_whitney_u,8.939040453812737e-30,True,sex
-4,20,50,welch_t_test,4.791681047811621e-07,True,sex
-4,20,50,mann_whitney_u,2.0218063540097339e-16,True,sex
+4,20,10,welch_t_test,8.094649200456894e-05,True,sex
+4,20,10,mann_whitney_u,2.4026596261997475e-12,True,sex
 5,20,100,welch_t_test,6.712115955519375e-14,True,sex
 5,20,100,mann_whitney_u,2.9653294916832555e-24,True,sex
-6,20,1000,welch_t_test,6.283398463143198e-39,True,sex
-6,20,1000,mann_whitney_u,1.6651073257654105e-28,True,sex
+6,20,10000,welch_t_test,4.867932125246548e-15,True,sex
+6,20,10000,mann_whitney_u,1.2905591415127419e-13,True,sex
