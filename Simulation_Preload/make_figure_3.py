@@ -34,7 +34,7 @@ Y_SHARE = False
 
 rows = [
     [(2, 100), (20, 100), (100, 100)],
-    [(20, 50), (20, 100), (20, 1000)],
+    [(20, 10), (20, 100), (20, 10000)],
 ]
 
 row_labels = [
@@ -74,20 +74,17 @@ def safe_load(path):
         return None
 
 
-def mean_margin_bounds(data):
-    """Return lower/upper bounds using the plotted mean ± 1 SD envelope."""
+def median_iqr_bounds(data):
+    """Return lower/upper bounds using the plotted median with IQR envelope."""
     if data is None or data.size == 0:
         return None
 
     if data.ndim == 1:
-        mean = data
-        std = np.zeros_like(mean)
+        lower = data
+        upper = data
     else:
-        mean = data.mean(axis=0)
-        std = data.std(axis=0)
-
-    lower = mean - std
-    upper = mean + std
+        lower = np.percentile(data, 25, axis=0)
+        upper = np.percentile(data, 75, axis=0)
 
     return lower, upper
 
@@ -120,7 +117,7 @@ if Y_SHARE:
 
     for cfg in data_cache.values():
         for data in [cfg["sexual_data"], cfg["asexual_data"]]:
-            bounds = mean_margin_bounds(data)
+            bounds = median_iqr_bounds(data)
             if bounds is None:
                 continue
             lower, upper = bounds
@@ -128,7 +125,7 @@ if Y_SHARE:
             upper_vals.extend(upper.tolist())
 
     if lower_vals and upper_vals:
-        # Shared limits are based on the same plotted metric (mean ± 1 SD)
+        # Shared limits are based on the same plotted metric (median + IQR)
         # and include the full envelope so panel data is never clipped.
         low = float(np.min(lower_vals))
         high = float(np.max(upper_vals))

@@ -15,9 +15,9 @@ PANEL_CONFIGS = [
     (1, 2, 100),
     (2, 20, 100),
     (3, 100, 100),
-    (4, 20, 50),
+    (4, 20, 10),
     (5, 20, 100),
-    (6, 20, 1000),
+    (6, 20, 10000),
 ]
 
 
@@ -57,24 +57,14 @@ def summarize_pair(asexual_values: np.ndarray, sexual_values: np.ndarray):
     if len(asexual_values) < 3 or len(sexual_values) < 3:
         raise ValueError("Each distribution must have at least 3 data points.")
 
-    mean_diff = np.mean(sexual_values) - np.mean(asexual_values)
     median_diff = np.median(sexual_values) - np.median(asexual_values)
 
-    ttest_res = stats.ttest_ind(asexual_values, sexual_values, equal_var=False)
     mw_res = stats.mannwhitneyu(asexual_values, sexual_values, alternative="two-sided")
 
-    return [
-        {
-            "test": "welch_t_test",
-            "p_value": float(ttest_res.pvalue),
-            "direction": "sex" if mean_diff > 0 else "asex",
-        },
-        {
-            "test": "mann_whitney_u",
-            "p_value": float(mw_res.pvalue),
-            "direction": "sex" if median_diff > 0 else "asex",
-        },
-    ]
+    return {
+        "p_value": float(mw_res.pvalue),
+        "direction": "sex" if median_diff > 0 else "asex",
+    }
 
 
 def main() -> int:
@@ -117,31 +107,22 @@ def main() -> int:
         asexual_values = load_file(asexual_file)
         sexual_values = load_file(sexual_file)
 
-        panel_rows = summarize_pair(asexual_values, sexual_values)
+        mw = summarize_pair(asexual_values, sexual_values)
 
-        by_test = {r["test"]: r for r in panel_rows}
-        welch = by_test["welch_t_test"]
-        mw = by_test["mann_whitney_u"]
-
-        for panel_row in panel_rows:
-            rows.append(
-                {
-                    "panel": panel_index,
-                    "num_tags": num_tags,
-                    "epi_const": epi_const,
-                    "test_type": panel_row["test"],
-                    "p_value": panel_row["p_value"],
-                    "significant": panel_row["p_value"] <= threshold,
-                    "direction": panel_row["direction"],
-                }
-            )
+        rows.append(
+            {
+                "panel": panel_index,
+                "num_tags": num_tags,
+                "epi_const": epi_const,
+                "p_value": mw["p_value"],
+                "significant": mw["p_value"] <= threshold,
+                "direction": mw["direction"],
+            }
+        )
 
         wide_rows.append(
             {
                 "config": f"tags{num_tags}_epi{epi_const}",
-                "welch_p_value": welch["p_value"],
-                "welch_significant": None,  # filled after Bonferroni correction
-                "welch_direction": welch["direction"],
                 "mw_p_value": mw["p_value"],
                 "mw_significant": None,
                 "mw_direction": mw["direction"],
@@ -153,13 +134,12 @@ def main() -> int:
         row["significant"] = row["p_value"] <= corrected_threshold
 
     for wide_row in wide_rows:
-        wide_row["welch_significant"] = wide_row["welch_p_value"] <= corrected_threshold
         wide_row["mw_significant"] = wide_row["mw_p_value"] <= corrected_threshold
 
     with summary_csv.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=["panel", "num_tags", "epi_const", "test_type", "p_value", "significant", "direction"],
+            fieldnames=["panel", "num_tags", "epi_const", "p_value", "significant", "direction"],
         )
         writer.writeheader()
         writer.writerows(rows)
@@ -168,11 +148,7 @@ def main() -> int:
     with wide_csv.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=[
-                "config",
-                "welch_p_value", "welch_significant", "welch_direction",
-                "mw_p_value", "mw_significant", "mw_direction",
-            ],
+            fieldnames=["config", "mw_p_value", "mw_significant", "mw_direction"],
         )
         writer.writeheader()
         writer.writerows(wide_rows)
@@ -190,7 +166,6 @@ def main() -> int:
 def _render_wide_table(wide_rows: list, out_path: Path) -> None:
     col_headers = [
         "Config",
-        "Welch\np-value", "Welch\nSignificant?", "Welch\nDirection",
         "Mann-Whitney\np-value", "Mann-Whitney\nSignificant?", "Mann-Whitney\nDirection",
     ]
 
@@ -198,9 +173,6 @@ def _render_wide_table(wide_rows: list, out_path: Path) -> None:
     for row in wide_rows:
         cell_data.append([
             row["config"],
-            f"{row['welch_p_value']:.4g}",
-            str(row["welch_significant"]),
-            row["welch_direction"],
             f"{row['mw_p_value']:.4g}",
             str(row["mw_significant"]),
             row["mw_direction"],

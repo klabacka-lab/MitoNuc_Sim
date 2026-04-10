@@ -1,7 +1,7 @@
-config,welch_p_value,welch_significant,welch_direction,mw_p_value,mw_significant,mw_direction
-tags2_epi100,0.002158940566011313,True,sex,0.0008944288267255211,True,sex
-tags20_epi100,6.712115955519375e-14,True,sex,2.9653294916832555e-24,True,sex
-tags100_epi100,6.7425987990183756e-43,True,sex,8.939040453812737e-30,True,sex
-tags20_epi50,4.791681047811621e-07,True,sex,2.0218063540097339e-16,True,sex
-tags20_epi100,6.712115955519375e-14,True,sex,2.9653294916832555e-24,True,sex
-tags20_epi1000,6.283398463143198e-39,True,sex,1.6651073257654105e-28,True,sex
+config,mw_p_value,mw_significant,mw_direction
+tags2_epi100,0.0008944288267255211,True,sex
+tags20_epi100,2.9653294916832555e-24,True,sex
+tags100_epi100,8.939040453812737e-30,True,sex
+tags20_epi10,2.4026596261997475e-12,True,sex
+tags20_epi100,2.9653294916832555e-24,True,sex
+tags20_epi10000,1.2905591415127419e-13,True,sex
