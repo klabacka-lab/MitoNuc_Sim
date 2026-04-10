@@ -348,7 +348,7 @@ If not using the quickstart blocks, perform the following discrete steps:
 GrowthFitness.slim runs a single simulation. It can be executed through the command line with the following syntax:
 
 ```bash
-slim -d logging=T -d asexual=[T or F] -d mut_profile=[1, 2, or 3] -d preload_location=["mito" or "nucl"] -d epi=[T or F] -d data_file=[file_location] -d num_tags=[number of tags] -d epi_rate=[epistatic constant] GrowthFitness.slim
+slim -d logging=T -d asexual=[T or F] -d mut_profile=[1, 2, or 3] -d preload_location=["mito" or "nucl"] -d epi=[T or F] -d data_file=[file_location] -d num_tags=[number of tags] -d epi_rate=[epistatic site spacing] GrowthFitness.slim
 ```
 
 The main simulation of interest should be run with `asexual` both on and off (the sim runs twice), `mut_profile` 1, `preload_location` set to "mito", and epistasis (`epi`) set to `T`. A file output location should be specified for each. 5 different choices for `num_tags` and `epi_rate` are needed to reproduce our exact result, so running simulations manually is not reccomended. 
@@ -369,7 +369,7 @@ The files written by the above commands can be used to generate the figures in t
 python make_figure_3.py --folder [data dir]
 ```
 
-This will produce a set of boxplots comparing the effects of differing numbers of epistatic tags (one row) and differing epistatic strength constants (the other). It will be saved as `fig_3.py`
+This will produce a set of boxplots comparing the effects of differing numbers of epistatic tags (one row) and differing epistatic strength site spacings (the other). It will be saved as `fig_3.py`
 
 ## Statistical Testing
 
