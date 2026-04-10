@@ -48,13 +48,21 @@ def parse_filename_label(path: str) -> str:
 
 
 def compute_stats(arr: np.ndarray):
+    """
+    Returns median and interquartile range (Q1/Q3)
+    """
     if arr.size == 0:
-        return np.array([]), np.array([])
+        return np.array([]), np.array([]), np.array([])
 
     if arr.ndim == 1:
-        return arr, np.zeros_like(arr)
+        return arr, arr, arr
 
-    return arr.mean(axis=0), arr.std(axis=0)
+    median = np.median(arr, axis=0)
+    q1 = np.percentile(arr, 25, axis=0)
+    q3 = np.percentile(arr, 75, axis=0)
+
+    return median, q1, q3
+
 
 # -----------------------------
 # Plot function
@@ -65,8 +73,8 @@ def plot_pair(ax, sexual_file, asexual_file):
     sexual_data = np.atleast_2d(np.loadtxt(sexual_file, delimiter=","))
     asexual_data = np.atleast_2d(np.loadtxt(asexual_file, delimiter=","))
 
-    sexual_mean, sexual_std = compute_stats(sexual_data)
-    asexual_mean, asexual_std = compute_stats(asexual_data)
+    sexual_median, sexual_q1, sexual_q3 = compute_stats(sexual_data)
+    asexual_median, asexual_q1, asexual_q3 = compute_stats(asexual_data)
 
     sexual_label = parse_filename_label(sexual_file)
     asexual_label = parse_filename_label(asexual_file)
@@ -75,29 +83,38 @@ def plot_pair(ax, sexual_file, asexual_file):
     asexual_n = asexual_data.shape[0]
 
     if MEASURE_FITNESS_GAP:
-        sexual_mean = 1 - sexual_mean
-        asexual_mean = 1 - asexual_mean
+        sexual_median = 1 - sexual_median
+        sexual_q1 = 1 - sexual_q1
+        sexual_q3 = 1 - sexual_q3
+
+        asexual_median = 1 - asexual_median
+        asexual_q1 = 1 - asexual_q1
+        asexual_q3 = 1 - asexual_q3
+
+        # Ensure Q1 < Q3 after inversion
+        sexual_q1, sexual_q3 = np.minimum(sexual_q1, sexual_q3), np.maximum(sexual_q1, sexual_q3)
+        asexual_q1, asexual_q3 = np.minimum(asexual_q1, asexual_q3), np.maximum(asexual_q1, asexual_q3)
 
     # --- Asexual
-    if asexual_mean.size > 0:
-        x = np.arange(1, len(asexual_mean) + 1)
-        ax.plot(x, asexual_mean, color=ASEXUAL_COLOR, label=asexual_label)
+    if asexual_median.size > 0:
+        x = np.arange(1, len(asexual_median) + 1)
+        ax.plot(x, asexual_median, color=ASEXUAL_COLOR, label=asexual_label)
         ax.fill_between(
             x,
-            asexual_mean - asexual_std,
-            asexual_mean + asexual_std,
+            asexual_q1,
+            asexual_q3,
             alpha=0.3,
             color=ASEXUAL_COLOR
         )
 
     # --- Sexual
-    if sexual_mean.size > 0:
-        x = np.arange(1, len(sexual_mean) + 1)
-        ax.plot(x, sexual_mean, color=SEXUAL_COLOR, label=sexual_label)
+    if sexual_median.size > 0:
+        x = np.arange(1, len(sexual_median) + 1)
+        ax.plot(x, sexual_median, color=SEXUAL_COLOR, label=sexual_label)
         ax.fill_between(
             x,
-            sexual_mean - sexual_std,
-            sexual_mean + sexual_std,
+            sexual_q1,
+            sexual_q3,
             alpha=0.3,
             color=SEXUAL_COLOR
         )
@@ -113,21 +130,23 @@ def plot_pair(ax, sexual_file, asexual_file):
     if LOG_SCALE:
         ax.set_yscale("log")
 
-    # Legend bottom-right, no box
+    # Legend
     if ax.get_legend_handles_labels()[0]:
         ax.legend(loc="upper right", frameon=False, fontsize=7)
+
 
 # -----------------------------
 # File pairs (6 plots)
 # -----------------------------
 
 pairs = [
+        ("./NoPreload_Data/sex_ben_epi_10_5.0e-06_20.csv", "./NoPreload_Data/asex_ben_epi_10_0_20.csv"),
+    ("./NoPreload_Data/sex_ben_epi_100_5.0e-06_20.csv", "./NoPreload_Data/asex_ben_epi_100_0_20.csv"),
+    ("./NoPreload_Data/sex_ben_epi_10000_5.0e-06_20.csv", "./NoPreload_Data/asex_ben_epi_10000_0_20.csv"),
     ("./NoPreload_Data/sex_ben_epi_100_5.0e-06_2.csv", "./NoPreload_Data/asex_ben_epi_100_0_2.csv"),
     ("./NoPreload_Data/sex_ben_epi_100_5.0e-06_20.csv", "./NoPreload_Data/asex_ben_epi_100_0_20.csv"),
     ("./NoPreload_Data/sex_ben_epi_100_5.0e-06_100.csv", "./NoPreload_Data/asex_ben_epi_100_0_100.csv"),
-    ("./NoPreload_Data/sex_ben_epi_50_5.0e-06_20.csv", "./NoPreload_Data/asex_ben_epi_50_0_20.csv"),
-    ("./NoPreload_Data/sex_ben_epi_100_5.0e-06_20.csv", "./NoPreload_Data/asex_ben_epi_100_0_20.csv"),
-    ("./NoPreload_Data/sex_ben_epi_10000_5.0e-06_20.csv", "./NoPreload_Data/asex_ben_epi_10000_0_20.csv"),
+
 ]
 
 # -----------------------------
@@ -157,11 +176,14 @@ for ax in axes[::3]:
 
 # Panel labels A–F
 for ax, label in zip(axes, string.ascii_uppercase):
-    ax.text(0.02, 0.98, f"({label})",
-            transform=ax.transAxes,
-            fontsize=12,
-            fontweight='bold',
-            va='top')
+    ax.text(
+        0.02, 0.98, f"({label})",
+        transform=ax.transAxes,
+        fontsize=12,
+        fontweight='bold',
+        va='top'
+    )
 
 plt.tight_layout()
-plt.savefig("Sim1GridPlot.png", dpi=300)
+plt.savefig("Sim1GridPlotMedian.png", dpi=300)
+plt.show()
