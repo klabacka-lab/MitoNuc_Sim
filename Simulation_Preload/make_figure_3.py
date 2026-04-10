@@ -18,6 +18,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+
 folder_path = Path(args.folder)
 folder_path.mkdir(parents=True, exist_ok=True)
 script_dir = Path(__file__).resolve().parent
