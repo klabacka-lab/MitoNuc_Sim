@@ -43,7 +43,10 @@ tmp = wilcox.test(results_list[["sex_ben_epi_100_5.0e-06_20"]]$X9999,
 pvals[["recomb_5e-6_vs_norecomb"]] = tmp
 
 # Test significance of different epistasis rates in sexual
-tmp = kruskal.test(list(results_list[["sex_ben_epi_50_5.0e-06_20"]]$X9999,
+tmp = kruskal.test(list(results_list[["sex_ben_epi_5_5.0e-06_20"]]$X9999,
+                        results_list[["sex_ben_epi_10_5.0e-06_20"]]$X9999,
+                        results_list[["sex_ben_epi_25_5.0e-06_20"]]$X9999,
+                        results_list[["sex_ben_epi_50_5.0e-06_20"]]$X9999,
                         results_list[["sex_ben_epi_100_5.0e-06_20"]]$X9999,
                         results_list[["sex_ben_epi_250_5.0e-06_20"]]$X9999,
                         results_list[["sex_ben_epi_500_5.0e-06_20"]]$X9999,
@@ -52,7 +55,10 @@ tmp = kruskal.test(list(results_list[["sex_ben_epi_50_5.0e-06_20"]]$X9999,
 pvals[["epistasis_rate_sex"]] = tmp
 
 # Test significance of different epistasis rates in asexual
-tmp = kruskal.test(list(results_list[["asex_ben_epi_50_0_20"]]$X9999,
+tmp = kruskal.test(list(results_list[["asex_ben_epi_5_0_20"]]$X9999,
+                        results_list[["asex_ben_epi_10_0_20"]]$X9999,
+                        results_list[["asex_ben_epi_25_0_20"]]$X9999,
+                        results_list[["asex_ben_epi_50_0_20"]]$X9999,
                         results_list[["asex_ben_epi_100_0_20"]]$X9999,
                         results_list[["asex_ben_epi_250_0_20"]]$X9999,
                         results_list[["asex_ben_epi_500_0_20"]]$X9999,
@@ -128,7 +134,7 @@ compare_sex_asex = function(epi, tags, pvals, directions, results_list) {
 }
 
 # Test sex vs asex with different epi values (constant tag of 20)
-epi_values = c(50, 100, 250, 500, 1000, 10000)
+epi_values = c(5, 10, 25, 50, 100, 250, 500, 1000, 10000)
 
 for (epi in epi_values) {
   res = compare_sex_asex(epi, 20, pvals, directions, results_list)
@@ -159,5 +165,7 @@ pval_table = tibble(
   direction = map_chr(names(pvals), ~ if (.x %in% names(directions)) directions[[.x]] else "-")
 )
 
-write_csv(pval_table, "noPreload_results.csv")
+write_csv(pval_table, "pvalues_results.csv")
+
+cat("Saved results to pvalues_results.csv")
 }
