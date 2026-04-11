@@ -128,6 +128,12 @@ parser.add_argument(
     help="Disable boxplot for final fitness distribution (deprecated; boxplots are off by default)"
 )
 
+parser.add_argument(
+    "--no_panel_labels",
+    action="store_true",
+    help="Disable automatic panel labels like (A), (B), ..."
+)
+
 args = parser.parse_args()
 
 SHOW_DISTRIBUTION = not args.no_boxplot
@@ -309,12 +315,13 @@ if dist_ax is not None:
 
 # ---- Panel Labels
 
-for ax, label in zip(panel_axes, string.ascii_uppercase):
-    ax.text(0.02, 0.98, f"({label})",
-            transform=ax.transAxes,
-            fontsize=14,
-            fontweight='bold',
-            va='top')
+if not args.no_panel_labels:
+    for ax, label in zip(panel_axes, string.ascii_uppercase):
+        ax.text(0.02, 0.98, f"({label})",
+                transform=ax.transAxes,
+                fontsize=14,
+                fontweight='bold',
+                va='top')
 
 
 if args.ymin is not None and args.ymax is not None:

@@ -6,6 +6,7 @@ import subprocess
 import argparse
 import sys
 from matplotlib.lines import Line2D
+import string
 
 parser = argparse.ArgumentParser(
     description="Generate Figure 3 panels from simulation output files."
@@ -157,6 +158,7 @@ for num_tags, epi_const in configs:
         "--asexual_data", str(asexual_path(num_tags, epi_const)),
         "--output", str(plot_path(num_tags, epi_const)),
         "--no_boxplot",
+        "--no_panel_labels",
     ]
 
     if Y_SHARE and global_min is not None and global_max is not None:
@@ -195,6 +197,17 @@ for i, row in enumerate(rows):
         ax.imshow(img)
         ax.axis("off")
         ax.set_title(config_label(num_tags, epi_const), fontsize=12)
+        panel_idx = i * len(row) + j
+        ax.text(
+            -0.02,
+            1.02,
+            f"({string.ascii_uppercase[panel_idx]})",
+            transform=ax.transAxes,
+            fontsize=14,
+            fontweight="bold",
+            va="top",
+            ha="left",
+        )
 
         if j == 0:
             ax.text(
