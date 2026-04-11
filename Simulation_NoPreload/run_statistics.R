@@ -165,7 +165,7 @@ pval_table = tibble(
   direction = map_chr(names(pvals), ~ if (.x %in% names(directions)) directions[[.x]] else "-")
 )
 
-write_csv(pval_table, "pvalues_results.csv")
+write_csv(pval_table, "noPreload_results.csv")
 
-cat("Saved results to pvalues_results.csv")
+cat("Saved results to noPreload_results.csv")
 }
