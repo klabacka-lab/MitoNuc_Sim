@@ -29,18 +29,18 @@ Y_SHARE = False
 
 # --------------------------------------------
 # Layout: 2 rows x 3 cols
-# Row 0: vary tags while epi is fixed at 100
-# Row 1: vary epi while tags are fixed at 20
+# Row 0: vary epi while tags are fixed at 20
+# Row 1: vary tags while epi is fixed at 100
 # --------------------------------------------
 
 rows = [
-    [(2, 100), (20, 100), (100, 100)],
     [(20, 10), (20, 100), (20, 10000)],
+    [(2, 100), (20, 100), (100, 100)],
 ]
 
 row_labels = [
-    "Vary tags\n(epi fixed at 100)",
     "Vary epi\n(tags fixed at 20)",
+    "Vary tags\n(epi fixed at 100)",
 ]
 
 # Flat list of unique configs to generate
