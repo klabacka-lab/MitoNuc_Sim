@@ -39,8 +39,8 @@ rows = [
 ]
 
 row_labels = [
-    "Vary epi\n(tags fixed at 20)",
-    "Vary tags\n(epi fixed at 100)",
+    "Site Spacing",
+    "Tag Amount",
 ]
 
 # Flat list of unique configs to generate
