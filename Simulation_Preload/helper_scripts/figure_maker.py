@@ -142,6 +142,12 @@ parser.add_argument(
     help="Suppress all panel legends (for use when a global legend is added externally)"
 )
 
+parser.add_argument(
+    "--raw_lines_preview",
+    action="store_true",
+    help="Render a clean lines-only panel with no ticks/labels/title for inset previews"
+)
+
 args = parser.parse_args()
 
 SHOW_DISTRIBUTION = not args.no_boxplot
@@ -263,7 +269,7 @@ if args.log_scale:
     if dist_ax is not None:
         dist_ax.set_yscale("log")
 
-if not args.no_legend and time_ax.get_legend_handles_labels()[0]:
+if not args.no_legend and not args.raw_lines_preview and time_ax.get_legend_handles_labels()[0]:
     time_ax.legend()
 
 
@@ -317,13 +323,26 @@ if dist_ax is not None:
     dist_ax.set_xlabel("Simulation Type")
     dist_ax.grid(True, alpha=0.3)
 
-    if not args.no_legend and dist_ax.get_legend_handles_labels()[0]:
+    if not args.no_legend and not args.raw_lines_preview and dist_ax.get_legend_handles_labels()[0]:
         dist_ax.legend()
+
+
+if args.raw_lines_preview:
+    time_ax.set_title("")
+    time_ax.set_xlabel("")
+    time_ax.set_ylabel("")
+    time_ax.set_xticks([])
+    time_ax.set_yticks([])
+    time_ax.tick_params(bottom=False, left=False, labelbottom=False, labelleft=False)
+    time_ax.grid(False)
+    for spine in time_ax.spines.values():
+        spine.set_visible(False)
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 
 
 # ---- Panel Labels
 
-if not args.no_panel_labels:
+if not args.no_panel_labels and not args.raw_lines_preview:
     for ax, label in zip(panel_axes, string.ascii_uppercase):
         ax.text(0.02, 0.98, f"({label})",
                 transform=ax.transAxes,
@@ -339,6 +358,9 @@ if args.ymin is not None and args.ymax is not None:
 
 
 plt.tight_layout()
-plt.savefig(OUTPUT_PATH, dpi=300)
+if args.raw_lines_preview:
+    plt.savefig(OUTPUT_PATH, dpi=300, bbox_inches="tight", pad_inches=0)
+else:
+    plt.savefig(OUTPUT_PATH, dpi=300)
 
 print(f"Saved: {OUTPUT_PATH}")

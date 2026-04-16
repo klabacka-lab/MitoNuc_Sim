@@ -23,6 +23,11 @@ parser.add_argument(
     action="store_true",
     help="Use Simulation_NoPreload CSV inputs (Figure 2 layout/inputs) instead of default Figure 3 TXT inputs",
 )
+parser.add_argument(
+    "--inset_non_y_share_preview",
+    action="store_true",
+    help="Insert a small non-y-shared raw-lines preview in the upper-right of each panel",
+)
 args = parser.parse_args()
 
 folder_path = Path(args.folder)
@@ -72,6 +77,10 @@ def asexual_path(num_tags, epi_const):
 
 def plot_path(num_tags, epi_const):
     return folder_path / f"plot_{run_id(num_tags, epi_const)}.png"
+
+
+def preview_plot_path(num_tags, epi_const):
+    return folder_path / f"plot_preview_{run_id(num_tags, epi_const)}.png"
 
 
 def config_label(num_tags, epi_const):
@@ -183,6 +192,25 @@ for num_tags, epi_const in configs:
     print("Running:", " ".join(cmd))
     subprocess.run(cmd)
 
+    if args.inset_non_y_share_preview:
+        preview_cmd = [
+            sys.executable,
+            str(figure_maker_script),
+            "--sexual_data", str(sexual_path(num_tags, epi_const)),
+            "--asexual_data", str(asexual_path(num_tags, epi_const)),
+            "--output", str(preview_plot_path(num_tags, epi_const)),
+            "--no_boxplot",
+            "--no_panel_labels",
+            "--no_legend",
+            "--raw_lines_preview",
+        ]
+
+        if LOG_SCALE:
+            preview_cmd.append("--log_scale")
+
+        print("Running preview:", " ".join(preview_cmd))
+        subprocess.run(preview_cmd)
+
 # --------------------------------------------
 # Step 4 — Combine PNGs into 2x3 figure
 # --------------------------------------------
@@ -234,6 +262,21 @@ for i, row in enumerate(rows):
                 va="center",
                 ha="right",
             )
+
+        if args.inset_non_y_share_preview:
+            preview_fname = preview_plot_path(num_tags, epi_const)
+            try:
+                preview_img = Image.open(preview_fname)
+                inset_ax = ax.inset_axes([0.12, 0.58, 0.34, 0.34])
+                inset_ax.imshow(preview_img)
+                inset_ax.set_xticks([])
+                inset_ax.set_yticks([])
+                inset_ax.set_facecolor("white")
+                for spine in inset_ax.spines.values():
+                    spine.set_color("#333333")
+                    spine.set_linewidth(0.8)
+            except FileNotFoundError:
+                print(f"Warning: Preview file not found: {preview_fname}")
 
 top_row_bottom = min(ax.get_position().y0 for ax in axes[0, :])
 bottom_row_top = max(ax.get_position().y1 for ax in axes[1, :])
