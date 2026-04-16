@@ -27,13 +27,15 @@ def load_2d_array(path: str) -> np.ndarray:
         return np.empty((0, 0))
 
     rows = []
+    delimiter = "," if path_obj.suffix.lower() == ".csv" else None
     with open(path, "r") as f:
         for line in f:
             line = line.strip()
             if not line:
                 continue
             try:
-                rows.append([float(x) for x in line.split()])
+                parts = line.split(",") if delimiter == "," else line.split()
+                rows.append([float(x) for x in parts])
             except ValueError:
                 continue
 

@@ -18,11 +18,17 @@ parser.add_argument(
     default="cached_data/fig_3",
     help="Folder containing sexual/asexual data files and where output images are written",
 )
+parser.add_argument(
+    "--fig_2_instead",
+    action="store_true",
+    help="Use Simulation_NoPreload CSV inputs (Figure 2 layout/inputs) instead of default Figure 3 TXT inputs",
+)
 args = parser.parse_args()
 
 folder_path = Path(args.folder)
 folder_path.mkdir(parents=True, exist_ok=True)
 script_dir = Path(__file__).resolve().parent
+fig2_data_dir = script_dir.parent / "Simulation_NoPreload" / "NoPreload_Data"
 figure_maker_script = script_dir / "helper_scripts" / "figure_maker.py"
 
 LOG_SCALE = False
@@ -55,9 +61,13 @@ def run_id(num_tags, epi_const):
     return f"tags{num_tags}_epi{epi_const}"
 
 def sexual_path(num_tags, epi_const):
+    if args.fig_2_instead:
+        return fig2_data_dir / f"sex_ben_epi_{epi_const}_5.0e-06_{num_tags}.csv"
     return folder_path / f"sexual_{run_id(num_tags, epi_const)}_data.txt"
 
 def asexual_path(num_tags, epi_const):
+    if args.fig_2_instead:
+        return fig2_data_dir / f"asex_ben_epi_{epi_const}_0_{num_tags}.csv"
     return folder_path / f"asexual_{run_id(num_tags, epi_const)}_data.txt"
 
 def plot_path(num_tags, epi_const):
@@ -71,7 +81,8 @@ def safe_load(path):
     if not path.exists() or path.stat().st_size == 0:
         return None
     try:
-        return np.atleast_1d(np.loadtxt(path))
+        delimiter = "," if path.suffix.lower() == ".csv" else None
+        return np.atleast_1d(np.loadtxt(path, delimiter=delimiter))
     except Exception:
         return None
 
@@ -177,7 +188,10 @@ for num_tags, epi_const in configs:
 # --------------------------------------------
 
 fig, axes = plt.subplots(2, 3, figsize=(18, 8))
-fig.suptitle("Simulation: Preloaded", fontsize=22, fontweight="bold", y=0.98)
+if args.fig_2_instead:
+    fig.suptitle("GMAS", fontsize=22, fontweight="bold", y=0.98)
+else:
+    fig.suptitle("IMDeS", fontsize=22, fontweight="bold", y=0.98)
 fig.subplots_adjust(left=0.08, right=1.0, bottom=0.07, top=0.88, hspace=0.15, wspace=0.0)
 
 placeholder = Image.new("RGB", (200, 200), color=(200, 200, 200))
@@ -223,7 +237,7 @@ for i, row in enumerate(rows):
 
 top_row_bottom = min(ax.get_position().y0 for ax in axes[0, :])
 bottom_row_top = max(ax.get_position().y1 for ax in axes[1, :])
-separator_y = (top_row_bottom + bottom_row_top) / 2
+separator_y = (top_row_bottom + bottom_row_top) / 2 + 0.01
 separator_x0 = axes[0, 0].get_position().x0
 separator_x1 = axes[0, -1].get_position().x1
 
@@ -257,4 +271,5 @@ fig.legend(
     bbox_to_anchor=(0.5, 0.0),
 )
 
-plt.savefig("figure_3.png", dpi=300)
+final_output = "figure_2.png" if args.fig_2_instead else "figure_3.png"
+plt.savefig(final_output, dpi=300)
