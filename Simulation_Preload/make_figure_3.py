@@ -32,7 +32,7 @@ fig2_data_dir = script_dir.parent / "Simulation_NoPreload" / "NoPreload_Data"
 figure_maker_script = script_dir / "helper_scripts" / "figure_maker.py"
 
 LOG_SCALE = False
-Y_SHARE = False
+Y_SHARE = True
 
 # --------------------------------------------
 # Layout: 2 rows x 3 cols
