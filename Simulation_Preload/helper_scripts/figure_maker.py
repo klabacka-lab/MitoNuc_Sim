@@ -134,6 +134,12 @@ parser.add_argument(
     help="Disable automatic panel labels like (A), (B), ..."
 )
 
+parser.add_argument(
+    "--no_legend",
+    action="store_true",
+    help="Suppress all panel legends (for use when a global legend is added externally)"
+)
+
 args = parser.parse_args()
 
 SHOW_DISTRIBUTION = not args.no_boxplot
@@ -255,7 +261,7 @@ if args.log_scale:
     if dist_ax is not None:
         dist_ax.set_yscale("log")
 
-if time_ax.get_legend_handles_labels()[0]:
+if not args.no_legend and time_ax.get_legend_handles_labels()[0]:
     time_ax.legend()
 
 
@@ -309,7 +315,7 @@ if dist_ax is not None:
     dist_ax.set_xlabel("Simulation Type")
     dist_ax.grid(True, alpha=0.3)
 
-    if dist_ax.get_legend_handles_labels()[0]:
+    if not args.no_legend and dist_ax.get_legend_handles_labels()[0]:
         dist_ax.legend()
 
 

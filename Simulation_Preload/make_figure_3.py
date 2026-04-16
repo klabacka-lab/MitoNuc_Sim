@@ -6,6 +6,7 @@ import subprocess
 import argparse
 import sys
 from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 import string
 
 parser = argparse.ArgumentParser(
@@ -159,6 +160,7 @@ for num_tags, epi_const in configs:
         "--output", str(plot_path(num_tags, epi_const)),
         "--no_boxplot",
         "--no_panel_labels",
+        "--no_legend",
     ]
 
     if Y_SHARE and global_min is not None and global_max is not None:
@@ -176,7 +178,7 @@ for num_tags, epi_const in configs:
 
 fig, axes = plt.subplots(2, 3, figsize=(18, 8))
 fig.suptitle("Simulation: Preloaded", fontsize=22, fontweight="bold", y=0.98)
-fig.subplots_adjust(left=0.08, right=1.0, bottom=0.0, top=0.88, hspace=0.55, wspace=0.0)
+fig.subplots_adjust(left=0.08, right=1.0, bottom=0.07, top=0.88, hspace=0.15, wspace=0.0)
 
 placeholder = Image.new("RGB", (200, 200), color=(200, 200, 200))
 draw = ImageDraw.Draw(placeholder)
@@ -234,6 +236,25 @@ fig.add_artist(
         linewidth=0.8,
         alpha=0.45,
     )
+)
+
+SEXUAL_COLOR = "orange"
+ASEXUAL_COLOR = "blue"
+
+legend_handles = [
+    Line2D([0], [0], color=SEXUAL_COLOR, linewidth=2, label="Sexual Median"),
+    Patch(facecolor=SEXUAL_COLOR, alpha=0.3, label="Sexual IQR"),
+    Line2D([0], [0], color=ASEXUAL_COLOR, linewidth=2, label="Asexual Median"),
+    Patch(facecolor=ASEXUAL_COLOR, alpha=0.3, label="Asexual IQR"),
+]
+
+fig.legend(
+    handles=legend_handles,
+    loc="lower center",
+    ncol=4,
+    fontsize=11,
+    frameon=True,
+    bbox_to_anchor=(0.5, 0.0),
 )
 
 plt.savefig("figure_3.png", dpi=300)
